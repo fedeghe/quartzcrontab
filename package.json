@@ -1,0 +1,17 @@
+{
+  "name": "crontabbed",
+  "version": "0.0.0",
+  "main": "index.js",
+  "author": "fedeghe <fedeghe@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "malta source/build.json",
+    "test": "jest",
+    "watch": "jest --watch",
+    "cover": "jest --collectCoverage --rootDir=tests"
+  },
+  "devDependencies": {
+    "malta": "^4.1.41",
+    "malta-jest": "^0.0.1"
+  }
+}

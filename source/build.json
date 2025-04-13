@@ -1,0 +1,8 @@
+{
+    "EXE": [
+        "rm -rf dist tests",
+        "mkdir dist tests"
+    ],
+    "source/index.js" : "dist -plugins=malta-jest[argz:'--rootDir=tests'] -options=verbose:2",
+    "source/tests/*.js" : "tests -plugins=malta-jest[argz:'--rootDir=tests']"
+}
