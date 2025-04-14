@@ -20,7 +20,7 @@ const defaults = {
     i : '0', // minutes
     h : '0', // seconds
     dom : '*', // day of month
-    dow : '*', // day of week
+    dow : '?', // day of week
     m : '*', // month
     y : '*', // year (1970-2099) ...how 1970 :D ??????
 }
@@ -72,143 +72,193 @@ class CronTabist {
             dow: dow ?? this.elements.dow,
             y: y ?? this.elements.y,
         }
+        this.descriptions = {
+            s: s ?? this.elements.s,
+            i: i ?? this.elements.i,
+            h: h ?? this.elements.h,
+            dom: dom ?? this.elements.dom,
+            m: m ?? this.elements.m,
+            dow: dow ?? this.elements.dow,
+            y: y ?? this.elements.y,
+        }
+        return this;
     }
     /* seconds */
     everySecond() {
-        this.over({ s: '*'})
+        return this.over({ s: '*'})
     }
     everyXSeconds({freq, start = 0}) {
-        this.over({ s: `${start}/${freq}` })
+        return this.over({ s: `${start}/${freq}` })
     }
     atSecond(s) {
-        this.over({ s })
+        return this.over({ s })
     }
     atSecondAdd(s) {
         var current = this.elements.s.split(',')
-        this.over({ s: [...current, s].join(',') })
+        return this.over({ s: [...current, s].join(',') })
     }
     betweenSeconds(from, to, every) {
-        this.over({ s: `${from}-${to}${every ? `/${every}`: ''}` })
+        return this.over({ s: `${from}-${to}${every ? `/${every}`: ''}` })
     }
 
     /* minutes */
     everyMinute() {
-        this.over({ i: '*'})
+        return this.over({ i: '*'})
     }
     everyXMinutes({freq, start = 0}) {
-        this.over({ i: `${start}/${freq}` })
+        return this.over({ i: `${start}/${freq}` })
     }
     atMinute(i) {
-        this.over({ i })
+        return this.over({ i })
     }
     atMinuteAdd(i) {
         var current = this.elements.i.split(',')
-        this.over({ i: [...current, i].join(',') })
+        return this.over({ i: [...current, i].join(',') })
     }
     betweenMinutes(from, to, every) {
-        this.over({ i: `${from}-${to}${every ? `/${every}` : ''}` })
+        return this.over({ i: `${from}-${to}${every ? `/${every}` : ''}` })
     }
 
     /* hours */
     everyHour() {
-        this.over({ h: '*'})
+        return this.over({ h: '*'})
     }
     everyXHours({freq, start = 0}) {
-        this.over({ h: `${start}/${freq}` })
+        return this.over({ h: `${start}/${freq}` })
     }
     atHour(h) {
-        this.over({ h })
+        return this.over({ h })
     }
     atHourAdd(h) {
         var current = this.elements.h.split(',')
-        this.over({ h: [...current, h].join(',') })
+        return this.over({ h: [...current, h].join(',') })
     }
     betweenHours(from, to, every) {
-        this.over({ h: `${from}-${to}${every ? `/${every}`: ''}` })
+        return this.over({ h: `${from}-${to}${every ? `/${every}`: ''}` })
     }
 
     /* dom/dow */
     everyDay(){
-        this.over({ dom: '*'})
+        return this.over({ dom: '*'})
     }
     everyXDayStartingFromYDay(x, y){
-        this.over({ dom: `${y}/${x}`, dow: '?'})
+        return this.over({ dom: `${y}/${x}`, dow: '?'})
     }
     everyDayOfWeek(d) {
-        this.over({ dom: '?', dow: d })
-    }
+        return this.over({ dom: '?', dow: d })
+    }   
     everyDayOfWeekAdd(d) {
         var current = this.elements.dow === defaults.dow
             ? []
             : this.elements.dow.split(',')
-        this.over({ dom: '?', dow: [...current, d].join(',') })
+        return this.over({ dom: '?', dow: [...current, d].join(',') })
     }
     atDayOfMonth(dom) {
-        this.over({ dom, dow: '?' })
+        return this.over({ dom, dow: '?' })
     }
     atDayOfMonthAdd(dom) {
         var current = this.elements.dom === defaults.dom
             ? []
             : this.elements.dom.split(',')
-        this.over({ dom: [...current, dom].join(','), dow: '?' })
+        return this.over({ dom: [...current, dom].join(','), dow: '?' })
     }
     onLastDayOfMonth(){
-        this.over({ dom: 'L', dow: '?' })
+        return this.over({ dom: 'L', dow: '?' })
     }
     onLastWeekDayOfMonth(){
-        this.over({ dom: 'LW', dow: '?' })
+        return this.over({ dom: 'LW', dow: '?' })
     }
     onLastXWeekDayOfMonth(x){
-        this.over({ dom: '?', dow: `${x}L` })
+        return this.over({ dom: '?', dow: `${x}L` })
     }
     onLastXDayBeforeTheEndOfTheMonth(x){
-        this.over({ dom:`L-${x}`, dow: '?' })
+        return this.over({ dom:`L-${x}`, dow: '?' })
     }
     onClosestWorkingDayToTheXofTheMonth(x) {
-        this.over({ dom:`${x}W`, dow: '?' })
+        return this.over({ dom:`${x}W`, dow: '?' })
     }
     onTheNthWeekDayOfTheMonth(n,wd) {
-        this.over({ dom:'?', dow: `${wd}#${n}` })
+        return this.over({ dom:'?', dow: `${wd}#${n}` })
     }
 
     /* month */
     everyMonth() {
-        this.over({ m: '*'})
+        return this.over({ m: '*'})
     }
     everyXMonths({freq, start = 0}) {
-        this.over({ m: `${start}/${freq}` })
+        return this.over({ m: `${start}/${freq}` })
     }
     atMonth(m) {
-        this.over({ m })
+        return this.over({ m })
     }
     atMonthAdd(m) {
         var current = this.elements.m === defaults.m
             ? []
             : this.elements.m.split(',')
-        this.over({ m: [...current, m].join(',') })
+        return this.over({ m: [...current, m].join(',') })
     }
     betweenMonths(from, to, every) {
-        this.over({ m: `${from}-${to}${every ? `/${every}` : ''}` })
+        return this.over({ m: `${from}-${to}${every ? `/${every}` : ''}` })
     }
 
     /* year */
     everyYear() {
-        this.over({ y: '*'})
+        return this.over({ y: '*'})
     }
     everyXYears({freq, start = 0}) {
-        this.over({ y: `${start}/${freq}` })
+        return this.over({ y: `${start}/${freq}` })
     }
     atYear(y) {
-        this.over({ y })
+        return this.over({ y })
     }
     atYearAdd(y) {
         var current = this.elements.y === defaults.y
             ? []
             : this.elements.y.split(',')
-        this.over({ y: [...current, y].join(',') })
+        return this.over({ y: [...current, y].join(',') })
     }
     betweenYears(from, to, every) {
-        this.over({ y: `${from}-${to}${every ? `/${every}` : ''}` })
+        return this.over({ y: `${from}-${to}${every ? `/${every}` : ''}` })
+    }
+    describe() {
+        return [
+            this.describeTime(),
+            this.describeDomDowOccurrence(),
+            this.describeYears()
+        ].join(' of ')
+    }
+    describeTime() {
+        return 'every second'
+    }
+    describeDomDowOccurrence() {
+        return 'every day'
+    }
+    describeYears() {
+        return 'every year'
+    }
+
+    validate(){
+        const errors = [],
+            rxSecMinHrs = /^(([0-9,]*)|([0-9]*-[0-9]*))?(\/([0-9]*))?$/;
+
+        // dow and dom cant coexist withouth a ?
+        if (this.elements.dom !== '?' && this.elements.dow !== '?') {
+            errors.push('Dow and Dom cant both have a configuration');
+        }
+        if (!this.elements.s.match(rxSecMinHrs)) {
+            errors.push('Seconds are mot well formatted');
+        }
+        if (!this.elements.i.match(rxSecMinHrs)) {
+            errors.push('Minutes are mot well formatted');
+        }
+        if (!this.elements.h.match(rxSecMinHrs)) {
+            errors.push('Hours are mot well formatted');
+        }
+
+        return {
+            valid: errors.length === 0,
+            errors
+        }
     }
 
     out() {

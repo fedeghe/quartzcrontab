@@ -2,316 +2,346 @@
 const Crontabist  = require('../dist/index.js');
 
 describe('Crontabist', () => {
+
     describe('constructor', () => {
+        
         it('should Initialize as default', () => {
             const c = new Crontabist()
-            expect(c.out()).toBe('0 0 0 * * * *')
+            expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('should Initialize with month', () => {
             const c = new Crontabist({ m: 3 })
-            expect(c.out()).toBe('0 0 0 * 3 * *')
+            expect(c.out()).toBe('0 0 0 * 3 ? *')
         })
         it('should Initialize with month-year', () => {
             const c = new Crontabist({ m: 3, y: 2023 })
-            expect(c.out()).toBe('0 0 0 * 3 * 2023')
+            expect(c.out()).toBe('0 0 0 * 3 ? 2023')
         })
         it('should Initialize with month-daysOfMonth', () => {
             const c = new Crontabist({ m: 3, dom: '9,12,17' })
-            expect(c.out()).toBe('0 0 0 9,12,17 3 * *')
+            expect(c.out()).toBe('0 0 0 9,12,17 3 ? *')
         })
         it('should Initialize with every second', () => {
             const c = new Crontabist({ s:'*', i: '*', h:'*' })
-            expect(c.out()).toBe('* * * * * * *')
+            expect(c.out()).toBe('* * * * * ? *')
         })
     })
+    
     describe('seconds', () => {
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
+        })
         it('everySecond', () => {
-            const c = new Crontabist()
             c.everySecond()
-            expect(c.out()).toBe('* 0 0 * * * *')
+            expect(c.out()).toBe('* 0 0 * * ? *')
         })
         it('everyXSeconds every x from 0', () => {
-            const c = new Crontabist()
             c.everyXSeconds({ freq: 6 })
-            expect(c.out()).toBe('0/6 0 0 * * * *')
+            expect(c.out()).toBe('0/6 0 0 * * ? *')
         })
-
         it('everyXSeconds every x from y', () => {
-            const c = new Crontabist()
             c.everyXSeconds({ freq: 6, start:13 })
-            expect(c.out()).toBe('13/6 0 0 * * * *')
+            expect(c.out()).toBe('13/6 0 0 * * ? *')
         })
-
         it('atSecond', () => {
-            const c = new Crontabist()
             c.atSecond(13)
-            expect(c.out()).toBe('13 0 0 * * * *')
+            expect(c.out()).toBe('13 0 0 * * ? *')
         })
-        it('atSecond straight more', () => {
-            const c = new Crontabist()
+        it('atSecond straight more', () => {  
             c.atSecond('13,15,19')
-            expect(c.out()).toBe('13,15,19 0 0 * * * *')
+            expect(c.out()).toBe('13,15,19 0 0 * * ? *')
         })
         it('atSecondAdd', () => {
-            const c = new Crontabist()
             c.atSecondAdd(13)
             c.atSecondAdd(19)
-            expect(c.out()).toBe('0,13,19 0 0 * * * *')
+            expect(c.out()).toBe('0,13,19 0 0 * * ? *')
         })
         it('betweenSeconds', () => {
-            const c = new Crontabist()
             c.betweenSeconds(13,19)
-            expect(c.out()).toBe('13-19 0 0 * * * *')
+            expect(c.out()).toBe('13-19 0 0 * * ? *')
         })
         it('betweenSeconds every X seconds', () => {
-            const c = new Crontabist()
             c.betweenSeconds(3,39, 2)
-            expect(c.out()).toBe('3-39/2 0 0 * * * *')
+            expect(c.out()).toBe('3-39/2 0 0 * * ? *')
         })
     })
+    
     describe('minutes', () => {
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
+        })
         it('everyMinute', () => {
-            const c = new Crontabist()
             c.everyMinute()
-            expect(c.out()).toBe('0 * 0 * * * *')
+            expect(c.out()).toBe('0 * 0 * * ? *')
         })
         it('everyXMinutes every x from 0', () => {
-            const c = new Crontabist()
             c.everyXMinutes({ freq: 6 })
-            expect(c.out()).toBe('0 0/6 0 * * * *')
+            expect(c.out()).toBe('0 0/6 0 * * ? *')
         })
-
-        it('everyXMinutes every x from y', () => {
-            const c = new Crontabist()
+        it('everyXMinutes every x from y', () => {  
             c.everyXMinutes({ freq: 6, start:13 })
-            expect(c.out()).toBe('0 13/6 0 * * * *')
+            expect(c.out()).toBe('0 13/6 0 * * ? *')
         })
-
-        it('atMinute', () => {
-            const c = new Crontabist()
+        it('atMinute', () => {  
             c.atMinute(13)
-            expect(c.out()).toBe('0 13 0 * * * *')
+            expect(c.out()).toBe('0 13 0 * * ? *')
         })
         it('atMinute straight more', () => {
-            const c = new Crontabist()
             c.atMinute('13,15,19')
-            expect(c.out()).toBe('0 13,15,19 0 * * * *')
+            expect(c.out()).toBe('0 13,15,19 0 * * ? *')
         })
         it('atMinuteAdd', () => {
-            const c = new Crontabist()
             c.atMinuteAdd(13)
             c.atMinuteAdd(19)
-            expect(c.out()).toBe('0 0,13,19 0 * * * *')
+            expect(c.out()).toBe('0 0,13,19 0 * * ? *')
         })
         it('betweenMinutes', () => {
-            const c = new Crontabist()
             c.betweenMinutes(13,19)
-            expect(c.out()).toBe('0 13-19 0 * * * *')
+            expect(c.out()).toBe('0 13-19 0 * * ? *')
         })
         it('betweenMinutes every X minutes', () => {
-            const c = new Crontabist()
             c.betweenMinutes(13,49, 7)
-            expect(c.out()).toBe('0 13-49/7 0 * * * *')
+            expect(c.out()).toBe('0 13-49/7 0 * * ? *')
         })
     })
+    
     describe('hours', () => {
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
+        })
         it('everyHour', () => {
-            const c = new Crontabist()
             c.everyHour()
-            expect(c.out()).toBe('0 0 * * * * *')
+            expect(c.out()).toBe('0 0 * * * ? *')
         })
         it('everyXHours every x from 0', () => {
-            const c = new Crontabist()
             c.everyXHours({ freq: 6 })
-            expect(c.out()).toBe('0 0 0/6 * * * *')
+            expect(c.out()).toBe('0 0 0/6 * * ? *')
         })
-
-        it('everyXHours every x from y', () => {
-            const c = new Crontabist()
+        it('everyXHours every x from y', () => {  
             c.everyXHours({ freq: 6, start:13 })
-            expect(c.out()).toBe('0 0 13/6 * * * *')
+            expect(c.out()).toBe('0 0 13/6 * * ? *')
         })
-
-        it('atHour', () => {
-            const c = new Crontabist()
+        it('atHour', () => {  
             c.atHour(13)
-            expect(c.out()).toBe('0 0 13 * * * *')
+            expect(c.out()).toBe('0 0 13 * * ? *')
         })
         it('atHour straight more', () => {
-            const c = new Crontabist()
             c.atHour('13,15,19')
-            expect(c.out()).toBe('0 0 13,15,19 * * * *')
+            expect(c.out()).toBe('0 0 13,15,19 * * ? *')
         })
         it('atHourAdd', () => {
-            const c = new Crontabist()
             c.atHourAdd(13)
             c.atHourAdd(19)
-            expect(c.out()).toBe('0 0 0,13,19 * * * *')
+            expect(c.out()).toBe('0 0 0,13,19 * * ? *')
         })
         it('betweenHours', () => {
-            const c = new Crontabist()
             c.betweenHours(13,19)
-            expect(c.out()).toBe('0 0 13-19 * * * *')
+            expect(c.out()).toBe('0 0 13-19 * * ? *')
         })
         it('betweenHours every X hours', () => {
-            const c = new Crontabist()
             c.betweenHours(2,19, 3)
-            expect(c.out()).toBe('0 0 2-19/3 * * * *')
+            expect(c.out()).toBe('0 0 2-19/3 * * ? *')
         })
     })
+    
     describe('day of month/week', () => {
-        it('everyDay', () => {
-            const c = new Crontabist()
-            c.everyDay()
-            expect(c.out()).toBe('0 0 0 * * * *')
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
         })
         it('everyDay', () => {
-            const c = new Crontabist()
+            c.everyDay()
+            expect(c.out()).toBe('0 0 0 * * ? *')
+        })
+        it('everyDay', () => {
             c.everyXDayStartingFromYDay(3, 15)
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
         })
         it('everyDayOfWeek', () => {
-            const c = new Crontabist()
             c.everyDayOfWeek(4)
             expect(c.out()).toBe('0 0 0 ? * 4 *')
         })
         it('everyDayOfWeekAdd', () => {
-            const c = new Crontabist()
             c.everyDayOfWeekAdd(2)
             c.everyDayOfWeekAdd(4)
             expect(c.out()).toBe('0 0 0 ? * 2,4 *')
         })
         it('atDayOfMonth', () => {
-            const c = new Crontabist()
             c.atDayOfMonth(21)
             expect(c.out()).toBe('0 0 0 21 * ? *')
         })
         it('atDayOfMonthAdd', () => {
-            const c = new Crontabist()
             c.atDayOfMonthAdd(13)
             c.atDayOfMonthAdd(21)
             expect(c.out()).toBe('0 0 0 13,21 * ? *')
         })
         it('onLastDayOfMonth', () => {
-            const c = new Crontabist()
             c.onLastDayOfMonth()
             expect(c.out()).toBe('0 0 0 L * ? *')
         })
         it('onLastWeekDayOfMonth', () => {
-            const c = new Crontabist()
             c.onLastWeekDayOfMonth()
             expect(c.out()).toBe('0 0 0 LW * ? *')
         })
         it('onLastXWeekDayOfMonth', () => {
-            const c = new Crontabist()
             c.onLastXWeekDayOfMonth(2)
             expect(c.out()).toBe('0 0 0 ? * 2L *')
         })
         it('onLastXDayBeforeTheEndOfTheMonth', () => {
-            const c = new Crontabist()
             c.onLastXDayBeforeTheEndOfTheMonth(2)
             expect(c.out()).toBe('0 0 0 L-2 * ? *')
         })
         it('onClosestWorkingDayToTheXofTheMonth', () => {
-            const c = new Crontabist()
             c.onClosestWorkingDayToTheXofTheMonth(2)
             expect(c.out()).toBe('0 0 0 2W * ? *')
         })
-
         it('onTheNthWeekDayOfTheMonth', () => {
-            const c = new Crontabist()
             c.onTheNthWeekDayOfTheMonth(2, 4)
             expect(c.out()).toBe('0 0 0 ? * 4#2 *')
         })
     })
+    
     describe('months', () => {
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
+        })
         it('everyMonth', () => {
-            const c = new Crontabist()
             c.everyMonth()
-            expect(c.out()).toBe('0 0 0 * * * *')
+            expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('everyXMonths every x from 0', () => {
-            const c = new Crontabist()
             c.everyXMonths({ freq: 6 })
-            expect(c.out()).toBe('0 0 0 * 0/6 * *')
+            expect(c.out()).toBe('0 0 0 * 0/6 ? *')
         })
-
-        it('everyXMonths every x from y', () => {
-            const c = new Crontabist()
+        it('everyXMonths every x from y', () => {  
             c.everyXMonths({ freq: 6, start:13 })
-            expect(c.out()).toBe('0 0 0 * 13/6 * *')
+            expect(c.out()).toBe('0 0 0 * 13/6 ? *')
         })
-
         it('atMonth', () => {
-            const c = new Crontabist()
             c.atMonth(13)
-            expect(c.out()).toBe('0 0 0 * 13 * *')
+            expect(c.out()).toBe('0 0 0 * 13 ? *')
         })
         it('atMonth straight more', () => {
-            const c = new Crontabist()
             c.atMonth('13,15,19')
-            expect(c.out()).toBe('0 0 0 * 13,15,19 * *')
+            expect(c.out()).toBe('0 0 0 * 13,15,19 ? *')
         })
         it('atMonthAdd', () => {
-            const c = new Crontabist()
             c.atMonthAdd(13)
             c.atMonthAdd(19)
-            expect(c.out()).toBe('0 0 0 * 13,19 * *')
+            expect(c.out()).toBe('0 0 0 * 13,19 ? *')
         })
         it('betweenMonths', () => {
-            const c = new Crontabist()
             c.betweenMonths(13,19)
-            expect(c.out()).toBe('0 0 0 * 13-19 * *')
+            expect(c.out()).toBe('0 0 0 * 13-19 ? *')
         })
         it('betweenMonths every X months', () => {
-            const c = new Crontabist()
             c.betweenMonths(2,10, 3)
-            expect(c.out()).toBe('0 0 0 * 2-10/3 * *')
+            expect(c.out()).toBe('0 0 0 * 2-10/3 ? *')
         })
     })
+    
     describe('years', () => {
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
+        })
         it('everyYear', () => {
-            const c = new Crontabist()
             c.everyYear()
-            expect(c.out()).toBe('0 0 0 * * * *')
+            expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('everyXYears every x from 0', () => {
-            const c = new Crontabist()
             c.everyXYears({ freq: 6 })
-            expect(c.out()).toBe('0 0 0 * * * 0/6')
+            expect(c.out()).toBe('0 0 0 * * ? 0/6')
         })
-
-        it('everyXYears every x from y', () => {
-            const c = new Crontabist()
+        it('everyXYears every x from y', () => {  
             c.everyXYears({ freq: 6, start:2025 })
-            expect(c.out()).toBe('0 0 0 * * * 2025/6')
+            expect(c.out()).toBe('0 0 0 * * ? 2025/6')
         })
-
         it('atYear', () => {
-            const c = new Crontabist()
             c.atYear(2176)
-            expect(c.out()).toBe('0 0 0 * * * 2176')
+            expect(c.out()).toBe('0 0 0 * * ? 2176')
         })
         it('atYear straight more', () => {
-            const c = new Crontabist()
             c.atYear('2063,2034')
-            expect(c.out()).toBe('0 0 0 * * * 2063,2034')
+            expect(c.out()).toBe('0 0 0 * * ? 2063,2034')
         })
         it('atYearAdd', () => {
-            const c = new Crontabist()
             c.atYearAdd(1976)
             c.atYearAdd(2034)
-            expect(c.out()).toBe('0 0 0 * * * 1976,2034')
+            expect(c.out()).toBe('0 0 0 * * ? 1976,2034')
         })
         it('betweenYears', () => {
-            const c = new Crontabist()
             c.betweenYears(2013,2039)
-            expect(c.out()).toBe('0 0 0 * * * 2013-2039')
+            expect(c.out()).toBe('0 0 0 * * ? 2013-2039')
         })
         it('betweenYears every X years', () => {
-            const c = new Crontabist()
             c.betweenYears(2013, 2039, 2)
-            expect(c.out()).toBe('0 0 0 * * * 2013-2039/2')
+            expect(c.out()).toBe('0 0 0 * * ? 2013-2039/2')
+        })
+    })
+
+    describe('chained actions', () => {
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
+        })
+        it('atSecond atMinute atHour', () => {
+            c.atSecond(3)
+                .atMinute(14)
+                .atHour(23)
+            expect(c.out()).toBe('3 14 23 * * ? *')
+        })
+        it('atSecond atMinute atHour every X days starting from day Y', () => {
+            c.atSecond(30)
+                .atMinute(0)
+                .atHour(12)
+                .everyXDayStartingFromYDay(5, 2)
+            expect(c.out()).toBe('30 0 12 2/5 * ? *')
+        })
+        it('atSecond atMinute every hour in the 3rd saturday of JAN and FEB on years 2026,2028,2032', () => {
+            c.atSecondAdd(1)
+                .atSecondAdd(5)
+                .atMinute(0)
+                .everyHour()
+                .onTheNthWeekDayOfTheMonth(3, 7)
+                .atMonthAdd('JAN')
+                .atMonthAdd('FEB')
+                .atYearAdd(2026)
+                .atYearAdd(2028)
+                .atYearAdd(2032)
+            expect(c.out()).toBe('0,1,5 0 * ? JAN,FEB 7#3 2026,2028,2032')
+        })
+    })
+    
+    describe('edge examples', () => {
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
+        })
+        it('atSecond atMinute atHour atMonth all at range+cadence', () => {
+            c.atSecond('3-30/2')
+                .atMinute('15-45/5')
+                .atHour('12-23/3')
+                .atMonth('3-10/2')
+            expect(c.out()).toBe('3-30/2 15-45/5 12-23/3 * 3-10/2 ? *')
+        })
+    })
+
+
+
+
+    describe('describe as expected', () => {
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
+        })
+        it('default', () => {
+            
+            expect(c.describe()).toBe('every second of every day of every year')
         })
     })
 
