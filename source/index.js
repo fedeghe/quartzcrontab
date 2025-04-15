@@ -246,13 +246,13 @@ class CronTabist {
             errors.push('Dow and Dom cant both have a configuration');
         }
         if (!this.elements.s.match(rxSecMinHrs)) {
-            errors.push('Seconds are mot well formatted');
+            errors.push('Seconds are not well formatted');
         }
         if (!this.elements.i.match(rxSecMinHrs)) {
-            errors.push('Minutes are mot well formatted');
+            errors.push('Minutes are not well formatted');
         }
         if (!this.elements.h.match(rxSecMinHrs)) {
-            errors.push('Hours are mot well formatted');
+            errors.push('Hours are not well formatted');
         }
 
         return {

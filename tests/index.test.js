@@ -369,6 +369,127 @@ describe('Crontabist', () => {
             expect(ranger60(-1)).toBe(59)
         })
     })
+    describe('validation', () => {
+        describe('- seconds', () => {
+            describe('- positives', () => {
+                let c
+                beforeEach(() => {
+                    c = new Crontabist()
+                })
+                it('one number', () => {
+                    c.atSecond('3')
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+                it('interval', () => {
+                    c.atSecond('3-33')
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+
+                it('interval with cadence', () => {
+                    c.atSecond('3-33/2')
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+
+            })
+            describe('- negatives', () => {
+                let c
+                beforeEach(() => {
+                    c = new Crontabist()
+                })
+                it('Seconds are invalid', () => {
+                    c.atSecond('3--30')
+                    expect(c.validate().valid).toBeFalsy()
+                    expect(c.validate().errors.length).toBe(1)
+                })
+
+            })
+        })
+        
+        describe('- minutes', () => {
+            describe('- positives', () => {
+                let c
+                beforeEach(() => {
+                    c = new Crontabist()
+                })
+                it('one number', () => {
+                    c.atMinute('3')
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+                it('interval', () => {
+                    c.atMinute('3-30')
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+                it('interval with cadence', () => {
+                    c.atMinute('3-30/2')
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+            })
+
+            describe('- negatives', () => {
+                let c
+                beforeEach(() => {
+                    c = new Crontabist()
+                })
+                it('Minutes are invalid', () => {
+                    c.atMinute('3--30')
+                    expect(c.validate().valid).toBeFalsy()
+                    expect(c.validate().errors.length).toBe(1)
+                })
+
+            })
+        })
+        describe('- hours', () => {
+            describe('- positives', () => {
+                let c
+                beforeEach(() => {
+                    c = new Crontabist()
+                })
+                it('one number', () => {
+                    c.atHour('3')
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+                it('interval', () => {
+                    c.atHour('3-22')
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+                it('interval with cadence', () => {
+                    c.atHour('3-22/3')
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+            })
+
+
+            describe('- negatives', () => {
+                let c
+                beforeEach(() => {
+                    c = new Crontabist()
+                })
+                it('Hours are invalid', () => {
+                    c.atHour('3--30')
+                    expect(c.validate().valid).toBeFalsy()
+                    expect(c.validate().errors.length).toBe(1)
+                })
+
+            })
+        })
+        describe('- dow <> dom', () => { 
+            const c =  new Crontabist()
+            it('dow and dow can be both set', () => {
+                c.over({dom: 12, dow:2})
+                expect(c.validate().valid).toBeFalsy()
+                expect(c.validate().errors.length).toBe(1)
+            })
+        })        
+    })
 })
 
 
