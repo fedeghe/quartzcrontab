@@ -16,35 +16,181 @@ y   [2xxx,]*
 */
 
 const defaults = {
-    s : '0', // seconds
-    i : '0', // minutes
-    h : '0', // seconds
-    dom : '*', // day of month
+    s : '0', // seconds   *   0,1,2,3,4,59   3-45   3-35/5
+    i : '0', // minutes   *   0,1,2,3,4,59   3-45   3-35/5
+    h : '0', // seconds   *   0,1,2,3,4,23   3-23   3-23/5
+    dom : '*', // day of month   *   ?   3/4  12 12,13,15
     dow : '?', // day of week
     m : '*', // month
     y : '*', // year (1970-2099) ...how 1970 :D ??????
 }
 
-// const rawValidators = {
-//     year : y => {
-//         var _y = parseInt(y, 10);
-//         return _y - y === 0
-//             && _y >= 1970
-//             && _y >= 2099
-//     },
-//     month : m => m.match(/(^0?[1-9]$)|(^1[0-2]$)|^(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/)
-// }
+const rx = {
+    asterx: /^\*$/,
+    zeroFiftynine: /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
+    zeroTwentythree: /^([01]\d|2[0-3]|\d)$/,
+    oneThirtyone: /^(?:[012]\d|3[0,1]|[1-9]{1})$/,
+    weekday: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)$/,     /* this belowis exactly oneThirtyone */
+    weekdayAfterX: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\/(?:[012]\d|3[0,1]|[1-9]{1})$/,
+    LW: /^LW?$/,
 
+    //even this uses oneThirtyone
+    Lx: /^(L-[012]\d|3[0,1]|[1-9]{1})$/,
+
+    xL31: /^([012]\d|3[0,1]|[1-9]{1})L$/,
+    xLweekday: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)L$/,
+
+    nthWeekDay: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\#[1-5]{1}$/,
+    // dow/dow related
+    quest: /^(\?)$/,
+    /**
+     * ?
+     * *
+     * x/y : x weekday, y [1-31]
+     * x
+     * x,y,z
+     * x-y/z
+     * L
+     * LW
+     * L-x : x [1-31]
+     * xL: x [1-31]
+     * */
+    dom: /^(\?)|(\*)|()$/,
+    
+    
+    /**
+     * ?
+     * x weekday
+     * x-y weekday
+     * x-y/z weekday
+     * xL weekday
+     * x#y   y-th[1,5] weekday x [1,7]
+     */
+    dow: /^(\?)|$/,
+    
+    month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/,
+    year: /^(20[2-9][0-9])$/,
+
+    // match a valid cadence ()
+    wildCadence: /^\d*$/,
+
+    /**
+     * splits number-number/number (second and third optionals)
+     */
+    splitter: /^([\d,]*)(-(\d*)(\/(\d*))?)?$/
+    // note: to support ranges like MON,SUN or MON-SUN 
+    //      we need a less trivial splitter
+}
+const getRangeValidator = ({mainRx, cadenceRx}) => val => {
+    const v = `${val}`;
+    if (v.match(rx.asterx))return true
+    const s = v.match(rx.splitter);
+    if (!s) return null
+    const starts = s[1].split(/,/),
+        to = s[3],
+        cadence = s[5];
+    return (
+        starts.length &&
+        starts.every(start => start.match(mainRx)) &&
+        (
+            !to || (
+                to.match(mainRx) && (
+                    !cadence ||
+                    !!cadence.match(cadenceRx)
+                )
+            )
+        )
+    )
+}
+const getValidator = rxs => v => rxs.find(r => {
+    if(typeof r === 'function') return r(v)
+    return `${v}`.match(r)
+})
+
+const rx059 = getRangeValidator({
+    mainRx: rx.zeroFiftynine,
+    cadenceRx: rx.zeroFiftynine
+})
+const rx023 = getRangeValidator({
+    mainRx: rx.zeroTwentythree,
+    cadenceRx: rx.zeroTwentythree
+})
+const rx131 = getRangeValidator({
+    mainRx: rx.oneThirtyone,
+    cadenceRx: rx.oneThirtyone
+})
+const rxmonth = getRangeValidator({
+    mainRx: rx.month,
+    cadenceRx: rx.month
+})
+const rxYear = getRangeValidator({
+    mainRx: rx.year,
+    cadenceRx: rx.wildCadence
+})
+const rxWeekday = getRangeValidator({
+    mainRx: rx.weekday,
+    cadenceRx: rx.weekday
+})
+const rxDom = getValidator([
+    rx.oneThirtyone,
+    rx.quest,
+    rx.asterx,
+    rx.weekdayAfterX,
+    rx131,
+    rx.LW,
+    rx.Lx,
+    rx.xL31,
+])
+
+const rxDow = getValidator([
+    rx.quest,
+    rxWeekday,
+    rx.xLweekday,
+    rx.nthWeekDay
+])
+const rawValidators = {
+    second: rx059,
+    minute: rx059,
+    hour: rx023,
+    month: rxmonth,
+    year: rxYear,
+    dom: rxDom,
+    dow: rxDow
+}
+  
+
+
+const validators = {
+
+    // [0-59]
+    // second : s => s
+    //     .split(/-|\/|\,/)
+    //     .every(
+    //         spl => spl.match(rx.zeroFiftynine) || spl.match(rx.asterx)
+    //     ),
+    second: s => rawValidators.second(s),
+    minute : i => rawValidators.minute(i),
+    hour : h => rawValidators.hour(h),
+    month : m => rawValidators.month(m),
+    year: y => rawValidators.year(y),
+    dayOfMonth: d => rawValidators.dom(d),
+    dayOfWeek: d => rawValidators.dow(d)
+}
+
+const fieldCorrelationValidators = [{
+    validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?'),
+    message: 'either dom either dow must contain "?"'
+}]
 
 class CronTabist {
     constructor({
-        s = defaults.s, // seconds
-        i = defaults.i, // minutes
-        h = defaults.h, // seconds
-        dom = defaults.dom, // day of month
-        dow = defaults.dow, // day of week
-        m = defaults.m, // month
-        y = defaults.y, // year
+        s = defaults.s,         // seconds
+        i = defaults.i,         // minutes
+        h = defaults.h,         // seconds
+        dom = defaults.dom,     // day of month
+        dow = defaults.dow,     // day of week
+        m = defaults.m,         // month
+        y = defaults.y,         // year
     } = {}) {
         this.months = { min: 0, max: 11 }
         this.elements = { s, i, h, dom, m, dow, y }
@@ -162,6 +308,9 @@ class CronTabist {
             : this.elements.dom.split(',')
         return this.over({ dom: [...current, dom].join(','), dow: '?' })
     }
+    betweenDaysOfMonth(from, to, every) {
+        return this.over({ dom: `${from}-${to}${every ? `/${every}`: ''}`, dow: '?' })
+    }
     onLastDayOfMonth(){
         return this.over({ dom: 'L', dow: '?' })
     }
@@ -238,21 +387,39 @@ class CronTabist {
     }
 
     validate(){
-        const errors = [],
-            rxSecMinHrs = /^(([0-9,]*)|([0-9]*-[0-9]*))?(\/([0-9]*))?$/;
+        const errors = [];
 
-        // dow and dom cant coexist withouth a ?
-        if (this.elements.dom !== '?' && this.elements.dow !== '?') {
-            errors.push('Dow and Dom cant both have a configuration');
-        }
-        if (!this.elements.s.match(rxSecMinHrs)) {
+        // fieldCorrelationValidators
+        fieldCorrelationValidators.forEach(({
+            validator, message
+        }) => {
+            if(!validator(this.elements)){
+                errors.push(message);
+            }
+        })
+
+        
+        if (!validators.second(this.elements.s)) {
             errors.push('Seconds are not well formatted');
         }
-        if (!this.elements.i.match(rxSecMinHrs)) {
+        if (!validators.minute(this.elements.i)) {
             errors.push('Minutes are not well formatted');
         }
-        if (!this.elements.h.match(rxSecMinHrs)) {
+        if (!validators.hour(this.elements.h)) {
             errors.push('Hours are not well formatted');
+        }
+        if (!validators.month(this.elements.m)) {
+            errors.push('Months are not well formatted');
+        }
+        if (!validators.year(this.elements.y)) {
+            errors.push('Year are not well formatted');
+        }
+
+        if (!validators.dayOfMonth(this.elements.dom)) {
+            errors.push('Dom has unexpected value');
+        }
+        if (!validators.dayOfWeek(this.elements.dow)) {
+            errors.push('Dow has unexpected value');
         }
 
         return {
