@@ -162,7 +162,7 @@ describe('Crontabist', () => {
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('every weekday starting from', () => {
-            c.everyWeekDayStartingFromYDay(3, 15)
+            c.everyWeekDayStartingFromYMonthDay(3, 15)
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
         })
         it('everyWeekDay - num', () => {
@@ -183,45 +183,53 @@ describe('Crontabist', () => {
             c.everyWeekDayAdd('FRI')
             expect(c.out()).toBe('0 0 0 ? * MON,FRI *')
         })
-        it('atDayOfMonth', () => {
-            c.atDayOfMonth(21)
+        it('atMonthDay', () => {
+            c.atMonthDay(21)
             expect(c.out()).toBe('0 0 0 21 * ? *')
         })
-        it('atDayOfMonthAdd', () => {
-            c.atDayOfMonthAdd(13)
-            c.atDayOfMonthAdd(21)
+        it('atMonthDay range', () => {
+            c.atMonthDay('21-29')
+            expect(c.out()).toBe('0 0 0 21-29 * ? *')
+        })
+        it('atMonthDay range with cadence', () => {
+            c.atMonthDay('21-29/2')
+            expect(c.out()).toBe('0 0 0 21-29/2 * ? *')
+        })
+        it('atMonthDayAdd', () => {
+            c.atMonthDayAdd(13)
+            c.atMonthDayAdd(21)
             expect(c.out()).toBe('0 0 0 13,21 * ? *')
         })
-        it('betweenDaysOfMonth', () => {
-            c.betweenDaysOfMonth(12,19)
+        it('betweenMonthDays', () => {
+            c.betweenMonthDays(12,19)
             expect(c.out()).toBe('0 0 0 12-19 * ? *')
         })
-        it('betweenDaysOfMonth with cadence', () => {
-            c.betweenDaysOfMonth(12,19, 2)
+        it('betweenMonthDays with cadence', () => {
+            c.betweenMonthDays(12,19, 2)
             expect(c.out()).toBe('0 0 0 12-19/2 * ? *')
         })
-        it('onLastDayOfMonth', () => {
-            c.onLastDayOfMonth()
+        it('onLastMonthDay', () => {
+            c.onLastMonthDay()
             expect(c.out()).toBe('0 0 0 L * ? *')
         })
-        it('onLastWeekDayOfMonth', () => {
-            c.onLastWeekDayOfMonth()
+        it('onLastMonthWeekDay', () => {
+            c.onLastMonthWeekDay()
             expect(c.out()).toBe('0 0 0 LW * ? *')
         })
-        it('onLastXWeekDayOfMonth', () => {
-            c.onLastXWeekDayOfMonth(2)
+        it('onLastXMonthWeekDay', () => {
+            c.onLastXMonthWeekDay(2)
             expect(c.out()).toBe('0 0 0 ? * 2L *')
         })
-        it('onLastXDayBeforeTheEndOfTheMonth', () => {
-            c.onLastXDayBeforeTheEndOfTheMonth(2)
+        it('onXDayBeforeTheEndOfTheMonth', () => {
+            c.onXDayBeforeTheEndOfTheMonth(2)
             expect(c.out()).toBe('0 0 0 L-2 * ? *')
         })
-        it('onClosestWorkingDayToTheXofTheMonth', () => {
-            c.onClosestWorkingDayToTheXofTheMonth(2)
+        it('onClosestWorkingDayToTheXMonthDay', () => {
+            c.onClosestWorkingDayToTheXMonthDay(2)
             expect(c.out()).toBe('0 0 0 2W * ? *')
         })
-        it('onTheNthWeekDayOfTheMonth', () => {
-            c.onTheNthWeekDayOfTheMonth(2, 4)
+        it('onNWeekDayOfTheMonth', () => {
+            c.onNWeekDayOfTheMonth(2, 4)
             expect(c.out()).toBe('0 0 0 ? * 4#2 *')
         })
     })
@@ -323,7 +331,7 @@ describe('Crontabist', () => {
             c.atSecond(30)
                 .atMinute(0)
                 .atHour(12)
-                .everyWeekDayStartingFromYDay(5, 2)
+                .everyWeekDayStartingFromYMonthDay(5, 2)
             expect(c.out()).toBe('30 0 12 2/5 * ? *')
         })
         it('atSecond atMinute every hour in the 3rd saturday of JAN and FEB on years 2026,2028,2032', () => {
@@ -331,7 +339,7 @@ describe('Crontabist', () => {
                 .atSecondAdd(5)
                 .atMinute(0)
                 .everyHour()
-                .onTheNthWeekDayOfTheMonth(3, 7)
+                .onNWeekDayOfTheMonth(3, 7)
                 .atMonthAdd('JAN')
                 .atMonthAdd('FEB')
                 .atYearAdd(2026)

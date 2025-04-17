@@ -104,7 +104,7 @@ class CronTabist {
     everyDay(){
         return this.over({ dom: '*'})
     }
-    everyWeekDayStartingFromYDay(wd, start){
+    everyWeekDayStartingFromYMonthDay(wd, start){
         return this.over({ dom: `${start}/${wd}`, dow: '?'})
     }
     everyWeekDay(d) {
@@ -116,34 +116,34 @@ class CronTabist {
             : this.elements.dow.split(',')
         return this.over({ dom: '?', dow: [...current, d].map(c=>`${c}`).join(',') })
     }
-    atDayOfMonth(dom) {
+    atMonthDay(dom) {
         return this.over({ dom, dow: '?' })
     }
-    atDayOfMonthAdd(dom) {
+    atMonthDayAdd(dom) {
         var current = this.elements.dom === defaults.dom
             ? []
             : this.elements.dom.split(',')
         return this.over({ dom: [...current, dom].map(c=>`${c}`).join(','), dow: '?' })
     }
-    betweenDaysOfMonth(from, to, every) {
+    betweenMonthDays(from, to, every) {
         return this.over({ dom: `${from}-${to}${every ? `/${every}`: ''}`, dow: '?' })
     }
-    onLastDayOfMonth(){
+    onLastMonthDay(){
         return this.over({ dom: 'L', dow: '?' })
     }
-    onLastWeekDayOfMonth(){
+    onLastMonthWeekDay(){
         return this.over({ dom: 'LW', dow: '?' })
     }
-    onLastXWeekDayOfMonth(x){
+    onLastXMonthWeekDay(x){
         return this.over({ dom: '?', dow: `${x}L` })
     }
-    onLastXDayBeforeTheEndOfTheMonth(x){
+    onXDayBeforeTheEndOfTheMonth(x){
         return this.over({ dom:`L-${x}`, dow: '?' })
     }
-    onClosestWorkingDayToTheXofTheMonth(x) {
+    onClosestWorkingDayToTheXMonthDay(x) {
         return this.over({ dom:`${x}W`, dow: '?' })
     }
-    onTheNthWeekDayOfTheMonth(n,wd) {
+    onNWeekDayOfTheMonth(n,wd) {
         return this.over({ dom:'?', dow: `${wd}#${n}` })
     }
 

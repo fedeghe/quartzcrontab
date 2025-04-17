@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
 
 
-# crontabbed (quartz)
+# quartzcrontab
 <pre style="font-size:2em">s i h dom m dow y</pre>
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to help to programmatically create those cron expressions.
@@ -27,7 +27,7 @@ console.log(qct.out()) // 0 0 0 * ? * *
 // but default values can be changed when calling the constructor
 qct.atHour(12)
     .atHourAdd(22)
-    .onLastWeekDayOfMonth()
+    .onLastMonthDay()
     .everyXYears(5)
 
 console.log(qct.out()) 
@@ -67,7 +67,6 @@ no explanation needed
 every `x` minutes (starting from `start`)
 
 - `atMinute(min)`  
-no explanation needed;  
 resets any previous value set there;  
 can be called passing multiple comma separated values within `[0, 59]`
 
@@ -99,73 +98,81 @@ all hours from `from` to `to` hours; optionally set the cadence passing an `ever
 - `everyDay()`  
 no explanation needed
 
-- `everyWeekDayStartingFromYDay(x, y)`  
+- `everyWeekDayStartingFromYMonthDay(x, y)`  
 every `x` `[1-7][SUN-SAT]` day of the week starting from `y`th day `[1-31]` of the target months. 
 
 - `everyWeekDay(wd)`  
 every `wd` `[1-7][SUN-SAT]`; resets any previous value set there; even here more than one comma separated value can be passed. 
 
 - `everyWeekDayAdd(wd)`  
-every `wd` `[1-7][SUN-SAT]`; adds one more weekday in the current (default empty) list.
+every `wd` in `[1,7]` or (...and corresponding to) `{SUN,MON,TUE,WED,THU,FRI,SAT}`; adds one more weekday in the current (default empty) list.
 
-- `atDayOfMonth(dom)`  
-to be documented
+- `atMonthDay(dom)`  
+sets the target day of month, can be: 
+    - *: all days
+    - n: with n in `[1,31]`
+    - n,m,..: comma separated values all in `[1,31]`
+    - n-m: from `n` to `m` (in `[1,31]`)
+    - n-m/c: from `n` to `m` (in `[1,31]`) with `c` cadence
+for the last two examples there's also an on purpose method named `betweenMonthDays`
 
-- `atDayOfMonthAdd(dom)`  
-to be documented
+- `atMonthDayAdd(dom)`  
+this one allows to add one or more days to the existing target  
 
-- `betweenDaysOfMonth(from, to, every)`  
-to be documented
+- `betweenMonthDays(from, to, every)`  
+set target days from `from` to `to` with, if passed > 1, a cadence bigger than 1
 
-- `onLastDayOfMonth`  
-to be documented
+- `onLastMonthDay`  
+set the target day to the last day of the target months
 
-- `onLastWeekDayOfMonth`  
-to be documented
+- `onLastMonthWeekDay`  
+set as target day the last weekday of the month (working day)
 
-- `onLastXWeekDayOfMonth(x)`  
-to be documented
+- `onLastXMonthWeekDay(x)`  
+set as target day the last selected week day of the month
 
-- `onLastXDayBeforeTheEndOfTheMonth(x)`  
-to be documented
+- `onXDayBeforeTheEndOfTheMonth(n)`  
+set as target the X-th day before the end of the month
 
-- `onClosestWorkingDayToTheXofTheMonth(x)`  
-to be documented
+- `onClosestWorkingDayToTheXMonthDay(x)`  
+set as target the nearest weekday (working day) to the x-th day of the month
 
-- `onTheNthWeekDayOfTheMonth(n, wd)`  
-to be documented
+- `onNWeekDayOfTheMonth(n, wd)`  
+set as target the n-th week day of the month
 
 ### months  
 - `everyMonth()`  
-to be documented
+no explanation needed
 
 - `everyXMonths(freq, start)`  
-to be documented
+every `freq` months (starting from `start`)
 
 - `atMonth(m)`  
-to be documented
+resets any previous value set there;  
+can be called passing multiple comma separated values within `[1, 12]` or [JAN -> DEC]
 
 - `atMonthAdd(m)`  
-to be documented
+adds `m` to the list of already set months; as in the previous can pass multiple values comma separated.
 
 - `betweenMonths(from, to, every)`  
-to be documented
+all months from `from` month to `to` month; optionally set the cadence passing an `every` integer. 
 
 ### years  
 - `everyYear()`  
-to be documented
+no explanation needed
 
 - `everyXYears(freq, start)`  
-to be documented
+every `x` years (starting from `start`)
 
 - `atYear(y)`  
-to be documented
+resets any previous value set there;  
+can be called passing multiple comma separated values within `[1970, 2099]`
 
 - `atYearAdd(y)`  
-to be documented
+adds `min` to the list of already set minutes; as in the previous can pass multiple values comma separated, within `[1970, 2099]`
 
 - `betweenYears(from, to, every)`  
-to be documented
+all years from `from` year to `to` year; optionally set the cadence passing an `every` integer.  
 
 
 
