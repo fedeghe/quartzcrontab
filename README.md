@@ -1,5 +1,7 @@
 
 
+[![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
+
 
 # crontabbed (quartz)
 <pre style="font-size:2em">s i h dom m dow y</pre>
