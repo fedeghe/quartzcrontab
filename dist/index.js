@@ -77,7 +77,7 @@ const rx = {
     /**
      * splits number-number/number (second and third optionals)
      */
-    splitter: /^([\d,]*)(-(\d*)(\/(\d*))?)?$/
+    splitter: /^([\d,\w]*)(-([\d\w]*)(\/([\d\w]*))?)?$/
     // note: to support ranges like MON,SUN or MON-SUN 
     //      we need a less trivial splitter
 }

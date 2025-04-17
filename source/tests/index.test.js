@@ -156,18 +156,27 @@ describe('Crontabist', () => {
             c.everyDay()
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
-        it('everyDay', () => {
+        it('every weekday starting from', () => {
             c.everyXDayStartingFromYDay(3, 15)
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
         })
-        it('everyDayOfWeek', () => {
+        it('everyDayOfWeek - num', () => {
             c.everyDayOfWeek(4)
             expect(c.out()).toBe('0 0 0 ? * 4 *')
         })
-        it('everyDayOfWeekAdd', () => {
+        it('everyDayOfWeek - label', () => {
+            c.everyDayOfWeek('MON')
+            expect(c.out()).toBe('0 0 0 ? * MON *')
+        })
+        it('everyDayOfWeekAdd - num', () => {
             c.everyDayOfWeekAdd(2)
             c.everyDayOfWeekAdd(4)
             expect(c.out()).toBe('0 0 0 ? * 2,4 *')
+        })
+        it('everyDayOfWeekAdd - label', () => {
+            c.everyDayOfWeekAdd('MON')
+            c.everyDayOfWeekAdd('FRI')
+            expect(c.out()).toBe('0 0 0 ? * MON,FRI *')
         })
         it('atDayOfMonth', () => {
             c.atDayOfMonth(21)
@@ -611,17 +620,27 @@ describe('Crontabist', () => {
                     expect(c.validate().errors.length).toBe(0)
                 })
                 it('weekday - label ', () => {
-                    c.over({dom: '?', dow:'4'})
+                    c.over({dom: '?', dow:'FRI'})
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
-                it('weekdays', () => {
+                it('weekdays - num', () => {
                     c.over({dom: '?', dow:'1,3'})
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
-                it('weekdays range', () => {
+                it('weekdays - label', () => {
+                    c.over({dom: '?', dow:'MON,FRI'})
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+                it('weekdays range - num', () => {
                     c.over({dom: '?', dow:'1-5'})
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+                it('weekdays range - label', () => {
+                    c.over({dom: '?', dow:'TUE-SUN'})
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
@@ -630,14 +649,29 @@ describe('Crontabist', () => {
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
+                it('weekdays range with cadence - label', () => {
+                    c.over({dom: '?', dow:'MON-FRI/2'})
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
                 
-                it('xL', () => {
+                it('xL - num', () => {
                     c.over({dom: '?', dow:'3L'})
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
-                it('x#y', () => {
+                it('xL - label', () => {
+                    c.over({dom: '?', dow:'SUNL'})
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+                it('x#y - num', () => {
                     c.over({dom: '?', dow:'3#2'})
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.validate().errors.length).toBe(0)
+                })
+                it('x#y - label', () => {
+                    c.over({dom: '?', dow:'MON#2'})
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
@@ -657,7 +691,6 @@ describe('Crontabist', () => {
             })
              
         })
-        
         describe('- months', () => {
             describe('- positives', () => {
                 let c
@@ -716,7 +749,6 @@ describe('Crontabist', () => {
 
             })
         })
-
         describe('- years', () => {
             describe('- positives', () => {
                 let c
@@ -775,8 +807,6 @@ describe('Crontabist', () => {
 
             })
         })
-
-
         describe('correlations', () => {
             describe('- dow <> dom', () => { 
                 describe('- negatives', () => {
@@ -792,10 +822,7 @@ describe('Crontabist', () => {
                     })
                 })
             })
-        })
-
-
-                
+        })      
     })
 })
 
