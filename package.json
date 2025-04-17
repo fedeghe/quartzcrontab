@@ -1,7 +1,7 @@
 {
   "name": "crontabbed",
   "version": "0.0.0",
-  "main": "dist/index.js",
+  "main": "dist/min/index.js",
   "repository": {
     "type": "git",
     "url": "https://fedeghe@github.com/fedeghe/crontabbed.git"
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "malta": "^4.1.41",
-    "malta-jest": "^0.0.1"
+    "malta-jest": "^0.0.1",
+    "malta-millijs": "^1.0.5"
   }
 }

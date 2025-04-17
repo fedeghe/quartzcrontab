@@ -1608,6 +1608,11 @@ malta-jest@^0.0.1:
   dependencies:
     jest-cli "^29.7.0"
 
+malta-millijs@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/malta-millijs/-/malta-millijs-1.0.5.tgz#ce98ca3034bd70577adee1d01e07f92ec6c16252"
+  integrity sha512-hVj28USat0scHxUosf4fJCrAPB1Wi79ogOyaWpEyDmGIabJwr5W0kM0CAoOXqhB2C9XYyWfYv23wx0fkWmIhhA==
+
 malta@^4.1.41:
   version "4.1.41"
   resolved "https://registry.yarnpkg.com/malta/-/malta-4.1.41.tgz#de88e424e0b623d7b8004afe19fff526b0eb6abe"

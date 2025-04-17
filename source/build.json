@@ -1,8 +1,11 @@
 {
     "EXE": [
         "rm -rf dist tests",
-        "mkdir dist tests"
+        "mkdir -p dist/min tests"
     ],
-    "source/index.js" : "dist -plugins=malta-jest[argz:'--rootDir=tests'] -options=verbose:2",
+    "source/index.js" : [
+        "dist -plugins=malta-jest[argz:'--rootDir=tests'] -options=verbose:2",
+        "dist/min -plugins=malta-jest[argz:'--rootDir=tests']...malta-millijs -options=verbose:2"
+    ],
     "source/tests/*.js" : "tests -plugins=malta-jest[argz:'--rootDir=tests']"
 }

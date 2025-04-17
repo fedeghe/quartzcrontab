@@ -78,8 +78,14 @@ const rx = {
      * splits number-number/number (second and third optionals)
      */
     splitter: /^([\d,\w]*)(-([\d\w]*)(\/([\d\w]*))?)?$/
-    // note: to support ranges like MON,SUN or MON-SUN 
-    //      we need a less trivial splitter
+    /**
+     * to support ranges like MON,SUN or MON-SUN 
+     * the quite relaxed \w* was used here
+     * which is too relaxed,
+     * 
+     * validation on function parameters covers that edge
+     */
+    
 }
 const getRangeValidator = ({mainRx, cadenceRx}) => val => {
     const v = `${val}`;
