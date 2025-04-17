@@ -2,7 +2,9 @@
 const {
     validators,
     fieldCorrelationValidators,
-    defaults
+    defaults,
+    yearNow,
+    removeSpaces
 } = require('./utils');
 
 class CronTabist {
@@ -18,6 +20,7 @@ class CronTabist {
         this.months = { min: 0, max: 11 }
         this.elements = { s, i, h, dom, m, dow, y }
     }
+    
 
     static getRanger(max) {
         return n => {
@@ -33,13 +36,13 @@ class CronTabist {
 
     over({ s, i, h, dom, m, dow, y }) {
         this.elements = {
-            s: s ?? this.elements.s,
-            i: i ?? this.elements.i,
-            h: h ?? this.elements.h,
-            dom: dom ?? this.elements.dom,
-            m: m ?? this.elements.m,
-            dow: dow ?? this.elements.dow,
-            y: y ?? this.elements.y,
+            s: removeSpaces(s ?? this.elements.s),
+            i: removeSpaces(i ?? this.elements.i),
+            h: removeSpaces(h ?? this.elements.h),
+            dom: removeSpaces(dom ?? this.elements.dom),
+            m: removeSpaces(m ?? this.elements.m),
+            dow: removeSpaces(dow ?? this.elements.dow),
+            y: removeSpaces(y ?? this.elements.y),
         }
         return this;
     }
@@ -51,11 +54,11 @@ class CronTabist {
         return this.over({ s: `${start}/${freq}` })
     }
     atSecond(s) {
-        return this.over({ s })
+        return this.over({ s: `${s}` })
     }
     atSecondAdd(s) {
         var current = this.elements.s.split(',')
-        return this.over({ s: [...current, s].join(',') })
+        return this.over({ s: [...current, s].map(c=>`${c}`).join(',') })
     }
     betweenSeconds(from, to, every) {
         return this.over({ s: `${from}-${to}${every ? `/${every}`: ''}` })
@@ -69,11 +72,11 @@ class CronTabist {
         return this.over({ i: `${start}/${freq}` })
     }
     atMinute(i) {
-        return this.over({ i })
+        return this.over({ i: `${i}` })
     }
     atMinuteAdd(i) {
         var current = this.elements.i.split(',')
-        return this.over({ i: [...current, i].join(',') })
+        return this.over({ i: [...current, i].map(c=>`${c}`).join(',') })
     }
     betweenMinutes(from, to, every) {
         return this.over({ i: `${from}-${to}${every ? `/${every}` : ''}` })
@@ -87,11 +90,11 @@ class CronTabist {
         return this.over({ h: `${start}/${freq}` })
     }
     atHour(h) {
-        return this.over({ h })
+        return this.over({ h: `${h}` })
     }
     atHourAdd(h) {
         var current = this.elements.h.split(',')
-        return this.over({ h: [...current, h].join(',') })
+        return this.over({ h: [...current, h].map(c=>`${c}`).join(',') })
     }
     betweenHours(from, to, every) {
         return this.over({ h: `${from}-${to}${every ? `/${every}`: ''}` })
@@ -101,17 +104,17 @@ class CronTabist {
     everyDay(){
         return this.over({ dom: '*'})
     }
-    everyXDayStartingFromYDay(x, y){
-        return this.over({ dom: `${y}/${x}`, dow: '?'})
+    everyWeekDayStartingFromYDay(wd, start){
+        return this.over({ dom: `${start}/${wd}`, dow: '?'})
     }
-    everyDayOfWeek(d) {
-        return this.over({ dom: '?', dow: d })
+    everyWeekDay(d) {
+        return this.over({ dom: '?', dow: `${d}` })
     }   
-    everyDayOfWeekAdd(d) {
+    everyWeekDayAdd(d) {
         var current = this.elements.dow === defaults.dow
             ? []
             : this.elements.dow.split(',')
-        return this.over({ dom: '?', dow: [...current, d].join(',') })
+        return this.over({ dom: '?', dow: [...current, d].map(c=>`${c}`).join(',') })
     }
     atDayOfMonth(dom) {
         return this.over({ dom, dow: '?' })
@@ -120,7 +123,7 @@ class CronTabist {
         var current = this.elements.dom === defaults.dom
             ? []
             : this.elements.dom.split(',')
-        return this.over({ dom: [...current, dom].join(','), dow: '?' })
+        return this.over({ dom: [...current, dom].map(c=>`${c}`).join(','), dow: '?' })
     }
     betweenDaysOfMonth(from, to, every) {
         return this.over({ dom: `${from}-${to}${every ? `/${every}`: ''}`, dow: '?' })
@@ -152,13 +155,13 @@ class CronTabist {
         return this.over({ m: `${start}/${freq}` })
     }
     atMonth(m) {
-        return this.over({ m })
+        return this.over({ m: `${m}` })
     }
     atMonthAdd(m) {
         var current = this.elements.m === defaults.m
             ? []
             : this.elements.m.split(',')
-        return this.over({ m: [...current, m].join(',') })
+        return this.over({ m: [...current, m].map(c=>`${c}`).join(',') })
     }
     betweenMonths(from, to, every) {
         return this.over({ m: `${from}-${to}${every ? `/${every}` : ''}` })
@@ -168,17 +171,17 @@ class CronTabist {
     everyYear() {
         return this.over({ y: '*'})
     }
-    everyXYears({freq, start = 0}) {
+    everyXYears({freq, start = yearNow}) {
         return this.over({ y: `${start}/${freq}` })
     }
     atYear(y) {
-        return this.over({ y })
+        return this.over({ y: `${y}` })
     }
     atYearAdd(y) {
         var current = this.elements.y === defaults.y
             ? []
             : this.elements.y.split(',')
-        return this.over({ y: [...current, y].join(',') })
+        return this.over({ y: [...current, y].map(c=>`${c}`).join(',') })
     }
     betweenYears(from, to, every) {
         return this.over({ y: `${from}-${to}${every ? `/${every}` : ''}` })

@@ -52,10 +52,15 @@ describe('Crontabist', () => {
             c.atSecond('13,15,19')
             expect(c.out()).toBe('13,15,19 0 0 * * ? *')
         })
-        it('atSecondAdd', () => {
+        it('atSecondAdd - single', () => {
             c.atSecondAdd(13)
             c.atSecondAdd(19)
             expect(c.out()).toBe('0,13,19 0 0 * * ? *')
+        })
+        it('atSecondAdd - multiple', () => {
+            c.atSecondAdd(12)
+            c.atSecondAdd('13,19')
+            expect(c.out()).toBe('0,12,13,19 0 0 * * ? *')
         })
         it('betweenSeconds', () => {
             c.betweenSeconds(13,19)
@@ -157,25 +162,25 @@ describe('Crontabist', () => {
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('every weekday starting from', () => {
-            c.everyXDayStartingFromYDay(3, 15)
+            c.everyWeekDayStartingFromYDay(3, 15)
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
         })
-        it('everyDayOfWeek - num', () => {
-            c.everyDayOfWeek(4)
+        it('everyWeekDay - num', () => {
+            c.everyWeekDay(4)
             expect(c.out()).toBe('0 0 0 ? * 4 *')
         })
-        it('everyDayOfWeek - label', () => {
-            c.everyDayOfWeek('MON')
+        it('everyWeekDay - label', () => {
+            c.everyWeekDay('MON')
             expect(c.out()).toBe('0 0 0 ? * MON *')
         })
-        it('everyDayOfWeekAdd - num', () => {
-            c.everyDayOfWeekAdd(2)
-            c.everyDayOfWeekAdd(4)
+        it('everyWeekDayAdd - num', () => {
+            c.everyWeekDayAdd(2)
+            c.everyWeekDayAdd(4)
             expect(c.out()).toBe('0 0 0 ? * 2,4 *')
         })
-        it('everyDayOfWeekAdd - label', () => {
-            c.everyDayOfWeekAdd('MON')
-            c.everyDayOfWeekAdd('FRI')
+        it('everyWeekDayAdd - label', () => {
+            c.everyWeekDayAdd('MON')
+            c.everyWeekDayAdd('FRI')
             expect(c.out()).toBe('0 0 0 ? * MON,FRI *')
         })
         it('atDayOfMonth', () => {
@@ -271,8 +276,10 @@ describe('Crontabist', () => {
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('everyXYears every x from 0', () => {
+            var d = new Date(),
+                y = d.getFullYear();
             c.everyXYears({ freq: 6 })
-            expect(c.out()).toBe('0 0 0 * * ? 0/6')
+            expect(c.out()).toBe(`0 0 0 * * ? ${y}/6`)
         })
         it('everyXYears every x from y', () => {  
             c.everyXYears({ freq: 6, start:2025 })
@@ -316,7 +323,7 @@ describe('Crontabist', () => {
             c.atSecond(30)
                 .atMinute(0)
                 .atHour(12)
-                .everyXDayStartingFromYDay(5, 2)
+                .everyWeekDayStartingFromYDay(5, 2)
             expect(c.out()).toBe('30 0 12 2/5 * ? *')
         })
         it('atSecond atMinute every hour in the 3rd saturday of JAN and FEB on years 2026,2028,2032', () => {
@@ -344,6 +351,13 @@ describe('Crontabist', () => {
                 .atMinute('15-45/5')
                 .atHour('12-23/3')
                 .atMonth('3-10/2')
+            expect(c.out()).toBe('3-30/2 15-45/5 12-23/3 * 3-10/2 ? *')
+        })
+        it('utils.removeSpaces', () => {
+            c.atSecond('3 - 30 / 2')
+                .atMinute('15 - 45 / 5')
+                .atHour('12 - 2 3 / 3')
+                .atMonth('3 - 1 0 / 2')
             expect(c.out()).toBe('3-30/2 15-45/5 12-23/3 * 3-10/2 ? *')
         })
     })

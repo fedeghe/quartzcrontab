@@ -16,16 +16,15 @@ y   [2xxx,]*
 */
 
 const defaults = {
-    s : '0', // seconds   *   0,1,2,3,4,59   3-45   3-35/5
-    i : '0', // minutes   *   0,1,2,3,4,59   3-45   3-35/5
-    h : '0', // seconds   *   0,1,2,3,4,23   3-23   3-23/5
-    dom : '*', // day of month   *   ?   3/4  12 12,13,15
-    dow : '?', // day of week
-    m : '*', // month
-    y : '*', // year (1970-2099) ...how 1970 :D ??????
-}
-
-const rx = {
+        s : '0', // seconds   *   0,1,2,3,4,59   3-45   3-35/5
+        i : '0', // minutes   *   0,1,2,3,4,59   3-45   3-35/5
+        h : '0', // seconds   *   0,1,2,3,4,23   3-23   3-23/5
+        dom : '*', // day of month   *   ?   3/4  12 12,13,15
+        dow : '?', // day of week
+        m : '*', // month
+        y : '*', // year (1970-2099) ...how 1970 :D ??????
+    },
+    rx = {
     asterx: /^\*$/,
     zeroFiftynine: /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
     zeroTwentythree: /^([01]\d|2[0-3]|\d)$/,
@@ -86,8 +85,8 @@ const rx = {
      * validation on function parameters covers that edge
      */
     
-}
-const getRangeValidator = ({mainRx, cadenceRx}) => val => {
+    },
+    getRangeValidator = ({mainRx, cadenceRx}) => val => {
     const v = `${val}`;
     if (v.match(rx.asterx)) return true
     const s = v.match(rx.splitter);
@@ -107,37 +106,36 @@ const getRangeValidator = ({mainRx, cadenceRx}) => val => {
             )
         )
     )
-}
-const getValidator = rxs => v => rxs.find(r => {
+    },
+    getValidator = rxs => v => rxs.find(r => {
     if(typeof r === 'function') return r(v)
     return `${v}`.match(r)
-})
-
-const rx059 = getRangeValidator({
+    }),
+    rx059 = getRangeValidator({
     mainRx: rx.zeroFiftynine,
     cadenceRx: rx.zeroFiftynine
-})
-const rx023 = getRangeValidator({
+    }),
+    rx023 = getRangeValidator({
     mainRx: rx.zeroTwentythree,
     cadenceRx: rx.zeroTwentythree
-})
-const rx131 = getRangeValidator({
+    }),
+    rx131 = getRangeValidator({
     mainRx: rx.oneThirtyone,
     cadenceRx: rx.oneThirtyone
-})
-const rxmonth = getRangeValidator({
+    }),
+    rxmonth = getRangeValidator({
     mainRx: rx.month,
     cadenceRx: rx.month
-})
-const rxYear = getRangeValidator({
+    }),
+    rxYear = getRangeValidator({
     mainRx: rx.year,
     cadenceRx: rx.wildCadence
-})
-const rxWeekday = getRangeValidator({
+    }),
+    rxWeekday = getRangeValidator({
     mainRx: rx.weekday,
     cadenceRx: rx.weekday
-})
-const rxDom = getValidator([
+    }),
+    rxDom = getValidator([
     rx.oneThirtyone,
     rx.quest,
     rx.asterx,
@@ -146,15 +144,14 @@ const rxDom = getValidator([
     rx.LW,
     rx.Lx,
     rx.xL31,
-])
-
-const rxDow = getValidator([
+    ]),
+    rxDow = getValidator([
     rx.quest,
     rxWeekday,
     rx.xLweekday,
     rx.nthWeekDay
-])
-const validators = {
+    ]),
+    validators = {
     second: rx059,
     minute: rx059,
     hour: rx023,
@@ -162,16 +159,18 @@ const validators = {
     year: rxYear,
     dayOfMonth: rxDom,
     dayOfWeek: rxDow
-}
-
-
-const fieldCorrelationValidators = [{
+    },
+    fieldCorrelationValidators = [{
     validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?'),
     message: 'either dom either dow must contain "?"'
-}]
-
+    }],
+    now = new Date(),
+    yearNow = now.getFullYear(),
+    removeSpaces = s => `${s}`.replace(/\s/mg, '');
 module.exports = {
     validators,
     fieldCorrelationValidators,
-    defaults
+    defaults,
+    yearNow,
+    removeSpaces
 }
