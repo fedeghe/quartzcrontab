@@ -76,9 +76,7 @@ adds `min` to the list of already set minutes (0 there by default); as in the pr
 - `betweenMinutes(from, to, every)`  
 all minutes from `from` to `to` minutes; optionally set the cadence passing an `every` integer.  
 
-
-### hours
-
+### hours  
 - `everyHour()`  
 no explanation needed
 
@@ -96,7 +94,7 @@ adds `h` to the list of already set hours (0 there by default); as in the previo
 - `betweenHours(from, to, every)`  
 all hours from `from` to `to` hours; optionally set the cadence passing an `every` integer.  
 
-### day of month / day of week
+### day of month / day of week  
 - `everyDay()`  
 no explanation needed
 
@@ -109,10 +107,64 @@ every `wd` [1-7][SUN,SAT]; resets any previous value set there; even here more t
 - `everyWeekDayAdd(wd)`  
 every `wd` [1-7][SUN,SAT]; adds one more weekday in the current (default empty) list.
 
-### months
+- `atDayOfMonth(dom)`  
+to be documented
 
+- `atDayOfMonthAdd(dom)`  
+to be documented
 
-### years
+- `betweenDaysOfMonth(from, to, every)`  
+to be documented
+
+- `onLastDayOfMonth`  
+to be documented
+
+- `onLastWeekDayOfMonth`  
+to be documented
+
+- `onLastXWeekDayOfMonth(x)`  
+to be documented
+
+- `onLastXDayBeforeTheEndOfTheMonth(x)`  
+to be documented
+
+- `onClosestWorkingDayToTheXofTheMonth(x)`  
+to be documented
+
+- `onTheNthWeekDayOfTheMonth(n, wd)`  
+to be documented
+
+### months  
+- `everyMonth()`  
+to be documented
+
+- `everyXMonths(freq, start)`  
+to be documented
+
+- `atMonth(m)`  
+to be documented
+
+- `atMonthAdd(m)`  
+to be documented
+
+- `betweenMonths(from, to, every)`  
+to be documented
+
+### years  
+- `everyYear()`  
+to be documented
+
+- `everyXYears(freq, start)`  
+to be documented
+
+- `atYear(y)`  
+to be documented
+
+- `atYearAdd(y)`  
+to be documented
+
+- `betweenYears(from, to, every)`  
+to be documented
 
 
 
