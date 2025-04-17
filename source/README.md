@@ -18,19 +18,19 @@ Compared to [cron][cron], [Quartz scheduler][quartz] offers in addition the abil
 
 ## example
 ``` js
-const Crontabbed = require('crontabbed');
+const QuartzCrontab = require('quartzcrontab');
 
-const ct = new Crontabbed()
-console.log(ct.out()) // 0 0 0 * ? * *
+const qct = new QuartzCrontab()
+console.log(qct.out()) // 0 0 0 * ? * *
 // thus the default is
 // at midnight of everyday
 // but default values can be changed when calling the constructor
-ct.atHour(12)
+qct.atHour(12)
     .atHourAdd(22)
     .onLastWeekDayOfMonth()
     .everyXYears(5)
 
-console.log(ct.out()) 
+console.log(qct.out()) 
 /* 0 0 12,22 LW * ? 2025/5
 
 At second :00, at minute :00, at 12pm and 22pm, on the last weekday of the month, every month, every 5 years starting in 2025
