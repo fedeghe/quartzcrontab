@@ -6,7 +6,7 @@
 # quartzcrontab
 <pre style="font-size:2em">s i h dom m dow y</pre>
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
-That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to help to programmatically create those cron expressions.
+That additional freedom clearly maps into less trivial composition for the cron strings, this library **aims to help to programmatically create those cron expressions**.
 
 
 Compared to [cron][cron], [Quartz scheduler][quartz] offers in addition the ability to target:
