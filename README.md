@@ -35,6 +35,16 @@ console.log(qct.out())
 
 At second :00, at minute :00, at 12pm and 22pm, on the last weekday of the month, every month, every 5 years starting in 2025
 */
+
+/*
+alternatively the cron expression is also returned
+as the _toString_ result og the class instance
+and that can be done in quite some ways
+*/
+console.log(qct.toString()) 
+console.log(''+qct) 
+console.log(String(qct)) 
+console.log(`${qct}`) 
 ```
 
 

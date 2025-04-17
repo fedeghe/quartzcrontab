@@ -261,6 +261,7 @@ class CronTabist {
             .filter(e => e !== undefined && e !== null)
             .join(' ')
     }
+    toString = this.out;
 
 }
 

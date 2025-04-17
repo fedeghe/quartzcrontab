@@ -25,6 +25,13 @@ describe('Crontabist', () => {
             const c = new Crontabist({ s:'*', i: '*', h:'*' })
             expect(c.out()).toBe('* * * * * ? *')
         })
+        it('should toString as expected', () => {
+            const c = new Crontabist({ s:'*', i: '*', h:'*' })
+            expect(c.toString()).toBe('* * * * * ? *')
+            expect(c+'').toBe('* * * * * ? *')
+            expect(String(c)).toBe('* * * * * ? *')
+            expect(`${c}`).toBe('* * * * * ? *')
+        })
     })
     
     describe('seconds', () => {
@@ -379,7 +386,6 @@ describe('Crontabist', () => {
             c = new Crontabist()
         })
         it('default', () => {
-            
             expect(c.describe()).toBe('every second of every day of every year')
         })
     })
@@ -449,9 +455,17 @@ describe('Crontabist', () => {
                     c = new Crontabist()
                 })
                 it('Seconds are invalid', () => {
-                    c.atSecond('3--30')
-                    expect(c.validate().valid).toBeFalsy()
-                    expect(c.validate().errors.length).toBe(1)
+                    [
+                        -1, 60,
+                        '3--30', 'a', '-', '-1',
+                        '', /^$/, () => {},
+                    ].forEach(
+                        v => {
+                            c.atSecond(v)
+                            expect(c.validate().valid).toBeFalsy()
+                            expect(c.validate().errors.length).toBe(1)
+                        }
+                    )
                 })
 
             })
@@ -495,9 +509,17 @@ describe('Crontabist', () => {
                     c = new Crontabist()
                 })
                 it('Minutes are invalid', () => {
-                    c.atMinute('3--30')
-                    expect(c.validate().valid).toBeFalsy()
-                    expect(c.validate().errors.length).toBe(1)
+                    [
+                        -1, 60,
+                        '3--30', 'a', '-', '-1',
+                        '', /^$/, () => {},
+                    ].forEach(
+                        v => {
+                            c.atMinute(v)
+                            expect(c.validate().valid).toBeFalsy()
+                            expect(c.validate().errors.length).toBe(1)
+                        }
+                    )
                 })
 
             })
@@ -542,70 +564,43 @@ describe('Crontabist', () => {
                     c = new Crontabist()
                 })
                 it('Hours are invalid', () => {
-                    c.atHour('3--30')
-                    expect(c.validate().valid).toBeFalsy()
-                    expect(c.validate().errors.length).toBe(1)
+                    [
+                        -1, 24,
+                        '3--30', 'a', '-', '-1',
+                        '', /^$/, () => {},
+                    ].forEach(
+                        v => {
+                            c.atHour(v)
+                            expect(c.validate().valid).toBeFalsy()
+                            expect(c.validate().errors.length).toBe(1)
+                        }
+                    )
                 })
 
             })
         })
         describe('- dom', () => { 
-
             describe('- positives', () => {
                 let c
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('?', () => {
-                    c.over({dom: '?', dow:2})
+                test.each([
+                    ['?', {dom: '?', dow:2}],
+                    ['*', {dom: '*', dow:'?'}],
+                    ['weekday/[1-31]', {dom: '3/21', dow:'?'}],
+                    ['weekday', {dom: '3', dow:'?'}],
+                    ['weekdays', {dom: '2,3,4', dow:'?'}],
+                    ['weekdays/cadence', {dom: '1-5/2', dow:'?'}],
+                    ['L', {dom: 'L', dow:'?'}],
+                    ['LW', {dom: 'LW', dow:'?'}],
+                    ['L-x', {dom: 'L-12', dow:'?'}],
+                    ['xL', {dom: '13L', dow:'?'}],
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
-                })
-                it('*', () => {
-                    c.over({dom: '*', dow:'?'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekday/[1-31]', () => {
-                    c.over({dom: '3/21', dow:'?'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekday', () => {
-                    c.over({dom: '3', dow:'?'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekdays', () => {
-                    c.over({dom: '2,3,4', dow:'?'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekdays/cadence', () => {
-                    c.over({dom: '1-5/2', dow:'?'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('L', () => {
-                    c.over({dom: 'L', dow:'?'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('LW', () => {
-                    c.over({dom: 'LW', dow:'?'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('L-x', () => {
-                    c.over({dom: 'L-12', dow:'?'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('xL', () => {
-                    c.over({dom: '13L', dow:'?'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
+                }) 
             })
             
             describe('- negatives', () => {
@@ -613,12 +608,22 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('out of expected range', () => {
-                    c.over({dom: 42})
+                test.each([
+                    ['too big', {dom: 32}],
+                    ['too small', {dom: -1}],
+                    ['still too small', {dom: 0}],
+                    ['unexpected I', {dom: 'I'}],
+                    ['wrong suffix', {dom: 'Lx'}],
+                    ['wrong order', {dom: 'L1'}],
+                    ['too small prefix', {dom: '0L'}],
+                    ['too big prefix', {dom: '1123L'}],
+                    ['still too big prefix', {dom: '32L'}],
+                    
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeFalsy()
                     expect(c.validate().errors.length).toBe(1)
-                    expect(c.validate().errors[0]).toBe('Dom has unexpected value')
-                })
+                }) 
             })
             
         })
@@ -631,72 +636,26 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('?', () => {
-                    c.over({dom: '*', dow:'?'})
+                test.each([
+                    ['?', {dom: '*', dow:'?'}],
+                    ['weekday - num', {dom: '?', dow:'2'}],
+                    ['weekday - label', {dom: '?', dow:'FRI'}],
+                    ['weekdays - nums', {dom: '?', dow:'1,3'}],
+                    ['weekdays - labels', {dom: '?', dow:'MON,FRI'}],
+                    ['weekdays range - nums', {dom: '?', dow:'1-5'}],
+                    ['weekdays range - labels', {dom: '?', dow:'MON-FRI'}],
+                    ['weekdays range with cadence', {dom: '?', dow:'1-5/2'}],
+                    ['weekdays range with cadence - label', {dom: '?', dow:'MON-FRI/2'}],
+                    ['xL - num', {dom: '?', dow:'3L'}],
+                    ['xL - label', {dom: '?', dow:'SUNL'}],
+                    ['x#y - num', {dom: '?', dow:'3#2'}],
+                    ['x#y - label', {dom: '?', dow:'MON#2'}],
+                    
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekday - num ', () => {
-                    c.over({dom: '?', dow:'2'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekday - label ', () => {
-                    c.over({dom: '?', dow:'FRI'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekdays - num', () => {
-                    c.over({dom: '?', dow:'1,3'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekdays - label', () => {
-                    c.over({dom: '?', dow:'MON,FRI'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekdays range - num', () => {
-                    c.over({dom: '?', dow:'1-5'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekdays range - label', () => {
-                    c.over({dom: '?', dow:'TUE-SUN'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekdays range with cadence', () => {
-                    c.over({dom: '?', dow:'1-5/2'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('weekdays range with cadence - label', () => {
-                    c.over({dom: '?', dow:'MON-FRI/2'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                
-                it('xL - num', () => {
-                    c.over({dom: '?', dow:'3L'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('xL - label', () => {
-                    c.over({dom: '?', dow:'SUNL'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('x#y - num', () => {
-                    c.over({dom: '?', dow:'3#2'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('x#y - label', () => {
-                    c.over({dom: '?', dow:'MON#2'})
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
+                }) 
             })
             
             describe('- negatives', () => {

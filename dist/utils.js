@@ -25,152 +25,153 @@ const defaults = {
         y : '*', // year (1970-2099) ...how 1970 :D ??????
     },
     rx = {
-    asterx: /^\*$/,
-    zeroFiftynine: /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
-    zeroTwentythree: /^([01]\d|2[0-3]|\d)$/,
-    oneThirtyone: /^(?:[012]\d|3[0,1]|[1-9]{1})$/,
-    weekday: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)$/,     /* this belowis exactly oneThirtyone */
-    weekdayAfterX: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\/(?:[012]\d|3[0,1]|[1-9]{1})$/,
-    LW: /^LW?$/,
+        asterx: /^\*$/,
+        zeroFiftynine: /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
+        zeroTwentythree: /^([01]\d|2[0-3]|\d)$/,
+        oneThirtyone: /^(?:[012]\d|3[0,1]|[1-9]{1})$/,
+        weekday: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)$/,     /* this belowis exactly oneThirtyone */
+        weekdayAfterX: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\/(?:[012]\d|3[0,1]|[1-9]{1})$/,
+        LW: /^LW?$/,
 
-    //even this uses oneThirtyone
-    Lx: /^(L-[012]\d|3[0,1]|[1-9]{1})$/,
+        //even this uses oneThirtyone
+        Lx: /^(L-[012]\d|3[0,1]|[1-9]{1})$/,
 
-    xL31: /^([012]\d|3[0,1]|[1-9]{1})L$/,
-    xLweekday: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)L$/,
+        xL31: /^([012]\d|3[0,1]|[1-9]{1})L$/,
+        xLweekday: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)L$/,
 
-    nthWeekDay: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\#[1-5]{1}$/,
-    // dow/dow related
-    quest: /^(\?)$/,
-    /**
-     * ?
-     * *
-     * x/y : x weekday, y [1-31]
-     * x
-     * x,y,z
-     * x-y/z
-     * L
-     * LW
-     * L-x : x [1-31]
-     * xL: x [1-31]
-     * */
-    dom: /^(\?)|(\*)|()$/,
-    
-    
-    /**
-     * ?
-     * x weekday
-     * x-y weekday
-     * x-y/z weekday
-     * xL weekday
-     * x#y   y-th[1,5] weekday x [1,7]
-     */
-    dow: /^(\?)|$/,
-    
-    month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/,
-    year: /^(20[2-9][0-9])$/,
+        nthWeekDay: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\#[1-5]{1}$/,
+        // dow/dow related
+        quest: /^(\?)$/,
+        /**
+         * ?
+         * *
+         * x/y : x weekday, y [1-31]
+         * x
+         * x,y,z
+         * x-y/z
+         * L
+         * LW
+         * L-x : x [1-31]
+         * xL: x [1-31]
+         * */
+        dom: /^(\?)|(\*)|()$/,
+        
+        
+        /**
+         * ?
+         * x weekday
+         * x-y weekday
+         * x-y/z weekday
+         * xL weekday
+         * x#y   y-th[1,5] weekday x [1,7]
+         */
+        dow: /^(\?)|$/,
+        
+        month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/,
+        year: /^(20[2-9][0-9])$/,
 
-    // match a valid cadence ()
-    wildCadence: /^\d*$/,
+        // match a valid cadence ()
+        wildCadence: /^\d*$/,
 
-    /**
-     * splits number-number/number (second and third optionals)
-     */
-    splitter: /^([\d,\w]*)(-([\d\w]*)(\/([\d\w]*))?)?$/
-    /**
-     * to support ranges like MON,SUN or MON-SUN 
-     * the quite relaxed \w* was used here
-     * which is too relaxed,
-     * 
-     * validation on function parameters covers that edge
-     */
+        /**
+         * splits number-number/number (second and third optionals)
+         */
+        splitter: /^([\d,\w]*)(-([\d\w]*)(\/([\d\w]*))?)?$/
+        /**
+         * to support ranges like MON,SUN or MON-SUN 
+         * the quite relaxed \w* was used here
+         * which is too relaxed,
+         * 
+         * validation on function parameters covers that edge
+         */
     
     },
     getRangeValidator = ({mainRx, cadenceRx}) => val => {
-    const v = `${val}`;
-    if (v.match(rx.asterx)) return true
-    const s = v.match(rx.splitter);
-    if (!s) return false
-    const starts = s[1].split(/,/),
-        to = s[3],
-        cadence = s[5];
-    return (
-        starts.length &&
-        starts.every(start => start.match(mainRx)) &&
-        (
-            !to || (
-                to.match(mainRx) && (
-                    !cadence ||
-                    !!cadence.match(cadenceRx)
+        const v = `${val}`;
+        if (v.match(rx.asterx)) return true
+        const s = v.match(rx.splitter);
+        if (!s) return false
+        const starts = s[1].split(/,/),
+            to = s[3],
+            cadence = s[5];
+        return (
+            starts.length &&
+            starts.every(start => start.match(mainRx)) &&
+            (
+                !to || (
+                    to.match(mainRx) && (
+                        !cadence ||
+                        !!cadence.match(cadenceRx)
+                    )
                 )
             )
         )
-    )
     },
     getValidator = rxs => v => rxs.find(r => {
-    if(typeof r === 'function') return r(v)
-    return `${v}`.match(r)
+        if(typeof r === 'function') return r(v)
+        return `${v}`.match(r)
     }),
     rx059 = getRangeValidator({
-    mainRx: rx.zeroFiftynine,
-    cadenceRx: rx.zeroFiftynine
+        mainRx: rx.zeroFiftynine,
+        cadenceRx: rx.zeroFiftynine
     }),
     rx023 = getRangeValidator({
-    mainRx: rx.zeroTwentythree,
-    cadenceRx: rx.zeroTwentythree
+        mainRx: rx.zeroTwentythree,
+        cadenceRx: rx.zeroTwentythree
     }),
     rx131 = getRangeValidator({
-    mainRx: rx.oneThirtyone,
-    cadenceRx: rx.oneThirtyone
+        mainRx: rx.oneThirtyone,
+        cadenceRx: rx.oneThirtyone
     }),
     rxmonth = getRangeValidator({
-    mainRx: rx.month,
-    cadenceRx: rx.month
+        mainRx: rx.month,
+        cadenceRx: rx.month
     }),
     rxYear = getRangeValidator({
-    mainRx: rx.year,
-    cadenceRx: rx.wildCadence
+        mainRx: rx.year,
+        cadenceRx: rx.wildCadence
     }),
     rxWeekday = getRangeValidator({
-    mainRx: rx.weekday,
-    cadenceRx: rx.weekday
+        mainRx: rx.weekday,
+        cadenceRx: rx.weekday
     }),
     rxDom = getValidator([
-    rx.oneThirtyone,
-    rx.quest,
-    rx.asterx,
-    rx.weekdayAfterX,
-    rx131,
-    rx.LW,
-    rx.Lx,
-    rx.xL31,
+        rx.oneThirtyone,
+        rx.quest,
+        rx.asterx,
+        rx.weekdayAfterX,
+        rx131,
+        rx.LW,
+        rx.Lx,
+        rx.xL31,
     ]),
     rxDow = getValidator([
-    rx.quest,
-    rxWeekday,
-    rx.xLweekday,
-    rx.nthWeekDay
+        rx.quest,
+        rxWeekday,
+        rx.xLweekday,
+        rx.nthWeekDay
     ]),
     validators = {
-    second: rx059,
-    minute: rx059,
-    hour: rx023,
-    month: rxmonth,
-    year: rxYear,
-    dayOfMonth: rxDom,
-    dayOfWeek: rxDow
+        second: rx059,
+        minute: rx059,
+        hour: rx023,
+        month: rxmonth,
+        year: rxYear,
+        dayOfMonth: rxDom,
+        dayOfWeek: rxDow
     },
     fieldCorrelationValidators = [{
-    validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?'),
-    message: 'either dom either dow must contain "?"'
+        validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?'),
+        message: 'either dom either dow must contain "?"'
     }],
     now = new Date(),
     yearNow = now.getFullYear(),
     removeSpaces = s => `${s}`.replace(/\s/mg, '');
+
 module.exports = {
     validators,
     fieldCorrelationValidators,
     defaults,
     yearNow,
     removeSpaces
-}
+};
