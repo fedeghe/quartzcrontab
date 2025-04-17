@@ -49,12 +49,11 @@ no explanation needed
 every `x` seconds (starting from `start`)
 
 - `atSecond(sec)`  
-no explanation needed;  
 resets any previous value set there;  
-can be called passing multiple comma separated values within [0, 59]
+can be called passing multiple comma separated values within `[0, 59]`
 
 - `atSecondAdd(sec)`  
-adds `sec` to the list of already set seconds (0 there by default); as in the previous can pass multiple values comma separated.
+adds `sec` to the list of already set seconds (`0` there by default); as in the previous can pass multiple values comma separated.
 
 - `betweenSeconds(from, to, every)`  
 all seconds from `from` to `to` seconds; optionally set the cadence passing an `every` integer.  
@@ -70,10 +69,10 @@ every `x` minutes (starting from `start`)
 - `atMinute(min)`  
 no explanation needed;  
 resets any previous value set there;  
-can be called passing multiple comma separated values within [0, 59]
+can be called passing multiple comma separated values within `[0, 59]`
 
 - `atMinuteAdd(min)`  
-adds `min` to the list of already set minutes (0 there by default); as in the previous can pass multiple values comma separated.
+adds `min` to the list of already set minutes (`0` there by default); as in the previous can pass multiple values comma separated.
 
 - `betweenMinutes(from, to, every)`  
 all minutes from `from` to `to` minutes; optionally set the cadence passing an `every` integer.  
@@ -88,7 +87,7 @@ every `x` hours (starting from `start`)
 - `atHour(h)`  
 no explanation needed;  
 resets any previous value set there;  
-can be called passing multiple comma separated values within [0, 23]
+can be called passing multiple comma separated values within `[0, 23]`
 
 - `atHourAdd(h)`  
 adds `h` to the list of already set hours (0 there by default); as in the previous can pass multiple values comma separated.
@@ -101,13 +100,13 @@ all hours from `from` to `to` hours; optionally set the cadence passing an `ever
 no explanation needed
 
 - `everyWeekDayStartingFromYDay(x, y)`  
-every `x` [1-7][SUN,SAT] day of the week starting from `y`th day [1-31] of the target months. 
+every `x` `[1-7][SUN,SAT]` day of the week starting from `y`th day `[1-31]` of the target months. 
 
 - `everyWeekDay(wd)`  
-every `wd` [1-7][SUN,SAT]; resets any previous value set there; even here more than one comma separated value can be passed. 
+every `wd` `[1-7][SUN,SAT]`; resets any previous value set there; even here more than one comma separated value can be passed. 
 
 - `everyWeekDayAdd(wd)`  
-every `wd` [1-7][SUN,SAT]; adds one more weekday in the current (default empty) list.
+every `wd` `[1-7][SUN,SAT]`; adds one more weekday in the current (default empty) list.
 
 - `atDayOfMonth(dom)`  
 to be documented

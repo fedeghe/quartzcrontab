@@ -186,6 +186,9 @@ class CronTabist {
     betweenYears(from, to, every) {
         return this.over({ y: `${from}-${to}${every ? `/${every}` : ''}` })
     }
+    
+    /***********/
+
     describe() {
         return [
             this.describeTime(),
