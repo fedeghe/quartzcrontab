@@ -100,13 +100,13 @@ all hours from `from` to `to` hours; optionally set the cadence passing an `ever
 no explanation needed
 
 - `everyWeekDayStartingFromYDay(x, y)`  
-every `x` `[1-7][SUN,SAT]` day of the week starting from `y`th day `[1-31]` of the target months. 
+every `x` `[1-7][SUN-SAT]` day of the week starting from `y`th day `[1-31]` of the target months. 
 
 - `everyWeekDay(wd)`  
-every `wd` `[1-7][SUN,SAT]`; resets any previous value set there; even here more than one comma separated value can be passed. 
+every `wd` `[1-7][SUN-SAT]`; resets any previous value set there; even here more than one comma separated value can be passed. 
 
 - `everyWeekDayAdd(wd)`  
-every `wd` `[1-7][SUN,SAT]`; adds one more weekday in the current (default empty) list.
+every `wd` `[1-7][SUN-SAT]`; adds one more weekday in the current (default empty) list.
 
 - `atDayOfMonth(dom)`  
 to be documented
