@@ -16,9 +16,11 @@
     "dev": "malta source/build.json",
     "test": "jest",
     "watch": "jest --watch",
-    "cover": "jest --collectCoverage --rootDir=tests"
+    "cover": "jest --collectCoverage --rootDir=tests",
+    "coveralls": "jest --rootDir=$PWD/tests && cat ./tests/coverage/lcov.info | coveralls"
   },
   "devDependencies": {
+    "coveralls": "^3.1.1",
     "malta": "^4.1.41",
     "malta-jest": "^0.0.1",
     "malta-millijs": "^1.0.5"
