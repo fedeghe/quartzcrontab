@@ -7,7 +7,12 @@
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to help to programmatically create those cron expressions.
 
 
-Quarts
+Compared to [cron][cron], [Quartz scheduler][quartz] offers in addition the ability to target:
+ - last day of the month
+ - n-th last day of the month
+ - working day closest to the n-th week of the month
+ - a week day of the n-th week  
+ ...and more
 
 ## example
 ``` js
@@ -22,8 +27,10 @@ ct.atHour(12)
     .atHourAdd(22)
     .onLastWeekDayOfMonth()
     .everyXYears(5)
-// 0 0 12,22 LW * ? 2025/5
-/*
+
+console.log(ct.out()) 
+/* 0 0 12,22 LW * ? 2025/5
+
 At second :00, at minute :00, at 12pm and 22pm, on the last weekday of the month, every month, every 5 years starting in 2025
 */
 ```
