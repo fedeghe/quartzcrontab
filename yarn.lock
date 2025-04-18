@@ -1806,6 +1806,11 @@ makeerror@1.0.12:
   dependencies:
     tmpl "1.0.5"
 
+malta-header-comment@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/malta-header-comment/-/malta-header-comment-1.0.12.tgz#6c64a6d46ddb35d6961257e6ca0ca50e404fd957"
+  integrity sha512-w4Qqcl67LCP7fyZ0u26KpS6iqi+T5cpykX/DgeFQzG6e2byZv776T2ynpuBykhCqxvaFFj2kejMfycSP9kdBpQ==
+
 malta-jest@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/malta-jest/-/malta-jest-0.0.1.tgz#d10f009334bfff138cf9c7beca6687c3db106f0f"

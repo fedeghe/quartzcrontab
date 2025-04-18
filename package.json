@@ -4,11 +4,13 @@
   "main": "dist/min/index.js",
   "repository": {
     "type": "git",
-    "url": "https://fedeghe@github.com/fedeghe/crontabbed.git"
+    "url": "https://fedeghe@github.com/fedeghe/quartzcrontab.git"
   },
   "keywords": [
     "cron string builder",
-    "quartz cron string builder"
+    "quartz cron string builder",
+    "quartz cron",
+    "quartz crontab"
   ],
   "author": "Federico Ghedina <fedeghe@gmail.com>",
   "license": "MIT",
@@ -17,11 +19,12 @@
     "test": "jest",
     "watch": "jest --watch",
     "cover": "jest --collectCoverage --rootDir=tests",
-    "coveralls": "jest --rootDir=$PWD/tests && cat ./tests/coverage/lcov.info | coveralls"
+    "coveralls": "jest --collectCoverage --rootDir=$PWD/tests && cat ./tests/coverage/lcov.info | coveralls"
   },
   "devDependencies": {
     "coveralls": "^3.1.1",
     "malta": "^4.1.41",
+    "malta-header-comment": "^1.0.12",
     "malta-jest": "^0.0.1",
     "malta-millijs": "^1.0.5"
   }

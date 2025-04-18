@@ -1,4 +1,7 @@
 /*
+Quartz cron string creator (v.0.0.1)
+*/
+/*
 validations
 https://www.freeformatter.com/cron-expression-generator-quartz.html
 
