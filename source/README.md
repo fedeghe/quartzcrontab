@@ -119,11 +119,11 @@ every `wd` in `[1,7]` or (...and corresponding to) `{SUN,MON,TUE,WED,THU,FRI,SAT
 
 - `atMonthDay(dom)`  
 sets the target day of month, can be: 
-    - *: all days
-    - n: with n in `[1,31]`
-    - n,m,..: comma separated values all in `[1,31]`
-    - n-m: from `n` to `m` (in `[1,31]`)
-    - n-m/c: from `n` to `m` (in `[1,31]`) with `c` cadence
+    - `*`: all days
+    - `n`: with n in `[1,31]`
+    - `n,m,...`: comma separated values all in `[1,31]`
+    - `n-m`: from `n` to `m` (in `[1,31]`)
+    - `n-m/c`: from `n` to `m` (in `[1,31]`) with `c` cadence
 for the last two examples there's also an on purpose method named `betweenMonthDays`
 
 - `atMonthDayAdd(dom)`  
