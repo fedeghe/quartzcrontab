@@ -393,25 +393,33 @@ describe('Crontabist', () => {
     describe('static', () => {
         it('CronTabist.getRanger should work as expected', () => {
             const ranger24 = Crontabist.getRanger(24),
-                ranger60 = Crontabist.getRanger(60)
-            
-            expect(ranger24(0)).toBe(0)
-            expect(ranger24(11)).toBe(11)
-            expect(ranger24(12)).toBe(12)
-            expect(ranger24(23)).toBe(23)
-            expect(ranger24(24)).toBe(0)
-            expect(ranger24(26)).toBe(2)
-            expect(ranger24(47)).toBe(23)
-            expect(ranger24(-1)).toBe(23)
-
-            expect(ranger60(0)).toBe(0)
-            expect(ranger60(11)).toBe(11)
-            expect(ranger60(12)).toBe(12)
-            expect(ranger60(59)).toBe(59)
-            expect(ranger60(60)).toBe(0)
-            expect(ranger60(62)).toBe(2)
-            expect(ranger60(118)).toBe(58)
-            expect(ranger60(-1)).toBe(59)
+                ranger60 = Crontabist.getRanger(60),
+                exp24 = [
+                    {inp:0,out:0},
+                    {inp:11,out:11},
+                    {inp:23,out:23},
+                    {inp:24,out:0},
+                    {inp:26,out:2},
+                    {inp:47,out:23},
+                    {inp:49,out:1},
+                    {inp:-1,out:23},
+                ],
+                exp60=[
+                    {inp:0,out:0},
+                    {inp:11,out:11},
+                    {inp:12,out:12},
+                    {inp:59,out:59},
+                    {inp:60,out:0},
+                    {inp:62,out:2},
+                    {inp:118,out:58},
+                    {inp:-1,out:59},
+                ];
+            exp24.forEach(({inp, out}) => {
+                expect(ranger24(inp)).toBe(out)
+            });
+            exp60.forEach(({inp, out}) => {
+                expect(ranger60(inp)).toBe(out)
+            })
         })
     })
     describe('validation', () => {
