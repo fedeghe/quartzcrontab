@@ -68,7 +68,8 @@ const defaults = {
         dow: /^(\?)|$/,
         
         month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/,
-        year: /^(20[2-9][0-9])$/,
+        // year: /^(20[2-9][0-9])$/,
+        year: /^(19[7-9]\d)|(20\d\d)$/,
 
         // match a valid cadence ()
         wildCadence: /^\d*$/,

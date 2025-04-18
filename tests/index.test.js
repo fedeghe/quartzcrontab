@@ -421,53 +421,39 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('every (*)', () => {
-                    c.everySecond()
+                test.each([
+                    ['every', {s: '*'}],
+                    ['one number', {s: '3'}],
+                    ['more than one number', {s: '3,5,7'}],
+                    ['interval', {s: '3-45'}],
+                    ['interval with cadence', {s: '3-45/3'}],
+                    
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
-                it('one number (3)', () => {
-                    c.atSecond('3')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('more than one number (3,5,9)', () => {
-                    c.atSecond('3,5,9')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('interval (3-33)', () => {
-                    c.atSecond('3-33')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-
-                it('interval with cadence (3-33/2)', () => {
-                    c.atSecond('3-33/2')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-
             })
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('Seconds are invalid', () => {
-                    [
-                        -1, 60,
-                        '3--30', 'a', '-', '-1',
-                        '', /^$/, () => {},
-                    ].forEach(
-                        v => {
-                            c.atSecond(v)
-                            expect(c.validate().valid).toBeFalsy()
-                            expect(c.validate().errors.length).toBe(1)
-                        }
-                    )
+                test.each([
+                    ['negative', {s: -1}],
+                    ['over 23', {s: 60}],
+                    ['invalid interval', {s: '3--30'}],
+                    ['alpha', {s: 'a'}],
+                    ['minus', {s: '-'}],
+                    ['minus one str', {s: '-1'}],
+                    ['empty str', {s: ''}],
+                    ['regexp', {s: /^$/}],
+                    ['func', {s: ()=>{}}],
+                ])('%s', (_, arg) => {
+                    c.over(arg)
+                    expect(c.validate().valid).toBeFalsy()
+                    expect(c.validate().errors.length).toBe(1)
                 })
-
             })
         })
         describe('- minutes', () => {
@@ -476,28 +462,15 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('every (*)', () => {
-                    c.everyMinute()
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('one number (3)', () => {
-                    c.atMinute('3')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('more than one number (3,11,36)', () => {
-                    c.atMinute('3,11,26')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('interval (3-30)', () => {
-                    c.atMinute('3-30')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('interval with cadence (3-30/2)', () => {
-                    c.atMinute('3-30/2')
+                test.each([
+                    ['every', {i: '*'}],
+                    ['one number', {i: '3'}],
+                    ['more than one number', {i: '3,11,36'}],
+                    ['interval', {i: '11-36'}],
+                    ['interval with cadence', {i: '11-36/2'}],
+                    
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
@@ -508,20 +481,21 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('Minutes are invalid', () => {
-                    [
-                        -1, 60,
-                        '3--30', 'a', '-', '-1',
-                        '', /^$/, () => {},
-                    ].forEach(
-                        v => {
-                            c.atMinute(v)
-                            expect(c.validate().valid).toBeFalsy()
-                            expect(c.validate().errors.length).toBe(1)
-                        }
-                    )
+                test.each([
+                    ['negative', {i: -1}],
+                    ['over 23', {i: 60}],
+                    ['invalid interval', {i: '3--30'}],
+                    ['alpha', {i: 'a'}],
+                    ['minus', {i: '-'}],
+                    ['minus one str', {i: '-1'}],
+                    ['empty str', {i: ''}],
+                    ['regexp', {i: /^$/}],
+                    ['func', {i: ()=>{}}],
+                ])('%s', (_, arg) => {
+                    c.over(arg)
+                    expect(c.validate().valid).toBeFalsy()
+                    expect(c.validate().errors.length).toBe(1)
                 })
-
             })
         })
         describe('- hours', () => {
@@ -530,53 +504,40 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('every', () => {
-                    c.everyHour()
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('one number', () => {
-                    c.atHour('3')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('more than one number', () => {
-                    c.atHour('3,12,23')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('interval', () => {
-                    c.atHour('3-22')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('interval with cadence', () => {
-                    c.atHour('3-22/3')
+                test.each([
+                    ['every', {h: '*'}],
+                    ['one number', {h: '3'}],
+                    ['more than one number', {h: '3,5,9'}],
+                    ['interval', {h: '3-9'}],
+                    ['interval with cadence', {h: '3-9/2'}],
+                    
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
             })
-
 
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('Hours are invalid', () => {
-                    [
-                        -1, 24,
-                        '3--30', 'a', '-', '-1',
-                        '', /^$/, () => {},
-                    ].forEach(
-                        v => {
-                            c.atHour(v)
-                            expect(c.validate().valid).toBeFalsy()
-                            expect(c.validate().errors.length).toBe(1)
-                        }
-                    )
+                test.each([
+                    ['negative', {h: -1}],
+                    ['over 23', {h: 24}],
+                    ['invalid interval', {h: '3--30'}],
+                    ['alpha', {h: 'a'}],
+                    ['minus', {h: '-'}],
+                    ['minus one str', {h: '-1'}],
+                    ['empty str', {h: ''}],
+                    ['regexp', {h: /^$/}],
+                    ['func', {h: ()=>{}}],
+                ])('%s', (_, arg) => {
+                    c.over(arg)
+                    expect(c.validate().valid).toBeFalsy()
+                    expect(c.validate().errors.length).toBe(1)
                 })
-
             })
         })
         describe('- dom', () => { 
@@ -678,28 +639,18 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('every', () => {
-                    c.everyMonth()
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('one number', () => {
-                    c.atMonth('3')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('more than one number', () => {
-                    c.atMonth('3,5,11')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('interval', () => {
-                    c.atHour('3-7')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('interval with cadence', () => {
-                    c.atHour('3-12/2')
+                test.each([
+                    ['every', {m: '*'}],// every month does that
+                    ['single - num', {m: '3'}],// every month does that
+                    ['single - label', {m: 'JAN'}],// every month does that
+                    ['multiple - num', {m: '1,2,3'}],// every month does that
+                    ['multiple - label', {m: 'JAN,FEB,MAR'}],// every month does that
+                    ['interval - num', {m: '1-6'}],// every month does that
+                    ['interval - label', {m: 'JAN-JUN'}],// every month does that
+                    ['interval with cadence - num', {m: '1-8/2'}],// every month does that
+                    ['interval with cadence - label', {m: 'JAN-AUG/2'}],// every month does that  
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
@@ -711,23 +662,15 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('single invalid', () => {
-                    c.atMonth('13')
+                test.each([
+                    ['single invalid', {m: '13'}],// every month does that
+                    ['some invalid', {m: '2,13'}],// every month does that
+                    ['all invalid', {m: '13,21,23'}],// every month does that
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeFalsy()
                     expect(c.validate().errors.length).toBe(1)
                 })
-
-                it('some invalid', () => {
-                    c.atMonth('2,13')
-                    expect(c.validate().valid).toBeFalsy()
-                    expect(c.validate().errors.length).toBe(1)
-                })
-                it('all invalid', () => {
-                    c.atMonth('21,23')
-                    expect(c.validate().valid).toBeFalsy()
-                    expect(c.validate().errors.length).toBe(1)
-                })
-
             })
         })
         describe('- years', () => {
@@ -736,28 +679,16 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('every', () => {
-                    c.everyYear()
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('one number', () => {
-                    c.atYear('2030')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('more than one number', () => {
-                    c.atYear('2030,2032')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('interval', () => {
-                    c.atYear('2020-2030')
-                    expect(c.validate().valid).toBeTruthy()
-                    expect(c.validate().errors.length).toBe(0)
-                })
-                it('interval with cadence', () => {
-                    c.atYear('2020-2030/2')
+
+                test.each([
+                    ['every', {y: '*'}],// every month does that
+                    ['one number', {y: '2030'}],// every month does that
+                    ['more than one number', {y: '2030,2032'}],// every month does that
+                    ['interval', {y: '2020-2032'}],// every month does that
+                    ['interval with cadence', {y: '2010-2032/2'}],// every month does that
+                    
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 })
@@ -769,23 +700,18 @@ describe('Crontabist', () => {
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-                it('single invalid', () => {
-                    c.atYear('1950')
+                test.each([
+                    ['single invalid lower', {y: '1969'}],// every month does that
+                    ['single invalid higher', {y: '2100'}],// every month does that
+                    ['some invalid', {y: '1200,2000'}],// every month does that
+                    ['all invalid', {y: '1200,2300,34000'}],// every month does that
+                    
+                    
+                ])('%s', (_, arg) => {
+                    c.over(arg)
                     expect(c.validate().valid).toBeFalsy()
                     expect(c.validate().errors.length).toBe(1)
                 })
-
-                it('some invalid', () => {
-                    c.atYear('1800,2020,3012')
-                    expect(c.validate().valid).toBeFalsy()
-                    expect(c.validate().errors.length).toBe(1)
-                })
-                it('all invalid', () => {
-                    c.atYear('1800,1900,3012')
-                    expect(c.validate().valid).toBeFalsy()
-                    expect(c.validate().errors.length).toBe(1)
-                })
-
             })
         })
         describe('correlations', () => {
