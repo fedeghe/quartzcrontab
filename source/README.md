@@ -6,7 +6,10 @@
 # quartzcrontab (v. maltaV('PACKAGE.version'))
 <pre style="font-size:2em">s i h dom m dow y</pre>
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
-That additional freedom clearly maps into less trivial composition for the cron strings, this library **aims to help to programmatically create those cron expressions**.
+That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
+ **help to programmatically create those cron expressions**  
+ and  
+ **validate an expression**.
 
 
 Compared to [cron][cron], [Quartz scheduler][quartz] offers in addition the ability to target:
@@ -28,7 +31,7 @@ console.log(qct.out()) // 0 0 0 * ? * *
 qct.atHour(12)
     .atHourAdd(22)
     .onLastMonthDay()
-    .everyXYears(5)
+    .everyNYears(5)
 
 console.log(qct.out()) 
 /* 0 0 12,22 LW * ? 2025/5
@@ -46,16 +49,33 @@ console.log(''+qct)
 console.log(String(qct)) 
 console.log(`${qct}`) 
 ```
+## validation API
+
+`QuartzCrontab.validate(exp)`  
+when invoked it will return an object shaped like follows:
+`{ valid: boolean, errors: ['error description',...]}`
 
 
-## API
+## composition API
+
+Almost all _seven_ fields composing the final _cron expression_ are independent. The only exception is represented by the "days of month" (4th field) and the "days of week" (6th field) cause they cannot coexsist. Basically whenever one of the two is set the other one is forced to contain just `?`.
+
+Another small thing:  
+for weeekdays we can use seamlessly  
+`[1,2,3,4,5,6,7]`  or
+`['SUN','MON','TUE','WED','THU', 'FRI', 'SAT']`  
+
+similarly for months:  
+`[1,2,3,4,5,6,7,8,9,10,11,12]` or 
+`['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']`.  
+
 
 ### seconds
 
 - `everySecond()`  
 no explanation needed
 
-- `everyXSeconds(x, start = 0)`  
+- `everyNSeconds(x, start = 0)`  
 every `x` seconds (starting from `start`)
 
 - `atSecond(sec)`  
@@ -68,12 +88,14 @@ adds `sec` to the list of already set seconds (`0` there by default); as in the 
 - `betweenSeconds(from, to, every)`  
 all seconds from `from` to `to` seconds; optionally set the cadence passing an `every` integer.  
 
+---
+
 ### minutes
 
 - `everyMinute()`  
 no explanation needed
 
-- `everyXMinutes(x, start = 0)`  
+- `everyNMinutes(x, start = 0)`  
 every `x` minutes (starting from `start`)
 
 - `atMinute(min)`  
@@ -86,11 +108,13 @@ adds `min` to the list of already set minutes (`0` there by default); as in the 
 - `betweenMinutes(from, to, every)`  
 all minutes from `from` to `to` minutes; optionally set the cadence passing an `every` integer.  
 
+---
+
 ### hours  
 - `everyHour()`  
 no explanation needed
 
-- `everyXHours(x, start = 0)`  
+- `everyNHours(x, start = 0)`  
 every `x` hours (starting from `start`)
 
 - `atHour(h)`  
@@ -104,18 +128,44 @@ adds `h` to the list of already set hours (0 there by default); as in the previo
 - `betweenHours(from, to, every)`  
 all hours from `from` to `to` hours; optionally set the cadence passing an `every` integer.  
 
+---
+
 ### day of month / day of week  
 - `everyDay()`  
-no explanation needed
+no explanation needed  
+    ``` js
+    qct.everyDay()
+    // { dom: '*', dow:'?', ...}
+    ```
 
-- `everyWeekDayStartingFromYMonthDay(x, y)`  
+- `everyWeekDayStartingFromNMonthDay(x, y)`  
 every `x` `[1-7][SUN-SAT]` day of the week starting from `y`th day `[1-31]` of the target months. 
+    ``` js
+    qct.everyWeekDayStartingFromNMonthDay('SUN', 10) 
+    // { dom: `10/SUN`, dow: '?', ...}
+    ```
 
 - `everyWeekDay(wd)`  
 every `wd` `[1-7][SUN-SAT]`; resets any previous value set there; even here more than one comma separated value can be passed. 
+    ``` js
+    qtc.everyWeekDay('WED')
+    // { dom: `?`, dow: 'WED', ...}
+    qtc.everyWeekDay('WED,FRI')
+    // { dom: `?`, dow: 'WED,FRI', ...}
+    qtc.everyWeekDay('MON-FRI/2')
+    // { dom: '?`, dow: 'MON-FRI/2', ...}
+    ```
 
 - `everyWeekDayAdd(wd)`  
 every `wd` in `[1,7]` or (...and corresponding to) `{SUN,MON,TUE,WED,THU,FRI,SAT}`; adds one more weekday in the current (default empty) list.
+    ``` js
+    qtc.everyWeekDayAdd('MON')
+    // { dom: `?`, dow: 'MON', ...}
+    qtc.everyWeekDayAdd('WED')
+    // { dom: `?`, dow: 'MON,WED', ...}
+    qtc.everyWeekDayAdd('FRI')
+    // { dom: '?`, dow: 'MON,WED,FRI', ...}
+    ```
 
 - `atMonthDay(dom)`  
 sets the target day of month, can be: 
@@ -125,36 +175,90 @@ sets the target day of month, can be:
     - `n-m`: from `n` to `m` (in `[1,31]`)
     - `n-m/c`: from `n` to `m` (in `[1,31]`) with `c` cadence
 for the last two examples there's also an on purpose method named `betweenMonthDays`
+    ``` js
+    qtc.atMonthDay('*') //same as qtc.everyDay()
+    // { dom: '*', dow: '?', ...} 
+    qtc.atMonthDay(10)
+    // { dom: '10', dow: '?', ...} 
+    qtc.atMonthDay('10,20')
+    // { dom: '10,20', dow: '?', ...} 
+    qtc.atMonthDay('10-20')
+    // { dom: '10-20', dow: '?', ...} 
+    qtc.atMonthDay('10-20/2')
+    // { dom: '10-20/2', dow: '?', ...} 
+    ```
 
 - `atMonthDayAdd(dom)`  
 this one allows to add one or more days to the existing target  
-
+    ``` js
+    qtc.atMonthDayAdd('10')
+    // { dom: '10', dow: '?', ...} 
+    qtc.atMonthDayAdd('13')
+    // { dom: '10,13', dow: '?', ...} 
+    qtc.atMonthDayAdd('23')
+    // { dom: '10,13,23', dow: '?', ...} 
+    ```
 - `betweenMonthDays(from, to, every)`  
 set target days from `from` to `to` with, if passed > 1, a cadence bigger than 1
+    ``` js
+    qtc.betweenMonthDays(10, 20) 
+    // { dom: '10-20', dow: '?', ...} 
+    qtc.betweenMonthDays(10, 20, 2) 
+    // { dom: '10-20/2', dow: '?', ...} 
+    ```
 
 - `onLastMonthDay`  
 set the target day to the last day of the target months
+    ``` js
+    qtc.onLastMonthDay() 
+    // { dom: 'L', dow: '?', ...} 
+    ```
 
 - `onLastMonthWeekDay`  
 set as target day the last weekday of the month (working day)
+    ``` js
+    qtc.onLastMonthWeekDay() 
+    // { dom: 'LW', dow: '?', ...} 
+    ```
 
-- `onLastXMonthWeekDay(x)`  
+- `onLastMonthNWeekDay(x)`  
 set as target day the last selected week day of the month
+    ``` js
+    qtc.onLastMonthNWeekDay(2)
+    // last monday of the month 
+    // { dom: '?', dow: '2L', ...} 
+    ```
 
-- `onXDayBeforeTheEndOfTheMonth(n)`  
+- `onNDayBeforeTheEndOfTheMonth(n)`  
 set as target the X-th day before the end of the month
+    ``` js
+    qtc.onNDayBeforeTheEndOfTheMonth(9)
+    // nine days before the end of the month 
+    // { dom: 'L-9', dow: '?', ...} 
+    ```
 
-- `onClosestWorkingDayToTheXMonthDay(x)`  
+- `onClosestWorkingDayToTheNMonthDay(x)`  
 set as target the nearest weekday (working day) to the x-th day of the month
+    ``` js
+    qtc.onClosestWorkingDayToTheNMonthDay(15)
+    // the closest woring day (mon->fri) to the 15th 
+    // { dom: '15W', dow: '?', ...} 
+    ```
 
 - `onNWeekDayOfTheMonth(n, wd)`  
 set as target the n-th week day of the month
+    ``` js
+    qtc.onNWeekDayOfTheMonth(4, 2)
+    // the 4th tuesday 
+    // { dom: '?', dow: '2#4', ...} 
+    ```
+---
 
 ### months  
 - `everyMonth()`  
 no explanation needed
 
-- `everyXMonths(freq, start)`  
+- `everyNMonths(freq, start)`  
 every `freq` months (starting from `start`)
 
 - `atMonth(m)`  
@@ -167,11 +271,13 @@ adds `m` to the list of already set months; as in the previous can pass multiple
 - `betweenMonths(from, to, every)`  
 all months from `from` month to `to` month; optionally set the cadence passing an `every` integer. 
 
+---
+
 ### years  
 - `everyYear()`  
 no explanation needed
 
-- `everyXYears(freq, start)`  
+- `everyNYears(freq, start)`  
 every `x` years (starting from `start`)
 
 - `atYear(y)`  
@@ -184,7 +290,7 @@ adds `min` to the list of already set minutes; as in the previous can pass multi
 - `betweenYears(from, to, every)`  
 all years from `from` year to `to` year; optionally set the cadence passing an `every` integer.  
 
-
+---
 
 
 [quartz]: https://www.quartz-scheduler.org/

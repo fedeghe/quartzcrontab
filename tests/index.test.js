@@ -43,12 +43,12 @@ describe('Crontabist', () => {
             c.everySecond()
             expect(c.out()).toBe('* 0 0 * * ? *')
         })
-        it('everyXSeconds every x from 0', () => {
-            c.everyXSeconds({ freq: 6 })
+        it('everyNSeconds every x from 0', () => {
+            c.everyNSeconds({ freq: 6 })
             expect(c.out()).toBe('0/6 0 0 * * ? *')
         })
-        it('everyXSeconds every x from y', () => {
-            c.everyXSeconds({ freq: 6, start:13 })
+        it('everyNSeconds every x from y', () => {
+            c.everyNSeconds({ freq: 6, start:13 })
             expect(c.out()).toBe('13/6 0 0 * * ? *')
         })
         it('atSecond', () => {
@@ -88,12 +88,12 @@ describe('Crontabist', () => {
             c.everyMinute()
             expect(c.out()).toBe('0 * 0 * * ? *')
         })
-        it('everyXMinutes every x from 0', () => {
-            c.everyXMinutes({ freq: 6 })
+        it('everyNMinutes every x from 0', () => {
+            c.everyNMinutes({ freq: 6 })
             expect(c.out()).toBe('0 0/6 0 * * ? *')
         })
-        it('everyXMinutes every x from y', () => {  
-            c.everyXMinutes({ freq: 6, start:13 })
+        it('everyNMinutes every x from y', () => {  
+            c.everyNMinutes({ freq: 6, start:13 })
             expect(c.out()).toBe('0 13/6 0 * * ? *')
         })
         it('atMinute', () => {  
@@ -128,12 +128,12 @@ describe('Crontabist', () => {
             c.everyHour()
             expect(c.out()).toBe('0 0 * * * ? *')
         })
-        it('everyXHours every x from 0', () => {
-            c.everyXHours({ freq: 6 })
+        it('everyNHours every x from 0', () => {
+            c.everyNHours({ freq: 6 })
             expect(c.out()).toBe('0 0 0/6 * * ? *')
         })
-        it('everyXHours every x from y', () => {  
-            c.everyXHours({ freq: 6, start:13 })
+        it('everyNHours every x from y', () => {  
+            c.everyNHours({ freq: 6, start:13 })
             expect(c.out()).toBe('0 0 13/6 * * ? *')
         })
         it('atHour', () => {  
@@ -169,7 +169,7 @@ describe('Crontabist', () => {
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('every weekday starting from', () => {
-            c.everyWeekDayStartingFromYMonthDay(3, 15)
+            c.everyWeekDayStartingFromNMonthDay(3, 15)
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
         })
         it('everyWeekDay - num', () => {
@@ -223,16 +223,16 @@ describe('Crontabist', () => {
             c.onLastMonthWeekDay()
             expect(c.out()).toBe('0 0 0 LW * ? *')
         })
-        it('onLastXMonthWeekDay', () => {
-            c.onLastXMonthWeekDay(2)
+        it('onLastMonthNWeekDay', () => {
+            c.onLastMonthNWeekDay(2)
             expect(c.out()).toBe('0 0 0 ? * 2L *')
         })
-        it('onXDayBeforeTheEndOfTheMonth', () => {
-            c.onXDayBeforeTheEndOfTheMonth(2)
+        it('onNDayBeforeTheEndOfTheMonth', () => {
+            c.onNDayBeforeTheEndOfTheMonth(2)
             expect(c.out()).toBe('0 0 0 L-2 * ? *')
         })
-        it('onClosestWorkingDayToTheXMonthDay', () => {
-            c.onClosestWorkingDayToTheXMonthDay(2)
+        it('onClosestWorkingDayToTheNMonthDay', () => {
+            c.onClosestWorkingDayToTheNMonthDay(2)
             expect(c.out()).toBe('0 0 0 2W * ? *')
         })
         it('onNWeekDayOfTheMonth', () => {
@@ -250,12 +250,12 @@ describe('Crontabist', () => {
             c.everyMonth()
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
-        it('everyXMonths every x from 0', () => {
-            c.everyXMonths({ freq: 6 })
+        it('everyNMonths every x from 0', () => {
+            c.everyNMonths({ freq: 6 })
             expect(c.out()).toBe('0 0 0 * 0/6 ? *')
         })
-        it('everyXMonths every x from y', () => {  
-            c.everyXMonths({ freq: 6, start:13 })
+        it('everyNMonths every x from y', () => {  
+            c.everyNMonths({ freq: 6, start:13 })
             expect(c.out()).toBe('0 0 0 * 13/6 ? *')
         })
         it('atMonth', () => {
@@ -290,14 +290,14 @@ describe('Crontabist', () => {
             c.everyYear()
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
-        it('everyXYears every x from 0', () => {
+        it('everyNYears every x from 0', () => {
             var d = new Date(),
                 y = d.getFullYear();
-            c.everyXYears({ freq: 6 })
+            c.everyNYears({ freq: 6 })
             expect(c.out()).toBe(`0 0 0 * * ? ${y}/6`)
         })
-        it('everyXYears every x from y', () => {  
-            c.everyXYears({ freq: 6, start:2025 })
+        it('everyNYears every x from y', () => {  
+            c.everyNYears({ freq: 6, start:2025 })
             expect(c.out()).toBe('0 0 0 * * ? 2025/6')
         })
         it('atYear', () => {
@@ -338,7 +338,7 @@ describe('Crontabist', () => {
             c.atSecond(30)
                 .atMinute(0)
                 .atHour(12)
-                .everyWeekDayStartingFromYMonthDay(5, 2)
+                .everyWeekDayStartingFromNMonthDay(5, 2)
             expect(c.out()).toBe('30 0 12 2/5 * ? *')
         })
         it('atSecond atMinute every hour in the 3rd saturday of JAN and FEB on years 2026,2028,2032', () => {
@@ -722,6 +722,61 @@ describe('Crontabist', () => {
                 })
             })
         })
+        describe('static validate', () => {
+            
+            describe('- positives', () => {
+                test.each([
+                    ['0 0 0 * * ? *'],
+                    ['* * * * * ? *'],
+                    ['0 0 0 1 * ? *'],
+                    ['0 0 0 1 1 ? *'],
+                    ['0 0 0 L 1 ? *'],
+                    ['0 0 0 LW 1 ? *'],
+                    ['0 0 0 3W 1 ? *'],
+                    ['0,1,5 1-31/5 * ? JAN,FEB 7#3 2026,2028,2032'],
+                    ['* * * ? JAN,FEB 7#3 2026,2028,2032'],
+                    ['* * * ? JAN-DEC/2 7#3 2026-2080/4'],
+                ])('%s', (arg) => {
+                    const validation = Crontabist.validate(arg)
+                    expect(validation.valid).toBeTruthy()
+                    expect(validation.errors.length).toBe(0)
+                })
+            })
+            describe('- negatives', () => {
+                test.each([
+                    ['-1 0 0 * * ? *', ['Seconds are not well formatted']],
+                    ['0 -1 0 * * ? *', ['Minutes are not well formatted']],
+                    ['0 0 -12 * * ? *', ['Hours are not well formatted']],
+                    ['0 0 0 s * ? *', ['Dom has unexpected value']],
+                    ['0 0 0 * aaa ? *', ['Months are not well formatted']],
+                    ['0 0 0 ? * 333 *', ['Dow has unexpected value']],
+                    ['0 0 0 ? * * aaaa', ['Years are not well formatted']],
+                    ['0 0 0 1 * 1 *', ['either dom either dow must contain "?"']],
+                    // more than one
+                    ['-1 -1 -12 s aaa 333 sss', [
+                        'either dom either dow must contain "?"',
+                        'Seconds are not well formatted',
+                        'Minutes are not well formatted',
+                        'Hours are not well formatted',
+                        'Months are not well formatted',
+                        'Years are not well formatted',
+                        'Dom has unexpected value',
+                        'Dow has unexpected value',
+                    ]],
+                ])('%s', (arg, err) => {
+                    const validation = Crontabist.validate(arg)
+                    expect(validation.valid).toBeFalsy()
+                    expect(validation.errors).toMatchObject(err)
+                })
+
+                it('nothing passed', () => {
+                    const validation = Crontabist.validate()
+                    expect(validation.valid).toBeFalsy()
+                    expect(validation.errors).toMatchObject([])
+                })
+            })
+            
+        }) 
         describe('correlations', () => {
             describe('- dow <> dom', () => { 
                 describe('- negatives', () => {

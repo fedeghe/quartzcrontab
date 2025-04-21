@@ -23,8 +23,8 @@ const defaults = {
         i : '0', // minutes   *   0,1,2,3,4,59   3-45   3-35/5
         h : '0', // seconds   *   0,1,2,3,4,23   3-23   3-23/5
         dom : '*', // day of month   *   ?   3/4  12 12,13,15
-        dow : '?', // day of week
         m : '*', // month
+        dow : '?', // day of week
         y : '*', // year (1970-2099) ...how 1970 :D ??????
     },
     rx = {
@@ -32,6 +32,7 @@ const defaults = {
         zeroFiftynine: /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
         zeroTwentythree: /^([01]\d|2[0-3]|\d)$/,
         oneThirtyone: /^(?:[012]\d|3[0,1]|[1-9]{1})$/,
+        oneThirtyoneW: /^(?:[012]\d|3[0,1]|[1-9]{1})W$/,
         weekday: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)$/,     /* this belowis exactly oneThirtyone */
         weekdayAfterX: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\/(?:[012]\d|3[0,1]|[1-9]{1})$/,
         LW: /^LW?$/,
@@ -148,6 +149,7 @@ const defaults = {
         rx.LW,
         rx.Lx,
         rx.xL31,
+        rx.oneThirtyoneW
     ]),
     rxDow = getValidator([
         rx.quest,

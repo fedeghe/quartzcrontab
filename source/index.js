@@ -50,7 +50,7 @@ class CronTabist {
     everySecond() {
         return this.over({ s: '*'})
     }
-    everyXSeconds({freq, start = 0}) {
+    everyNSeconds({freq, start = 0}) {
         return this.over({ s: `${start}/${freq}` })
     }
     atSecond(s) {
@@ -68,7 +68,7 @@ class CronTabist {
     everyMinute() {
         return this.over({ i: '*'})
     }
-    everyXMinutes({freq, start = 0}) {
+    everyNMinutes({freq, start = 0}) {
         return this.over({ i: `${start}/${freq}` })
     }
     atMinute(i) {
@@ -86,7 +86,7 @@ class CronTabist {
     everyHour() {
         return this.over({ h: '*'})
     }
-    everyXHours({freq, start = 0}) {
+    everyNHours({freq, start = 0}) {
         return this.over({ h: `${start}/${freq}` })
     }
     atHour(h) {
@@ -102,9 +102,9 @@ class CronTabist {
 
     /* dom/dow */
     everyDay(){
-        return this.over({ dom: '*'})
+        return this.over({ dom: '*', dow:'?'})
     }
-    everyWeekDayStartingFromYMonthDay(wd, start){
+    everyWeekDayStartingFromNMonthDay(wd, start){
         return this.over({ dom: `${start}/${wd}`, dow: '?'})
     }
     everyWeekDay(d) {
@@ -134,13 +134,13 @@ class CronTabist {
     onLastMonthWeekDay(){
         return this.over({ dom: 'LW', dow: '?' })
     }
-    onLastXMonthWeekDay(x){
+    onLastMonthNWeekDay(x){
         return this.over({ dom: '?', dow: `${x}L` })
     }
-    onXDayBeforeTheEndOfTheMonth(x){
+    onNDayBeforeTheEndOfTheMonth(x){
         return this.over({ dom:`L-${x}`, dow: '?' })
     }
-    onClosestWorkingDayToTheXMonthDay(x) {
+    onClosestWorkingDayToTheNMonthDay(x) {
         return this.over({ dom:`${x}W`, dow: '?' })
     }
     onNWeekDayOfTheMonth(n,wd) {
@@ -151,7 +151,7 @@ class CronTabist {
     everyMonth() {
         return this.over({ m: '*'})
     }
-    everyXMonths({freq, start = 0}) {
+    everyNMonths({freq, start = 0}) {
         return this.over({ m: `${start}/${freq}` })
     }
     atMonth(m) {
@@ -171,7 +171,7 @@ class CronTabist {
     everyYear() {
         return this.over({ y: '*'})
     }
-    everyXYears({freq, start = yearNow}) {
+    everyNYears({freq, start = yearNow}) {
         return this.over({ y: `${start}/${freq}` })
     }
     atYear(y) {
@@ -209,7 +209,6 @@ class CronTabist {
     validate(){
         const errors = [];
 
-        // fieldCorrelationValidators
         fieldCorrelationValidators.forEach(({
             validator, message
         }) => {
@@ -217,7 +216,6 @@ class CronTabist {
                 errors.push(message);
             }
         })
-
         
         if (!validators.second(this.elements.s)) {
             errors.push('Seconds are not well formatted');
@@ -232,13 +230,67 @@ class CronTabist {
             errors.push('Months are not well formatted');
         }
         if (!validators.year(this.elements.y)) {
-            errors.push('Year are not well formatted');
+            errors.push('Years are not well formatted');
         }
 
         if (!validators.dayOfMonth(this.elements.dom)) {
             errors.push('Dom has unexpected value');
         }
         if (!validators.dayOfWeek(this.elements.dow)) {
+            errors.push('Dow has unexpected value');
+        }
+
+        return {
+            valid: errors.length === 0,
+            errors
+        }
+    }
+
+    static validate(exp){
+        const errors = [],
+            local = exp ? `${exp}`.split(/\s/) : false,
+            elements = local && {
+                s : local[0],
+                i : local[1],
+                h : local[2],
+                dom : local[3],
+                m : local[4],
+                dow : local[5],
+                y : local[6],
+            };
+        if(!local)return {
+            valid: local,
+            errors
+        }
+
+        fieldCorrelationValidators.forEach(({
+            validator, message
+        }) => {
+            if(!validator(elements)){
+                errors.push(message);
+            }
+        })
+        
+        if (!validators.second(elements.s)) {
+            errors.push('Seconds are not well formatted');
+        }
+        if (!validators.minute(elements.i)) {
+            errors.push('Minutes are not well formatted');
+        }
+        if (!validators.hour(elements.h)) {
+            errors.push('Hours are not well formatted');
+        }
+        if (!validators.month(elements.m)) {
+            errors.push('Months are not well formatted');
+        }
+        if (!validators.year(elements.y)) {
+            errors.push('Years are not well formatted');
+        }
+
+        if (!validators.dayOfMonth(elements.dom)) {
+            errors.push('Dom has unexpected value');
+        }
+        if (!validators.dayOfWeek(elements.dow)) {
             errors.push('Dow has unexpected value');
         }
 
