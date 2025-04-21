@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.2)
+Quartz cron string creator (v.0.0.3)
 */
 /*
 validations
