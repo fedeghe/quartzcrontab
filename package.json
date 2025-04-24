@@ -16,8 +16,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "malta source/build.json",
-    "test": "jest",
-    "watch": "jest --watch",
+    "test": "jest --rootDir=tests",
+    "watch": "jest --watch --rootDir=tests",
     "cover": "jest --collectCoverage --rootDir=tests",
     "coveralls": "jest --collectCoverage --rootDir=$PWD/tests && cat ./tests/coverage/lcov.info | coveralls"
   },
