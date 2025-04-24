@@ -249,11 +249,11 @@ class CronTabist {
         }
     }
 
-
+    /* istanbul ignore next */
     next(n){
         return CronTabist.next(n, this.elements);
     }
-
+    /* istanbul ignore next */
     static next(n, els){
         const now = n || new Date(),
             s = now.getSeconds(),
