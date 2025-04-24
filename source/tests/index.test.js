@@ -422,6 +422,7 @@ describe('Crontabist', () => {
             })
         })
     })
+
     describe('validation', () => {
         describe('- seconds', () => {
             describe('- positives', () => {
@@ -612,7 +613,7 @@ describe('Crontabist', () => {
                     ['weekdays - nums', {dom: '?', dow:'1,3'}],
                     ['weekdays - labels', {dom: '?', dow:'MON,FRI'}],
                     ['weekdays range - nums', {dom: '?', dow:'1-5'}],
-                    ['weekdays range - labels', {dom: '?', dow:'MON-FRI'}],
+                    ['weekdays range - labels', {dom: '?', dow:'MoN-FrI'}],
                     ['weekdays range with cadence', {dom: '?', dow:'1-5/2'}],
                     ['weekdays range with cadence - label', {dom: '?', dow:'MON-FRI/2'}],
                     ['xL - num', {dom: '?', dow:'3L'}],
@@ -733,9 +734,71 @@ describe('Crontabist', () => {
                     ['0 0 0 L 1 ? *'],
                     ['0 0 0 LW 1 ? *'],
                     ['0 0 0 3W 1 ? *'],
-                    ['0,1,5 1-31/5 * ? JAN,FEB 7#3 2026,2028,2032'],
+                    ['0,1,5 1-31/5 * ? JAN,FeB 7#3 2026,2028,2032'],
                     ['* * * ? JAN,FEB 7#3 2026,2028,2032'],
                     ['* * * ? JAN-DEC/2 7#3 2026-2080/4'],
+
+                    // from https://www.freeformatter.com/cron-expression-generator-quartz.html
+                    '* * * ? * *', 
+                    '0 * * ? * *',
+                    '0 */2 * ? * *',
+                    '0 1/2 * ? * *',
+                    '0 */2 * ? * *',
+                    '0 */3 * ? * *',
+                    '0 */4 * ? * *',
+                    '0 */5 * ? * *',
+                    '0 */10 * ? * *',
+                    '0 */15 * ? * *',
+                    '0 */30 * ? * *',
+                    '0 15,30,45 * ? * *',
+                    '0 0 * ? * *',
+                    '0 0 */2 ? * *',
+                    '0 0 0/2 ? * *',
+                    '0 0 1/2 ? * *',
+                    '0 0 */3 ? * *',
+                    '0 0 */4 ? * *',
+                    '0 0 */6 ? * *',
+                    '0 0 */8 ? * *',
+                    '0 0 */12 ? * *',
+                    '0 0 0 * * ?',
+                    '0 0 1 * * ?',
+                    '0 0 6 * * ?',
+                    '0 0 12 * * ?',
+                    '0 0 12 * * ?',
+                    '0 0 12 ? * SUN',
+                    '0 0 12 ? * MON',
+                    '0 0 12 ? * TUE',
+                    '0 0 12 ? * WED',
+                    '0 0 12 ? * THU',
+                    '0 0 12 ? * FRI',
+                    '0 0 12 ? * SAT',
+                    '0 0 12 ? * MON-FRI',
+                    '0 0 12 ? * SUN,SAT',
+                    '0 0 12 */7 * ?',
+                    '0 0 12 1 * ?',
+                    '0 0 12 2 * ?',
+                    '0 0 12 15 * ?',
+                    '0 0 12 1/2 * ?',
+                    '0 0 12 1/4 * ?',
+                    '0 0 12 L * ?',
+                    '0 0 12 L-2 * ?',
+                    '0 0 12 LW * ?',
+                    '0 0 12 1L * ?',
+                    '0 0 12 2L * ?',
+                    '0 0 12 6L * ?',
+                    '0 0 12 1W * ?',
+                    '0 0 12 15W * ?',
+                    '0 0 12 ? * 2#1',
+                    '0 0 12 ? * 6#1',
+                    '0 0 12 ? * 2#2',
+                    '0 0 12 ? * 5#3',
+                    '0 0 12 ? JAN *',
+                    '0 0 12 ? JUN *',
+                    '0 0 12 ? JAN,JUN *',
+                    '0 0 12 ? DEC *',
+                    '0 0 12 ? JAN,FEB,MAR,APR *',
+                    '0 0 12 ? 9-12 *',
+                    '0 0 12 ? 9-12 */3',
                 ])('%s', (arg) => {
                     const validation = Crontabist.validate(arg)
                     expect(validation.valid).toBeTruthy()
@@ -794,6 +857,24 @@ describe('Crontabist', () => {
             })
         })      
     })
+
+    describe('next', () => {
+        it('basic', () => {
+            const d = new Date('18:19:20 3-12-2025');
+            Crontabist.next(d, {
+                s: 21,
+                i: 20,
+                h: 19,
+                dow: '?',
+                m: 3,
+                dom:11,
+                y: 2025
+            })
+
+        })
+    })
+
+    
 })
 
 

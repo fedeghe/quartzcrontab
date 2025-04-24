@@ -73,10 +73,13 @@ similarly for months:
 ### seconds
 
 - `everySecond()`  
-no explanation needed
+no explanation needed; still one should consider that this command will only update the `s` to `*`.  
+Which minute/s will actually be part of the target depends on how the instance was constructed.  
+If no other command is executed the target will be from 0-th to 59-th second of the first minutes of the first hour of the following day and this is cause the default values are `0 0 0 * * ? *`.  
+This clearly applies similarly also for almost all other commands.
 
 - `everyNSeconds(x, start = 0)`  
-every `x` seconds (starting from `start`)
+every `x` seconds (starting from `start`)  
 
 - `atSecond(sec)`  
 resets any previous value set there;  

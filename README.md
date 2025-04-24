@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
 
 
-# quartzcrontab (v. 0.0.3)
+# quartzcrontab (v. 0.0.4)
 <pre style="font-size:2em">s i h dom m dow y</pre>
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
@@ -73,10 +73,13 @@ similarly for months:
 ### seconds
 
 - `everySecond()`  
-no explanation needed
+no explanation needed; still one should consider that this command will only update the `s` to `*`.  
+Which minute/s will actually be part of the target depends on how the instance was constructed.  
+If no other command is executed the target will be from 0-th to 59-th second of the first minutes of the first hour of the following day and this is cause the default values are `0 0 0 * * ? *`.  
+This clearly applies similarly also for almost all other commands.
 
 - `everyNSeconds(x, start = 0)`  
-every `x` seconds (starting from `start`)
+every `x` seconds (starting from `start`)  
 
 - `atSecond(sec)`  
 resets any previous value set there;  

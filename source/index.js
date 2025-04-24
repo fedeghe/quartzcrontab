@@ -246,6 +246,22 @@ class CronTabist {
         }
     }
 
+
+    next(n){
+        return CronTabist.next(n, this.elements);
+    }
+
+    static next(n, els){
+        const now = n || new Date(),
+            s = now.getSeconds(),
+            i = now.getMinutes(),
+            h = now.getHours(),
+            d = now.getDate(),
+            m = now.getMonth(),
+            y = now.getFullYear();
+        console.log({els});
+    }
+
     static validate(exp){
         const errors = [],
             local = exp ? `${exp}`.split(/\s/) : false,
@@ -283,7 +299,7 @@ class CronTabist {
         if (!validators.month(elements.m)) {
             errors.push('Months are not well formatted');
         }
-        if (!validators.year(elements.y)) {
+        if (elements.y && !validators.year(elements.y)) {
             errors.push('Years are not well formatted');
         }
 

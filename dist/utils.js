@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.3)
+Quartz cron string creator (v.0.0.4)
 */
 /*
 validations
@@ -28,22 +28,22 @@ const defaults = {
         y : '*', // year (1970-2099) ...how 1970 :D ??????
     },
     rx = {
-        asterx: /^\*$/,
+        asterx: /^\*(\/\d*)?$/,
         zeroFiftynine: /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
         zeroTwentythree: /^([01]\d|2[0-3]|\d)$/,
         oneThirtyone: /^(?:[012]\d|3[0,1]|[1-9]{1})$/,
         oneThirtyoneW: /^(?:[012]\d|3[0,1]|[1-9]{1})W$/,
-        weekday: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)$/,     /* this belowis exactly oneThirtyone */
-        weekdayAfterX: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\/(?:[012]\d|3[0,1]|[1-9]{1})$/,
+        weekday: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)$/i,     /* this belowis exactly oneThirtyone */
+        weekdayAfterX: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\/(?:[012]\d|3[0,1]|[1-9]{1})$/i,
         LW: /^LW?$/,
 
         //even this uses oneThirtyone
-        Lx: /^(L-[012]\d|3[0,1]|[1-9]{1})$/,
+        Lx: /^(L-([012]\d|3[0,1]|[1-9]{1}))$/,
 
         xL31: /^([012]\d|3[0,1]|[1-9]{1})L$/,
-        xLweekday: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)L$/,
+        xLweekday: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)L$/i,
 
-        nthWeekDay: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\#[1-5]{1}$/,
+        nthWeekDay: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\#[1-5]{1}$/i,
         // dow/dow related
         quest: /^(\?)$/,
         /**
@@ -71,7 +71,7 @@ const defaults = {
          */
         dow: /^(\?)|$/,
         
-        month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/,
+        month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/i,
         // year: /^(20[2-9][0-9])$/,
         year: /^(19[7-9]\d)|(20\d\d)$/,
 
@@ -81,7 +81,7 @@ const defaults = {
         /**
          * splits number-number/number (second and third optionals)
          */
-        splitter: /^([\d,\w]*)(-([\d\w]*)(\/([\d\w]*))?)?$/
+        splitter: /^([\d,\w]*)(-([\d\w]*))?(\/([\d\w]*))?$/
         /**
          * to support ranges like MON,SUN or MON-SUN 
          * the quite relaxed \w* was used here
