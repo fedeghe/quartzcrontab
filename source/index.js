@@ -248,19 +248,27 @@ class CronTabist {
 
     /* istanbul ignore next */
     next({n = 1, date = null}){
-        const now = date || new Date(),
+        const base = date || new Date(),
             expr = this.out(),
             elements = this.elements;
-        if (now == 'Invalid Date') {
+        if (base == 'Invalid Date') {
             throw new Error('Invalid Date')
         }
-        const s = now.getSeconds(),
-            i = now.getMinutes(),
-            h = now.getHours(),
-            d = now.getDate(),
-            m = now.getMonth(),
-            y = now.getFullYear();
-        // console.log({expr, date, d: `${h}:${i}:${s} ${d}-${m+1}-${y}`});
+        const now = {
+            s: base.getSeconds(),
+            i:  base.getMinutes(),
+            h: base.getHours(),
+            d: base.getDate(),
+            m: base.getMonth(),
+            y: base.getFullYear()
+        };
+
+        // from elements get the starting earlier date
+
+
+
+
+
         
         return now;
     }

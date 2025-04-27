@@ -5,7 +5,8 @@ const {
     isLeap,
     lastMonthDay,
     nDaysBeforeEndOfMonth,
-    nDayOfMonth
+    nDayOfMonth,
+    solveRange
 } = dateutils
 describe('date utils', () => {
     
@@ -116,6 +117,27 @@ describe('date utils', () => {
             ])('%s', (_, n, wd, y, m) => {
                 expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('not enough days in this month')
             })
+        })
+    })
+
+    describe('solveRange', () => {
+        test.each([
+            ['one int', 2, [2]],
+            ['one str', '2', [2]],
+            ['comma sep', '3,1,7', [1,3,7]],
+            ['range', '3-7', [3,4,5,6,7]],
+            ['range/cadence #1', '2-18/4', [2,6,10,14,18]],
+            ['range/cadence #2', '2-21/4', [2,6,10,14,18]],
+            ['range/cadence #3', '2-22/4', [2,6,10,14,18,22]],
+            ['range/cadence #4', '2-21/3', [2,5,8,11,14,17,20]],
+        ])('%s', (_, n, expected) => {
+            expect(solveRange(n)).toMatchObject(expected)
+        })
+        test.each([
+            ['null #1', 'aaa', null],
+            ['null #2', ' ', null],
+        ])('%s', (_, n, expected) => {
+            expect(solveRange(n)).toBe(expected)
         })
     })
 })

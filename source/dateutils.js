@@ -58,9 +58,40 @@ const nDayOfMonth = (n, wd, y, m) => {
     return nthTarget; 
     
 };
+const solveRange = v => {
+    // one
+    if (`${v}`.match(/^\d*$/)) {
+        return [parseInt(v, 10)]
+    }
+    // commasep
+    if (`${v}`.match(/^([\d,]+)\d$/)) {
+        return v.split(/,/).map(v=>parseInt(v,10)).sort(
+            ( a, b ) => a > b ? 1 : -1
+        );
+    }
+    // range
+    const range = `${v}`.match(/^([\d,]+)-([\d,]+)(\/(\d*))?$/)
+    if (range) {
+        
+        const min = parseInt(range[1],10),
+            max = parseInt(range[2],10),
+            cadence = parseInt(range[4],10);
+        let ret = [];
+        if(cadence){
+            for(let i = min; i<=max; i+=cadence){
+                ret.push(i);
+            }
+        } else {
+            ret = Array.from({length: max-min+1}, (_, i) => i+min);
+        }
+        return ret
+    }
+    return null
+}
 module.exports = {
     isLeap,
     lastMonthDay,
     nDaysBeforeEndOfMonth,
-    nDayOfMonth
+    nDayOfMonth,
+    solveRange
 };
