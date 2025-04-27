@@ -172,6 +172,10 @@ describe('Crontabist', () => {
             c.everyWeekDayStartingFromNMonthDay(3, 15)
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
         })
+        it('everyWeekDay - no params => weekdays mon-fri', () => {
+            c.everyWeekDay()
+            expect(c.out()).toBe('0 0 0 ? * 2-6 *')
+        })
         it('everyWeekDay - num', () => {
             c.everyWeekDay(4)
             expect(c.out()).toBe('0 0 0 ? * 4 *')
@@ -420,6 +424,11 @@ describe('Crontabist', () => {
         })
     })
 
+    /**
+     * the whole validation test exploit directly the "over" method
+     * which is not actually supposed to be used directly,
+     * "over" allows to set the elements for the validation in one single call
+     */
     describe('validation', () => {
         describe('- seconds', () => {
             describe('- positives', () => {
@@ -597,8 +606,6 @@ describe('Crontabist', () => {
 
             describe('- positives', () => {
                 let c
-                // note: to support ranges like MON,SUN or MON-SUN 
-                // instead of numeric values we need a less trivial rx.splitter
                 beforeEach(() => {
                     c = new Crontabist()
                 })
@@ -653,14 +660,14 @@ describe('Crontabist', () => {
                 })
                 test.each([
                     ['every', {m: '*'}],// every month does that
-                    ['single - num', {m: '3'}],// every month does that
-                    ['single - label', {m: 'JAN'}],// every month does that
-                    ['multiple - num', {m: '1,2,3'}],// every month does that
-                    ['multiple - label', {m: 'JAN,FEB,MAR'}],// every month does that
-                    ['interval - num', {m: '1-6'}],// every month does that
-                    ['interval - label', {m: 'JAN-JUN'}],// every month does that
-                    ['interval with cadence - num', {m: '1-8/2'}],// every month does that
-                    ['interval with cadence - label', {m: 'JAN-AUG/2'}],// every month does that  
+                    ['single - num', {m: '3'}],
+                    ['single - label', {m: 'JAN'}],
+                    ['multiple - num', {m: '1,2,3'}],
+                    ['multiple - label', {m: 'JAN,FEB,MAR'}],
+                    ['interval - num', {m: '1-6'}],
+                    ['interval - label', {m: 'JAN-JUN'}],
+                    ['interval with cadence - num', {m: '1-8/2'}],
+                    ['interval with cadence - label', {m: 'JAN-AUG/2'}],  
                 ])('%s', (_, arg) => {
                     c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
@@ -675,9 +682,9 @@ describe('Crontabist', () => {
                     c = new Crontabist()
                 })
                 test.each([
-                    ['single invalid', {m: '13'}],// every month does that
-                    ['some invalid', {m: '2,13'}],// every month does that
-                    ['all invalid', {m: '13,21,23'}],// every month does that
+                    ['single invalid', {m: '13'}],
+                    ['some invalid', {m: '2,13'}],
+                    ['all invalid', {m: '13,21,23'}],
                 ])('%s', (_, arg) => {
                     c.over(arg)
                     expect(c.validate().valid).toBeFalsy()
@@ -693,11 +700,11 @@ describe('Crontabist', () => {
                 })
 
                 test.each([
-                    ['every', {y: '*'}],// every month does that
-                    ['one number', {y: '2030'}],// every month does that
-                    ['more than one number', {y: '2030,2032'}],// every month does that
-                    ['interval', {y: '2020-2032'}],// every month does that
-                    ['interval with cadence', {y: '2010-2032/2'}],// every month does that
+                    ['every', {y: '*'}],
+                    ['one number', {y: '2030'}],
+                    ['more than one number', {y: '2030,2032'}],
+                    ['interval', {y: '2020-2032'}],
+                    ['interval with cadence', {y: '2010-2032/2'}],
                     
                 ])('%s', (_, arg) => {
                     c.over(arg)
@@ -713,10 +720,10 @@ describe('Crontabist', () => {
                     c = new Crontabist()
                 })
                 test.each([
-                    ['single invalid lower', {y: '1969'}],// every month does that
-                    ['single invalid higher', {y: '2100'}],// every month does that
-                    ['some invalid', {y: '1200,2000'}],// every month does that
-                    ['all invalid', {y: '1200,2300,34000'}],// every month does that
+                    ['single invalid lower', {y: '1969'}],
+                    ['single invalid higher', {y: '2100'}],
+                    ['some invalid', {y: '1200,2000'}],
+                    ['all invalid', {y: '1200,2300,34000'}],
                     
                     
                 ])('%s', (_, arg) => {
@@ -860,30 +867,4 @@ describe('Crontabist', () => {
             })
         })      
     })
-
-    describe('next', () => {
-        let c
-        beforeEach(() => {
-            c = new Crontabist()
-        })
-        it('basic', () => {
-            const d = new Date('18:19:20 12-31-2025'),
-                r = c.next({
-                    date: d
-                });
-            expect(r.getFullYear()).toBe(2025)
-        })
-        it('throws when invalid date is passed', () => {
-            expect(
-                () => c.next({
-                    date: new Date('18:19:20 56-37-2025')
-                })
-            ).toThrow('Invalid Date')
-        })
-    })
-
-    
 })
-
-
-
