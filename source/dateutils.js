@@ -158,14 +158,12 @@ const solve_0_59_Range = getRangeSolver({
             max: C.bounds.month.max,
             cadence: parseInt(cs[4],10)
         }),
-        labelTransformer: vstr => {
-            if(vstr.match(C.rx.next.hasMonths)){
-                return labels.months.reduce((acc, day, i) => {
-                    return acc.replace(day, i+1)
-                }, vstr)
-            }
-            return vstr;
-        },
+        labelTransformer: vstr => vstr.match(C.rx.next.hasMonths)
+            ? labels.months.reduce(
+                (acc, day, i) => acc.replace(day, i+1),
+                vstr
+            )
+            : vstr,
         rx1: C.rx.ranges.one12cadence,
         rx2: C.rx.ranges.wildRangeCadence
     }),
@@ -176,14 +174,12 @@ const solve_0_59_Range = getRangeSolver({
             max: C.bounds.week.max,
             cadence: parseInt(cs[4],10)
         }),
-        labelTransformer: vstr => {
-            if(vstr.match(C.rx.next.hasWeekdays)){
-                return labels.days.reduce((acc, day, i) => {
-                    return acc.replace(day, i+1)
-                }, vstr)
-            }
-            return vstr;
-        },
+        labelTransformer: vstr => vstr.match(C.rx.next.hasWeekdays)
+            ? labels.days.reduce(
+                (acc, day, i) => acc.replace(day, i+1),
+                vstr
+            )
+            : vstr,
         rx1: C.rx.ranges.one7cadence,
         rx2: C.rx.ranges.wildRangeCadence
     });
