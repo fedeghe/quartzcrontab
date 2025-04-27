@@ -18,16 +18,11 @@ dow [1(SUN), 7(SAT)]*
 y   [2xxx,]*
 */
 
-const defaults = {
-        s : '0', // seconds   *   0,1,2,3,4,59   3-45   3-35/5
-        i : '0', // minutes   *   0,1,2,3,4,59   3-45   3-35/5
-        h : '0', // seconds   *   0,1,2,3,4,23   3-23   3-23/5
-        dom : '*', // day of month   *   ?   3/4  12 12,13,15
-        m : '*', // month
-        dow : '?', // day of week
-        y : '*', // year (1970-2099) ...how 1970 :D ??????
-    },
-    rx = {
+const C = require('./constants.js')
+
+const { defaults } = C
+
+const rx = {
         asterx: /^\*(\/\d*)?$/,
         zeroFiftynine: /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
         zeroTwentythree: /^([01]\d|2[0-3]|\d)$/,
@@ -82,14 +77,6 @@ const defaults = {
          * splits number-number/number (second and third optionals)
          */
         splitter: /^([\d,\w]*)(-([\d\w]*))?(\/([\d\w]*))?$/
-        /**
-         * to support ranges like MON,SUN or MON-SUN 
-         * the quite relaxed \w* was used here
-         * which is too relaxed,
-         * 
-         * validation on function parameters covers that edge
-         */
-    
     },
     getRangeValidator = ({mainRx, cadenceRx}) => val => {
         const v = `${val}`;
@@ -168,7 +155,7 @@ const defaults = {
     },
     fieldCorrelationValidators = [{
         validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?'),
-        message: 'either dom either dow must contain "?"'
+        message: C.errors.domdowExclusivity
     }],
     now = new Date(),
     yearNow = now.getFullYear(),

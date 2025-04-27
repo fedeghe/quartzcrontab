@@ -1,5 +1,6 @@
 
 const Crontabist  = require('../dist/index.js');
+const C = require('../dist/constants.js')
 
 describe('Crontabist', () => {
 
@@ -647,7 +648,7 @@ describe('Crontabist', () => {
                     c.over({dom: '?', dow:8})
                     expect(c.validate().valid).toBeFalsy()
                     expect(c.validate().errors.length).toBe(1)
-                    expect(c.validate().errors[0]).toBe('Dow has unexpected value')
+                    expect(c.validate().errors[0]).toBe(C.errors.malformed.dow)
                 })
             })
              
@@ -817,24 +818,24 @@ describe('Crontabist', () => {
             })
             describe('- negatives', () => {
                 test.each([
-                    ['-1 0 0 * * ? *', ['Seconds are not well formatted']],
-                    ['0 -1 0 * * ? *', ['Minutes are not well formatted']],
-                    ['0 0 -12 * * ? *', ['Hours are not well formatted']],
-                    ['0 0 0 s * ? *', ['Dom has unexpected value']],
-                    ['0 0 0 * aaa ? *', ['Months are not well formatted']],
-                    ['0 0 0 ? * 333 *', ['Dow has unexpected value']],
-                    ['0 0 0 ? * * aaaa', ['Years are not well formatted']],
-                    ['0 0 0 1 * 1 *', ['either dom either dow must contain "?"']],
+                    ['-1 0 0 * * ? *', [C.errors.malformed.seconds]],
+                    ['0 -1 0 * * ? *', [C.errors.malformed.minutes]],
+                    ['0 0 -12 * * ? *', [C.errors.malformed.hours]],
+                    ['0 0 0 s * ? *', [C.errors.malformed.dom]],
+                    ['0 0 0 * aaa ? *', [C.errors.malformed.months]],
+                    ['0 0 0 ? * 333 *', [C.errors.malformed.dow]],
+                    ['0 0 0 ? * * aaaa', [C.errors.malformed.years]],
+                    ['0 0 0 1 * 1 *', [C.errors.domdowExclusivity]],
                     // more than one
                     ['-1 -1 -12 s aaa 333 sss', [
-                        'either dom either dow must contain "?"',
-                        'Seconds are not well formatted',
-                        'Minutes are not well formatted',
-                        'Hours are not well formatted',
-                        'Months are not well formatted',
-                        'Years are not well formatted',
-                        'Dom has unexpected value',
-                        'Dow has unexpected value',
+                        C.errors.domdowExclusivity,
+                        C.errors.malformed.seconds,
+                        C.errors.malformed.minutes,
+                        C.errors.malformed.hours,
+                        C.errors.malformed.months,
+                        C.errors.malformed.years,
+                        C.errors.malformed.dom,
+                        C.errors.malformed.dow,
                     ]],
                 ])('%s', (arg, err) => {
                     const validation = Crontabist.validate(arg)
@@ -845,7 +846,7 @@ describe('Crontabist', () => {
                 it('nothing passed', () => {
                     const validation = Crontabist.validate()
                     expect(validation.valid).toBeFalsy()
-                    expect(validation.errors).toMatchObject([])
+                    expect(validation.errors).toMatchObject([C.errors.staticValidationParamMissing])
                 })
             })
             
@@ -861,7 +862,7 @@ describe('Crontabist', () => {
                         c.over({dom: 12, dow:2})
                         expect(c.validate().valid).toBeFalsy()
                         expect(c.validate().errors.length).toBe(1)
-                        expect(c.validate().errors[0]).toBe('either dom either dow must contain "?"')
+                        expect(c.validate().errors[0]).toBe(C.errors.domdowExclusivity)
                     })
                 })
             })

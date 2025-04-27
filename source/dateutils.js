@@ -1,4 +1,6 @@
-const monthEnds = [31,28,31,30,31,30,31,31,30,31,30,31];
+const C = require('./constants.js')
+
+const monthEnds = C.monthEnds;
 
 /**
  * Check if a input year is leap of not
@@ -71,8 +73,7 @@ const solveRange = v => {
     }
     // range
     const range = `${v}`.match(/^([\d,]+)-([\d,]+)(\/(\d*))?$/)
-    if (range) {
-        
+    if (range) {  
         const min = parseInt(range[1],10),
             max = parseInt(range[2],10),
             cadence = parseInt(range[4],10);
@@ -88,10 +89,19 @@ const solveRange = v => {
     }
     return null
 }
+const solveAllRanges = v => {
+    // one
+    if (`${v}`.match(/^\d*$/)) {
+        return [parseInt(v, 10)]
+    }
+    
+    return null
+}
 module.exports = {
     isLeap,
     lastMonthDay,
     nDaysBeforeEndOfMonth,
     nDayOfMonth,
-    solveRange
+    solveRange,
+    solveAllRanges
 };

@@ -1,0 +1,4 @@
+/*
+Quartz cron string creator (v.0.0.6)
+*/
+const labels={days:['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'], monthss:['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],}const monthEnds=[31,28,31,30,31,30,31,31,30,31,30,31];const errors={malformed:{seconds:'Seconds are not well formatted', minutes:'Minutes are not well formatted', hours:'Hours are not well formatted', months:'Months are not well formatted', years:'Years are not well formatted', dom:'Dom has unexpected value', dow:'Dow has unexpected value'}, invalidDate:'Invalid Date', staticValidationParamMissing:'static validation needs an expression to validate', domdowExclusivity:'either dom either dow must contain "?"'}const defaults={s:'0', i:'0', h:'0', dom:'*', m:'*', dow:'?', y:'*',}module.exports={labels, monthEnds, errors, defaults}
