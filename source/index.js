@@ -108,7 +108,7 @@ class CronTabist {
         return this.over({ dom: `${start}/${wd}`, dow: '?'})
     }
     everyWeekDay(d) {
-        return this.over({ dom: '?', dow: `${d}` })
+        return this.over({ dom: '?', dow: `${d ? d : '2-6'}` })
     }   
     everyWeekDayAdd(d) {
         var current = this.elements.dow === defaults.dow
@@ -249,7 +249,8 @@ class CronTabist {
     /* istanbul ignore next */
     next({n = 1, date = null}){
         const now = date || new Date(),
-            expr = this.out();
+            expr = this.out(),
+            elements = this.elements;
         if (now == 'Invalid Date') {
             throw new Error('Invalid Date')
         }

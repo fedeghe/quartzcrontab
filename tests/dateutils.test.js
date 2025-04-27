@@ -30,12 +30,14 @@ describe('date utils', () => {
 
     describe('lastMonthDay', () => {
         test.each([
-            [2000, 0, 31],
-            [2000, 1, 29],
-            [2001, 1, 28],
-            [2100, 1, 28],
-            [2025, 0, 31, true],
-        ])('%i', (y, m, expected, wd=false) => {
+            ['2000 jan gives 31', 2000, 0, 31],
+            ['2000 feb(leap) gives 29', 2000, 1, 29],
+            ['2001 feb gives 28', 2001, 1, 28],
+            ['2100 feb gives 28', 2100, 1, 28],
+            ['2025 jan gives 31', 2025, 0, 31, true],
+            ['2025 may 31 is sat, gives 30 (weekday option)', 2025, 4, 30, true], // 31 may 2025 is sat, expect fri 30
+            ['2025 aug 31 is sun, gives 29 (weekday option)', 2025, 7, 29, true], // 31 aug 2025 is sun, expect fri 29
+        ])('%s', (_, y, m, expected, wd=false) => {
             const res = lastMonthDay(y, m, wd)
             expect(res).toBe(expected)
         })
@@ -67,7 +69,7 @@ describe('date utils', () => {
         })
 
     })
-    
+
     describe('nDayOfMonth', () => {
             /*  jan 2025
                 --------
@@ -95,23 +97,23 @@ describe('date utils', () => {
         })
         describe('throws', () => {
             test.each([
-                ['lower wd violation', 1, -1, 2025, 0,  1],
-                ['higher wd violation', 1, 7, 2025, 0,  1],
-            ])('%s', (_, n, wd, y, m, expected) => {
+                ['lower wd violation', 1, -1, 2025, 0],
+                ['higher wd violation', 1, 7, 2025, 0],
+            ])('%s', (_, n, wd, y, m) => {
                 expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('given weekday does not exist [0-6]')
             })
 
             test.each([
-                ['lower target #wd violation', -1, 1, 2025, 0,  1],
-                ['higher target #wd violation', 6, 1, 2025, 0,  1],
-            ])('%s', (_, n, wd, y, m, expected) => {
+                ['lower target #wd violation', -1, 1, 2025, 0],
+                ['higher target #wd violation', 6, 1, 2025, 0],
+            ])('%s', (_, n, wd, y, m) => {
                 expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('not enough days in any month')
             })
 
             test.each([
-                ['5th sat would be 32', 5, 6, 2025, 0,  1],
-                ['5th sun would be 33', 5, 0, 2025, 0,  1],
-            ])('%s', (_, n, wd, y, m, expected) => {
+                ['5th sat would be 32', 5, 6, 2025, 0],
+                ['5th sun would be 33', 5, 0, 2025, 0],
+            ])('%s', (_, n, wd, y, m) => {
                 expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('not enough days in this month')
             })
         })

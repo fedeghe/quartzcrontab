@@ -622,6 +622,13 @@ describe('Crontabist', () => {
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 }) 
+                it('no params - everyWeekDay', ()=>{
+                    c.everyWeekDay()
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.elements.dow).toBe('2-6')
+                    expect(c.elements.dom).toBe('?')
+                    
+                }) 
             })
             
             describe('- negatives', () => {
@@ -869,7 +876,7 @@ describe('Crontabist', () => {
         it('throws when invalid date is passed', () => {
             expect(
                 () => c.next({
-                    date: new Date('18:19:20 12-37-2025')
+                    date: new Date('18:19:20 56-37-2025')
                 })
             ).toThrow('Invalid Date')
         })
