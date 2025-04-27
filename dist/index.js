@@ -250,19 +250,21 @@ class CronTabist {
     }
 
     /* istanbul ignore next */
-    next(n){
-        return CronTabist.next(n, this.elements);
-    }
-    /* istanbul ignore next */
-    static next(n, els){
-        const now = n || new Date(),
-            s = now.getSeconds(),
+    next({n = 1, date = null}){
+        const now = date || new Date(),
+            expr = this.out();
+        if (now == 'Invalid Date') {
+            throw new Error('Invalid Date')
+        }
+        const s = now.getSeconds(),
             i = now.getMinutes(),
             h = now.getHours(),
             d = now.getDate(),
             m = now.getMonth(),
             y = now.getFullYear();
-        console.log({els});
+        // console.log({expr, date, d: `${h}:${i}:${s} ${d}-${m+1}-${y}`});
+        
+        return now;
     }
 
     static validate(exp){

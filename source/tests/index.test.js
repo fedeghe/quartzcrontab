@@ -855,18 +855,23 @@ describe('Crontabist', () => {
     })
 
     describe('next', () => {
-        it.skip('basic', () => {
-            const d = new Date('18:19:20 3-12-2025');
-            Crontabist.next(d, {
-                s: 21,
-                i: 20,
-                h: 19,
-                dow: '?',
-                m: 3,
-                dom:11,
-                y: 2025
-            })
-
+        let c
+        beforeEach(() => {
+            c = new Crontabist()
+        })
+        it('basic', () => {
+            const d = new Date('18:19:20 12-31-2025'),
+                r = c.next({
+                    date: d
+                });
+            expect(r.getFullYear()).toBe(2025)
+        })
+        it('throws when invalid date is passed', () => {
+            expect(
+                () => c.next({
+                    date: new Date('18:19:20 12-37-2025')
+                })
+            ).toThrow('Invalid Date')
         })
     })
 
