@@ -3,7 +3,10 @@ Quartz cron string creator (v.0.0.6)
 */
 const C = require('./constants.js')
 
-const monthEnds = C.monthEnds;
+const {
+    monthEnds,
+    labels,
+} = C
 
 /**
  * Check if a input year is leap of not
@@ -60,10 +63,145 @@ const nDayOfMonth = (n, wd, y, m) => {
         firstTarget = (wd + 7 - distance) % 7,
         nthTarget = (n-1)*7 + firstTarget;
     if(nthTarget > end) throw new Error('not enough days in this month');
-    return nthTarget; 
-    
+    return nthTarget;     
 };
-const solveRange = v => {
+
+const getRangeSolver = ({
+    bounds,
+    labelTransformer,
+    minMaxCadenceGetter,
+    rx1, rx2
+}) => {
+
+    return v => {
+        let vstr = `${v}`;
+        if(vstr.startsWith('*')){
+            vstr = vstr.replace('*', `${bounds.min}-${bounds.max}`);
+        }
+        if(labelTransformer) {
+            vstr = labelTransformer(vstr)
+        }
+        // one
+        if (vstr.match(/^\d*$/)) {
+            return [parseInt(vstr, 10)]
+        }
+        // commasep
+        if (vstr.match(/^([\d,]+)\d$/)) {
+            return vstr.split(/,/).map(val=>parseInt(val,10)).sort(
+                ( a, b ) => a > b ? 1 : -1
+            );
+        }
+        // startwithCadence
+        const cadenceStart = vstr.match(rx1)
+        if(cadenceStart){
+            const {
+                    min,
+                    max,
+                    cadence
+                } = minMaxCadenceGetter(cadenceStart),
+                ret = [];
+            for(let i = min; i<=max; i+=cadence){
+                ret.push(i);
+            }
+            return ret
+        }
+        // range
+        const range = vstr.match(rx2)
+        if (range) {  
+            const min = parseInt(range[1],10),
+                max = parseInt(range[2],10),
+                cadence = parseInt(range[4],10);
+            let ret = [];
+            if(cadence){
+                for(let i = min; i<=max; i+=cadence){
+                    ret.push(i);
+                }
+            } else {
+                ret = Array.from({length: max-min+1}, (_, i) => i+min);
+            }
+            return ret
+        }
+        return null
+    }
+}
+const solve_0_59_Range = getRangeSolver({
+    bounds: C.bounds.seconds,
+    minMaxCadenceGetter: cs => ({
+        min: parseInt(cs[1],10),
+        max : C.bounds.seconds.max,
+        cadence: parseInt(cs[5],10),
+    }),
+    rx1: C.rx.ranges.zero59cadence,
+    rx2: C.rx.ranges.wildRangeCadence
+})
+const solve_hours_ranges = getRangeSolver({
+    bounds: C.bounds.hour,
+    minMaxCadenceGetter: cs => ({
+        min: parseInt(cs[1],10),
+        max: C.bounds.hour.max,
+        cadence: parseInt(cs[4],10)
+    }),
+    rx1: C.rx.ranges.wildStartCadence,
+    rx2: C.rx.ranges.wildRangeCadence
+})
+
+const solve_year_ranges = getRangeSolver({
+    bounds: C.bounds.year,
+    minMaxCadenceGetter: cs => ({
+        min: parseInt(cs[1],10),
+        max: C.bounds.year.max,
+        cadence: parseInt(cs[4],10)
+    }),
+    rx1: C.rx.ranges.wildStartCadence,
+    rx2: C.rx.ranges.wildRangeCadence
+})
+
+const solve_month_ranges = getRangeSolver({
+    bounds: C.bounds.month,
+    minMaxCadenceGetter: cs => ({
+        min: parseInt(cs[1],10),
+        max: C.bounds.month.max,
+        cadence: parseInt(cs[4],10)
+    }),
+    labelTransformer: vstr => {
+        if(vstr.match(C.rx.next.hasMonths)){
+            return labels.months.reduce((acc, day, i) => {
+                return acc.replace(day, i+1)
+            }, vstr)
+        }
+        return vstr;
+    },
+    rx1: C.rx.ranges.one12cadence,
+    rx2: C.rx.ranges.wildRangeCadence
+})
+
+const solve_week_ranges = getRangeSolver({
+    bounds: C.bounds.week,
+    minMaxCadenceGetter: cs => ({
+        min: parseInt(cs[1],10),
+        max: C.bounds.week.max,
+        cadence: parseInt(cs[4],10)
+    }),
+    labelTransformer: vstr => {
+        if(vstr.match(C.rx.next.hasWeekdays)){
+            return labels.days.reduce((acc, day, i) => {
+                return acc.replace(day, i+1)
+            }, vstr)
+        }
+        return vstr;
+    },
+    rx1: C.rx.ranges.one7cadence,
+    rx2: C.rx.ranges.wildRangeCadence
+})
+
+/**
+ solve_hours_ranges 
+ solve_minutes_ranges < solve_0_59_Range
+ solve_seconds_ranges < solve_0_59_Range
+ */
+
+//most likely not needed, TODO : double check
+const solveNumericRange = v => {
     // one
     if (`${v}`.match(/^\d*$/)) {
         return [parseInt(v, 10)]
@@ -92,19 +230,15 @@ const solveRange = v => {
     }
     return null
 }
-const solveAllRanges = v => {
-    // one
-    if (`${v}`.match(/^\d*$/)) {
-        return [parseInt(v, 10)]
-    }
-    
-    return null
-}
 module.exports = {
     isLeap,
     lastMonthDay,
     nDaysBeforeEndOfMonth,
     nDayOfMonth,
-    solveRange,
-    solveAllRanges
+    solveNumericRange,
+    solve_0_59_Range,
+    solve_year_ranges,
+    solve_month_ranges,
+    solve_week_ranges,
+    solve_hours_ranges,
 };
