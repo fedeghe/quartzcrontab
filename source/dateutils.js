@@ -122,74 +122,71 @@ const getRangeSolver = ({
     }
 }
 const solve_0_59_Range = getRangeSolver({
-    bounds: C.bounds.seconds,
-    minMaxCadenceGetter: cs => ({
-        min: parseInt(cs[1],10),
-        max : C.bounds.seconds.max,
-        cadence: parseInt(cs[5],10),
+        bounds: C.bounds.seconds,
+        minMaxCadenceGetter: cs => ({
+            min: parseInt(cs[1],10),
+            max : C.bounds.seconds.max,
+            cadence: parseInt(cs[5],10),
+        }),
+        rx1: C.rx.ranges.zero59cadence,
+        rx2: C.rx.ranges.wildRangeCadence
     }),
-    rx1: C.rx.ranges.zero59cadence,
-    rx2: C.rx.ranges.wildRangeCadence
-})
-const solve_hours_ranges = getRangeSolver({
-    bounds: C.bounds.hour,
-    minMaxCadenceGetter: cs => ({
-        min: parseInt(cs[1],10),
-        max: C.bounds.hour.max,
-        cadence: parseInt(cs[4],10)
+    solve_hours_ranges = getRangeSolver({
+        bounds: C.bounds.hour,
+        minMaxCadenceGetter: cs => ({
+            min: parseInt(cs[1],10),
+            max: C.bounds.hour.max,
+            cadence: parseInt(cs[4],10)
+        }),
+        rx1: C.rx.ranges.wildStartCadence,
+        rx2: C.rx.ranges.wildRangeCadence
     }),
-    rx1: C.rx.ranges.wildStartCadence,
-    rx2: C.rx.ranges.wildRangeCadence
-})
-
-const solve_year_ranges = getRangeSolver({
-    bounds: C.bounds.year,
-    minMaxCadenceGetter: cs => ({
-        min: parseInt(cs[1],10),
-        max: C.bounds.year.max,
-        cadence: parseInt(cs[4],10)
+    solve_year_ranges = getRangeSolver({
+        bounds: C.bounds.year,
+        minMaxCadenceGetter: cs => ({
+            min: parseInt(cs[1],10),
+            max: C.bounds.year.max,
+            cadence: parseInt(cs[4],10)
+        }),
+        rx1: C.rx.ranges.wildStartCadence,
+        rx2: C.rx.ranges.wildRangeCadence
     }),
-    rx1: C.rx.ranges.wildStartCadence,
-    rx2: C.rx.ranges.wildRangeCadence
-})
-
-const solve_month_ranges = getRangeSolver({
-    bounds: C.bounds.month,
-    minMaxCadenceGetter: cs => ({
-        min: parseInt(cs[1],10),
-        max: C.bounds.month.max,
-        cadence: parseInt(cs[4],10)
+    solve_month_ranges = getRangeSolver({
+        bounds: C.bounds.month,
+        minMaxCadenceGetter: cs => ({
+            min: parseInt(cs[1],10),
+            max: C.bounds.month.max,
+            cadence: parseInt(cs[4],10)
+        }),
+        labelTransformer: vstr => {
+            if(vstr.match(C.rx.next.hasMonths)){
+                return labels.months.reduce((acc, day, i) => {
+                    return acc.replace(day, i+1)
+                }, vstr)
+            }
+            return vstr;
+        },
+        rx1: C.rx.ranges.one12cadence,
+        rx2: C.rx.ranges.wildRangeCadence
     }),
-    labelTransformer: vstr => {
-        if(vstr.match(C.rx.next.hasMonths)){
-            return labels.months.reduce((acc, day, i) => {
-                return acc.replace(day, i+1)
-            }, vstr)
-        }
-        return vstr;
-    },
-    rx1: C.rx.ranges.one12cadence,
-    rx2: C.rx.ranges.wildRangeCadence
-})
-
-const solve_week_ranges = getRangeSolver({
-    bounds: C.bounds.week,
-    minMaxCadenceGetter: cs => ({
-        min: parseInt(cs[1],10),
-        max: C.bounds.week.max,
-        cadence: parseInt(cs[4],10)
-    }),
-    labelTransformer: vstr => {
-        if(vstr.match(C.rx.next.hasWeekdays)){
-            return labels.days.reduce((acc, day, i) => {
-                return acc.replace(day, i+1)
-            }, vstr)
-        }
-        return vstr;
-    },
-    rx1: C.rx.ranges.one7cadence,
-    rx2: C.rx.ranges.wildRangeCadence
-})
+    solve_week_ranges = getRangeSolver({
+        bounds: C.bounds.week,
+        minMaxCadenceGetter: cs => ({
+            min: parseInt(cs[1],10),
+            max: C.bounds.week.max,
+            cadence: parseInt(cs[4],10)
+        }),
+        labelTransformer: vstr => {
+            if(vstr.match(C.rx.next.hasWeekdays)){
+                return labels.days.reduce((acc, day, i) => {
+                    return acc.replace(day, i+1)
+                }, vstr)
+            }
+            return vstr;
+        },
+        rx1: C.rx.ranges.one7cadence,
+        rx2: C.rx.ranges.wildRangeCadence
+    });
 
 /**
  solve_hours_ranges 
