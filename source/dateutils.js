@@ -64,8 +64,8 @@ const nDayOfMonth = (n, wd, y, m) => {
 };
 
 const getRangeSolver = ({
+    labelTransformer = v => v,
     bounds,
-    labelTransformer,
     minMaxCadenceGetter,
     rx1, rx2
 }) => {
@@ -75,9 +75,7 @@ const getRangeSolver = ({
         if(vstr.startsWith('*')){
             vstr = vstr.replace('*', `${bounds.min}-${bounds.max}`);
         }
-        if(labelTransformer) {
-            vstr = labelTransformer(vstr)
-        }
+        vstr = labelTransformer(vstr)
         // one
         if (vstr.match(/^\d*$/)) {
             return [parseInt(vstr, 10)]
@@ -141,14 +139,20 @@ const solve_0_59_Range = getRangeSolver({
         rx1: C.rx.ranges.wildStartCadence,
         rx2: C.rx.ranges.wildRangeCadence
     }),
-    solve_year_ranges = getRangeSolver({
-        bounds: C.bounds.year,
+    solve_week_ranges = getRangeSolver({
+        bounds: C.bounds.week,
         minMaxCadenceGetter: cs => ({
             min: parseInt(cs[1],10),
-            max: C.bounds.year.max,
+            max: C.bounds.week.max,
             cadence: parseInt(cs[4],10)
         }),
-        rx1: C.rx.ranges.wildStartCadence,
+        labelTransformer: vstr => vstr.match(C.rx.next.hasWeekdays)
+            ? labels.days.reduce(
+                (acc, day, i) => acc.replace(day, i+1),
+                vstr
+            )
+            : vstr,
+        rx1: C.rx.ranges.one7cadence,
         rx2: C.rx.ranges.wildRangeCadence
     }),
     solve_month_ranges = getRangeSolver({
@@ -167,20 +171,14 @@ const solve_0_59_Range = getRangeSolver({
         rx1: C.rx.ranges.one12cadence,
         rx2: C.rx.ranges.wildRangeCadence
     }),
-    solve_week_ranges = getRangeSolver({
-        bounds: C.bounds.week,
+    solve_year_ranges = getRangeSolver({
+        bounds: C.bounds.year,
         minMaxCadenceGetter: cs => ({
             min: parseInt(cs[1],10),
-            max: C.bounds.week.max,
+            max: C.bounds.year.max,
             cadence: parseInt(cs[4],10)
         }),
-        labelTransformer: vstr => vstr.match(C.rx.next.hasWeekdays)
-            ? labels.days.reduce(
-                (acc, day, i) => acc.replace(day, i+1),
-                vstr
-            )
-            : vstr,
-        rx1: C.rx.ranges.one7cadence,
+        rx1: C.rx.ranges.wildStartCadence,
         rx2: C.rx.ranges.wildRangeCadence
     });
 
