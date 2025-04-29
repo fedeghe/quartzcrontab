@@ -3,6 +3,12 @@ const labels = {
     months: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
 }
 
+const SEVEN = Array.from({length:7}, (_, i)=>i+1)
+const THIRTYONE = Array.from({length:31}, (_, i)=>i+1)
+const THIRTY = Array.from({length:30}, (_, i)=>i+1)
+const TWENTYNINE = Array.from({length:29}, (_, i)=>i+1)
+const TWENTYEIGTH = Array.from({length:28}, (_, i)=>i+1)
+
 const NUMBERS = {
     ZERO : 0,
     ONE : 1,
@@ -144,5 +150,10 @@ module.exports = {
     defaults,
     rx,
     bounds,
-    NUMBERS
+    NUMBERS,
+    SEVEN,
+    THIRTYONE,
+    THIRTY,
+    TWENTYNINE,
+    TWENTYEIGTH
 }

@@ -10,6 +10,15 @@ const {
     removeSpaces
 } = require('./utils');
 
+const {
+    solve_0_59_Range,
+    solve_hours_ranges,
+    solve_week_ranges,
+    solve_month_ranges,
+    solve_year_ranges,
+    solve_dom
+} = require('./dateutils')
+
 const C = require('./constants')
 
 class CronTabist {
@@ -208,13 +217,14 @@ class CronTabist {
 
 
     /* istanbul ignore next */
-    next({n = 1, date = null}){
+    next({n = 1, date = null} = {}){
         const base = date || new Date(),
             expr = this.out(),
             elements = this.elements;
         if (base == 'Invalid Date') {
             throw new Error(C.errors.invalidDate)
         }
+        // console.log(elements)
         const now = {
             s: base.getSeconds(),
             i:  base.getMinutes(),
@@ -223,6 +233,16 @@ class CronTabist {
             m: base.getMonth(),
             y: base.getFullYear()
         };
+        const all = {
+            seconds: solve_0_59_Range(elements.s),
+            minutes: solve_0_59_Range(elements.i),
+            hours: solve_hours_ranges(elements.h),
+            dow: solve_week_ranges(elements.dow),
+            dom: solve_dom(2025,2,elements.dom),
+            months: solve_month_ranges(elements.m),
+            years: solve_year_ranges(elements.y)
+        }
+        console.log({all})
 
         // from elements get the starting earlier date   
         return now;

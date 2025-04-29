@@ -12,10 +12,12 @@ const {
     solve_month_ranges,
     solve_week_ranges,
     solve_hours_ranges,
-    solve_0_59_Range
+    solve_0_59_Range,
+    solve_dom,
+    solve_dow
 } = dateutils
 describe('date utils', () => {
-    
+     
     describe('isLeap', () => {
         describe('positives', () => {
             test.each([
@@ -231,6 +233,7 @@ describe('date utils', () => {
         test.each([
             ['null #1', 'aaa', null],
             ['null #2', ' ', null],
+            ['?', '?', null],
         ])('%s', (_, n, expected) => {
             expect(solve_week_ranges(n)).toBe(expected)
         })
@@ -284,6 +287,210 @@ describe('date utils', () => {
         ])('%s', (_, n, expected) => {
             expect(solve_0_59_Range(n)).toBe(expected)
         })
+    })
+    
+    describe('solve_dom', () => {
+
+        describe('*', () => {
+            test.each([
+                ['* (2025 jan)', 2025, 1, '*', C.THIRTYONE],
+                ['* (2025 feb)', 2025, 2, '*', C.TWENTYEIGTH],
+                ['* (2025 apr)', 2025, 4, '*', C.THIRTY],
+                ['* (2024 feb*)', 2024, 2, '*', C.TWENTYNINE],
+            ])('%s', (_, y, m, dom, expected) => {
+                expect(solve_dom(y, m, dom)).toMatchObject(expected)
+            })
+        })
+        describe('[1-31]/[1-31]', () => {
+            test.each([
+                ['1/2 (2025 apr)', 2025, 4, '1/2', [1,3,5,7,9,11,13,15,17,19,21,23,25,27,29]],
+                ['27/1 (2025 apr)', 2025, 4, '27/1', [27,28,29,30]],
+                ['7/5 (2025 apr)', 2025, 4, '7/5', [7,12,17,22,27]],
+                ['8/31 (2025 apr)', 2025, 4, '8/31', [8]],
+                ['14/11 (2025 apr)', 2025, 4, '14/14', [14,28]],
+                ['15/7 (2025 apr)', 2025, 4, '15/7', [15,22,29]],
+                ['21/7 (2025 apr)', 2025, 4, '21/7', [21,28]],
+                // // leap
+                ['1/4 (2024 feb*)', 2024, 2, '1/4', [1,5,9,13,17,21,25,29]],
+                ['8/7 (2024 feb*)', 2024, 2, '8/7', [8,15,22,29]],
+                ['15/7 (2024 feb*)', 2024, 2, '15/7', [15,22,29]],
+                ['22/7 (2024 feb*)', 2024, 2, '22/7', [22,29]],
+                ['29/4 (2024 feb*)', 2024, 2, '29/4', [29]],
+                ['31/4 (2024 feb*)', 2024, 2, '31/4', []],
+            ])('%s', (_, y, m, dom, expected) => {
+                expect(solve_dom(y, m, dom)).toMatchObject(expected)
+            })
+        })
+        describe('one or more [1-31] , separated', () => {
+            test.each([
+                ['1 (2025 apr)', 2025, 4, '1', [1]],
+                ['31 (2025 apr)', 2025, 4, '31', []], 
+                ['31 (2025 may) ', 2025, 5, '31', [31]], 
+                ['31 (2023 feb)', 2023, 2, '29', []],
+                ['-1 (2025 apr)', 2025, 4, '-1', []],
+                ['32 (2025 apr)', 2025, 4, '32', []],
+
+                ['1 (2025 apr)', 2025, 4, '1', [1]],
+                ['31 (2025 apr)', 2025, 4, '31', []],
+                ['1,2,3 (2025 apr)', 2025, 4, '1,2,3', [1,2,3]],
+                ['1,2,3,30 (2025 apr)', 2025, 4, '1,2,3,30', [1,2,3,30]],
+                ['1,2,3,31 (2025 apr)', 2025, 4, '1,2,3,31', [1,2,3]],
+                ['1,2,3,31 (2025 may)', 2025, 5, '1,2,3,31', [1,2,3,31]],
+                ['1,2,3,32 (2025 apr)', 2025, 4, '1,2,3,32', []],
+                ['32 (2025 apr)', 2025, 4, '32', []],
+            ])('%s', (_, y, m, dom, expected) => {
+                expect(solve_dom(y, m, dom)).toMatchObject(expected)
+            })
+        })
+        describe('[1-31] - [1-31] / [1-31]', () => {
+            test.each([
+                ['1-10/2 (2025 apr)', 2025, 4, '1-10/2', [1,3,5,7,9]],
+                ['1-11/2 (2025 apr)', 2025, 4, '1-11/2', [1,3,5,7,9,11]],
+                ['1-31/2 (2025 apr)', 2025, 4, '1-31/2', [1,3,5,7,9,11,13,15,17,19,21,23,25,27,29]],
+                ['1-31/2 (2025 may)', 2025, 5, '1-31/2', [1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31]],
+            ])('%s', (_, y, m, dom, expected) => {
+                expect(solve_dom(y, m, dom)).toMatchObject(expected)
+            })
+        })
+
+        describe('L', () => {
+            test.each([
+                ['L (2025 apr)', 2025, 4, 'L', [30]],
+                ['L (2025 may)', 2025, 5, 'L', [31]],
+                ['L (2025 feb)', 2025, 2, 'L', [28]],
+                ['L (2024 feb*)', 2024, 2, 'L', [29]],
+                
+            ])('%s', (_, y, m, dom, expected) => {
+                expect(solve_dom(y, m, dom)).toMatchObject(expected)
+            })
+        })
+
+        describe('LW', () => {
+            test.each([
+                ['LW (2025 mar)', 2025, 3, 'LW', [31]],
+                ['LW (2025 apr)', 2025, 4, 'LW', [30]],
+                ['LW (2025 may)', 2025, 5, 'LW', [30]],
+                ['LW (2025 aug)', 2025, 8, 'LW', [29]],
+            ])('%s', (_, y, m, dom, expected) => {
+                expect(solve_dom(y, m, dom)).toMatchObject(expected)
+            })
+        })
+
+        describe('L-[1-31]', () => {
+            test.each([
+                ['L-1 (2025 march)', 2025, 3, 'L-1', [30]],
+                ['L-5 (2025 march)', 2025, 3, 'L-5', [26]],
+                ['L-30 (2025 march)', 2025, 3, 'L-30', [1]],
+                ['L-31 (2025 march)', 2025, 3, 'L-31', []],
+            ])('%s', (_, y, m, dom, expected) => {
+                expect(solve_dom(y, m, dom)).toMatchObject(expected)
+            })
+        })
+
+        describe('[1-7]L', () => {
+            test.each([
+                ['1L (2025 march)', 2025, 3, '1L', [30]],
+                ['2L (2025 march)', 2025, 3, '2L', [31]],
+                ['3L (2025 march)', 2025, 3, '3L', [25]],
+                ['4L (2025 march)', 2025, 3, '4L', [26]],
+                ['5L (2025 march)', 2025, 3, '5L', [27]],
+                ['6L (2025 march)', 2025, 3, '6L', [28]],
+                ['7L (2025 march)', 2025, 3, '7L', [29]],
+                ['7L (2025 march)', 2025, 3, 'L222', []],
+                ['8L (2025 march)', 2025, 3, '8L', []],
+                ['00L (2025 march)', 2025, 3, '00L', []],
+            ])('%s', (_, y, m, dom, expected) => {
+                expect(solve_dom(y, m, dom)).toMatchObject(expected)
+            })
+        })
+        
+    })
+
+    describe('solve_dow', () => {
+
+        describe ('*', () => {
+            test.each([
+                ['* (2024 jan)', 2025, 1, '*', C.THIRTYONE],
+                ['* (2025 feb)', 2025, 2, '*', C.TWENTYEIGTH],
+                ['*3 (2025 jan)', 2025, 2, '*3', []],
+            ])('%s', (_, y, m, dow, expected) => {
+                expect(solve_dow(y, m, dow)).toMatchObject(expected)
+            })
+        })
+
+        describe('[1-7]|* / [1-7]', () => {
+            test.each([
+                ['*/4 (2025 jan)', 2025, 1, '*/4', [5,9,13,17,21,25,29]],
+                ['1/4 (2025 jan)', 2025, 1, '1/4', [5,9,13,17,21,25,29]],
+                ['7/5 (2024 jan)', 2025, 1, '7/5',   [4,9,14,19,24,29]],
+                ['7/8 (2024 jan)', 2025, 1, '7/8', []],
+            ])('%s', (_, y, m, dow, expected) => {
+                expect(solve_dow(y, m, dow)).toMatchObject(expected)
+            })
+        })
+
+        describe('[1-7] OR [SUN-SAT]', () => {
+            test.each([
+                ['sun (2024 jan)', 2024, 1, '1', [7,14,21,28]],
+                ['SUN (2024 jan)', 2024, 1, 'SUN', [7,14,21,28]],
+                ['sun (2025 jan)', 2025, 1, '1', [5,12,19,26]],
+                ['SUN (2025 jan)', 2025, 1, 'SUN', [5,12,19,26]],
+                ['MON (2025 jan)', 2025, 1, 'MON', [6,13,20,27]],
+            ])('%s', (_, y, m, dow, expected) => {
+                expect(solve_dow(y, m, dow)).toMatchObject(expected)
+            })
+        })
+
+        describe('[1-7]-[1-7] OR [SUN-SAT]-[SUN-SAT]', () => {
+            test.each([
+                ['1-3 (2025 jan)', 2025, 1, '1-3', [5,6,7, 12,13,14, 19,20,21, 26,27,28]],
+                ['MON-WED (2025 jan)', 2025, 1, 'SAT-SUN', [4,5, 11,12, 18,19, 25,26]],
+                ['0-W32 (2025 jan)', 2025, 1, '0-32', []],
+            ])('%s', (_, y, m, dow, expected) => {
+                expect(solve_dow(y, m, dow)).toMatchObject(expected)
+            })
+        })
+
+        describe('[1-7]-[1-7]/[1-7] OR [SUN-SAT]-[SUN-SAT]/[1-7]', () => {
+            test.each([
+                ['2-5/2 (2025 jan)', 2025, 1, '2-6/2', [
+                       1, 3,
+                    6, 8, 10,
+                    13, 15, 17,
+                    20, 22, 24,
+                    27, 29, 31
+                ]],
+            ])('%s', (_, y, m, dow, expected) => {
+                expect(solve_dow(y, m, dow)).toMatchObject(expected)
+            })
+        })
+
+        describe('[1-7]L', () => {
+            test.each([
+                ['1L (2025 jan)', 2025, 1, '1L', [26]],
+                ['2L (2025 jan)', 2025, 1, '2L', [27]],
+                ['3L (2025 jan)', 2025, 1, '3L', [28]],
+                ['4L (2025 jan)', 2025, 1, '4L', [29]],
+                ['5L (2025 jan)', 2025, 1, '5L', [30]],
+                ['6L (2025 jan)', 2025, 1, '6L', [31]],
+                ['7L (2025 jan)', 2025, 1, '7L', [25]],
+                
+                ['5L (2025 feb)', 2025, 2, '7L', [22]],
+                ['5L (2024 feb*)', 2024, 2, '5L', [29]],
+            ])('%s', (_, y, m, dow, expected) => {
+                expect(solve_dow(y, m, dow)).toMatchObject(expected)
+            })
+        })
+
+        describe('[1-7]#[1-5]', () => {
+            test.each([
+                ['2#2 (2025 jan)', 2025, 1, '2#1', [6]],
+                ['2#2 (2025 jan)', 2025, 1, '2#2', [13]],
+            ])('%s', (_, y, m, dow, expected) => {
+                expect(solve_dow(y, m, dow)).toMatchObject(expected)
+            })
+        })
+        
     })
 
 

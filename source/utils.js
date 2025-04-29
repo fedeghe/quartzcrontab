@@ -17,7 +17,7 @@ y   [2xxx,]*
 
 const C = require('./constants.js')
 
-const { defaults, rx } = C
+const { defaults, rx, labels } = C
 
 const getRangeValidator = ({mainRx, cadenceRx}) => val => {
         const v = `${val}`;
@@ -98,6 +98,11 @@ const getRangeValidator = ({mainRx, cadenceRx}) => val => {
         validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?'),
         message: C.errors.domdowExclusivity
     }],
+    daysLabels2Numbers = v => {
+        return labels.days.reduce((acc, label, i) => {
+            return acc.replace(label,i+1)
+        }, v)
+    }
     now = new Date(),
     yearNow = now.getFullYear(),
     removeSpaces = s => `${s}`.replace(/\s/mg, '');
@@ -107,5 +112,6 @@ module.exports = {
     fieldCorrelationValidators,
     defaults,
     yearNow,
-    removeSpaces
+    removeSpaces,
+    daysLabels2Numbers
 };
