@@ -483,15 +483,7 @@ describe('date utils', () => {
                 ['6L (2025 jan)', 2025, 1, '6L', [31]],
                 ['7L (2025 jan)', 2025, 1, '7L', [25]],
                 ['5L (2025 feb)', 2025, 2, '7L', [22]],
-
-                // WTF is that ???????
-                /**
-                 * seems like the date here initialize wrong
-                 * last thursday in feb 2024 is the 29
-                 * but in the relative dow_resolver it is clear that cursorDay
-                 * gets a wrong value, then ...when one checks d 💥 🤯
-                 */
-                // ['5L (2024 feb*)', 2024, 2, '5L', [29]],
+                ['5L (2024 feb*)', 2024, 2, '5L', [29]],
             ])('%s', (_, y, m, dow, expected) => {
                 expect(solve_dow(y, m, dow)).toMatchObject(expected)
             })

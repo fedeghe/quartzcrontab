@@ -28,10 +28,10 @@ const lastMonthDay = (y, m, wd) => {
         ret = monthEnds[m];
     }
     if (wd) {
-        const da = new Date();
-        da.setUTCFullYear(y);
-        da.setUTCMonth(m);
-        da.setUTCDate(ret);
+        const da = new Date(Date.UTC(y,m,ret,0,0));
+        // da.setUTCFullYear(y);
+        // da.setUTCMonth(m);
+        // da.setUTCDate(ret);
         day = da.getUTCDay();
         
         /* istanbul ignore else */
@@ -60,10 +60,7 @@ const nDayOfMonth = (n, wd, y, m) => {
     if(wd<0 || wd>6) throw new Error('given weekday does not exist [0-6]');
     if(n<0 || n>5) throw new Error('not enough days in any month');
     const end = lastMonthDay(y, m),
-        da = new Date();
-    da.setUTCFullYear(y);
-    da.setUTCMonth(m);
-    da.setUTCDate(1);
+        da = new Date(Date.UTC(y,m,1,0,0));
     const first = da.getUTCDay(),// 0-6
         distance = (first-1+7)%7,
         firstTarget = (wd + 7 - distance) % 7,
@@ -130,14 +127,9 @@ const getRangeSolver = ({
 
 
 const getSpecialSolver = solvers => (y, m, val) => {
-    const d = new Date(),
+    const d = new Date(Date.UTC(y, m-1, 1, 0, 0)),
         lastDate = lastMonthDay(y, m-1),
         allDays = Array.from({length: lastDate}, (_,i) => i+1);
-    d.setUTCFullYear(y);
-    d.setUTCMonth(m-1);
-    d.setUTCDate(1);
-    d.setUTCHours(0);
-    d.setUTCMinutes(0);
     for(var i = 0, l = solvers.length, r; i < l; i++){
         r = solvers[i]({y, m, val, d, allDays, lastDate})
         if(r.length) return r
@@ -168,7 +160,7 @@ const dom_solvers = [
         let res = [];
         
         if (mat) {
-            var start = parseInt(mat[1], 10)
+            let start = parseInt(mat[1], 10)
                 step = parseInt(mat[2], 10);
             while(start <= lastDate){
                 res.push(start);
@@ -190,7 +182,7 @@ const dom_solvers = [
 
     // [1-31] , ...
     ({val, lastDate}) => {
-        var vals = val.split(/,/)
+        let vals = val.split(/,/)
         if(
             vals.every(v=>{
                 return v.match(/^([1-9]|1[0-9]|2[0-9]|3[01])$/)
@@ -201,16 +193,16 @@ const dom_solvers = [
 
     // [1-31] - [1-31] / [1-31]
     ({val, lastDate}) => {
-        var vals = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])-([1-9]|1[0-9]|2[0-9]|3[01])\/([1-9]|1[0-9]|2[0-9]|3[01])$/),
+        const vals = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])-([1-9]|1[0-9]|2[0-9]|3[01])\/([1-9]|1[0-9]|2[0-9]|3[01])$/),
             res = [];
         if(vals){
-            var tmp = Math.min(parseInt(vals[1],10),lastDate)
-                lim = Math.min(parseInt(vals[2],10), lastDate),
-                add = Math.min(parseInt(vals[3],10), lastDate);
+            const add = Math.min(parseInt(vals[3],10), lastDate);
+            let tmp = Math.min(parseInt(vals[1],10),lastDate),
+                lim = Math.min(parseInt(vals[2],10), lastDate);
             while(tmp <= lim) {
                 res.push(tmp);
                 tmp+=add;
-            }Math
+            }
         }
         
         return res
@@ -223,7 +215,7 @@ const dom_solvers = [
     ({val, lastDate, d}) => {
         if(val.match(/^LW$/)){
             d.setUTCDate(lastDate);
-            var res = d.getUTCDay(),
+            let res = d.getUTCDay(),
                 min = 0;
             while(`${(res - min + 7)%7 }`.match(/^[06]$/)){
                 min++;
@@ -236,7 +228,7 @@ const dom_solvers = [
     ({val, lastDate, d}) => {
         const vals = val.match(/^L-([1-9]|1[0-9]|2[0-9]|3[01])$/);
         if(vals){
-            var last = lastDate-parseInt(vals[1]);
+            const last = lastDate-parseInt(vals[1]);
             return last> 0 ? [last] : [];
         }
         return [];
@@ -246,9 +238,9 @@ const dom_solvers = [
         const vals = val.match(/^([1-7])L$/);
         if(vals){
             d.setUTCDate(lastDate);
-            var targetWeekDay = (parseInt(vals[1], 10) - 1 +7)%7, //rem quartz[1-7], js [0-6]
-                res = d.getUTCDay(), // [0-6]
-                min = 0;
+            const targetWeekDay = (parseInt(vals[1], 10) - 1 +7)%7, //rem quartz[1-7], js [0-6]
+                res = d.getUTCDay(); // [0-6]
+            let min = 0;
             while((res - min + 7)%7 !== targetWeekDay){
                 min++;
             }
@@ -357,17 +349,17 @@ const dow_solvers = [
     // a-b/c every c days between as and bs
     ({val, d, lastDate}) => {
         const mat = daysLabels2Numbers(val)
-                .match(/^(([1-7])-([1-7])\/([1-7]))$/);
+                .match(/^(([1-7])-([1-7])\/([1-7]))$/),
+            res = [];
             
-        let res = [],
-            firstDayWd = d.getUTCDay()+1,// [0-6] -> [1,7]
+        let firstDayWd = d.getUTCDay()+1,// [0-6] -> [1,7]
             toAddDate = 1;
 
         if (mat) {
+            const to = parseInt(mat[3], 10),
+                cadence = parseInt(mat[4], 10);
             let rangeFilled = false,
                 cursor = parseInt(mat[2], 10),
-                to = parseInt(mat[3], 10),
-                cadence = parseInt(mat[4], 10),
                 range = [cursor];
             while(!rangeFilled) {
                 cursor = (1 + cursor)%7;
@@ -388,21 +380,21 @@ const dow_solvers = [
 
     // [1-7]L
     // aL the last a of the month
-    ({y,m,val, d, lastDate}) => {
+    ({val, d, lastDate}) => {
         const mat = val.match(/^([1-7])L$/);
         let res = [],
             trg = lastDate;
         d.setUTCDate(lastDate);
-        d.setUTCHours(0);
-        d.setUTCMinutes(0);
-        d.setUTCSeconds(0);
+        // d.setUTCHours(0);
+        // d.setUTCMinutes(0);
+        // d.setUTCSeconds(0);
         // d.setUTCHours(0);
         
         let cursorDay = d.getUTCDay()+1 ; // [0-6] -> [1,7]
         
         if (mat) {
             let trgWd = parseInt(mat[1], 10);
-            console.log({d, 'wwaaaat': d.getUTCDay(), lastDate, cursorDay, trgWd})
+            // console.log({d, 'wwaaaat': d.getUTCDay(), lastDate, cursorDay, trgWd})
             while(cursorDay !== trgWd){
                 cursorDay = cursorDay-1>0 ? cursorDay-1 : 7;
                 trg--;
@@ -417,8 +409,8 @@ const dow_solvers = [
     ({val, d}) => {
         const mat = val.match(/^([1-7])#([1-5])$/);
         d.setUTCDate(1);
-        let res = [],
-            cursorDate = 1;
+        const res = [];
+        let cursorDate = 1;
             cursorDay = d.getUTCDay() + 1; // [0-6] -> [1,7]
         if (mat) {
             const wd = parseInt(mat[1], 10),
