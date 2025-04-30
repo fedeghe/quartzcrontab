@@ -133,6 +133,8 @@ const getSpecialSolver = solvers => (y, m, val) => {
     d.setUTCFullYear(y);
     d.setUTCMonth(m-1);
     d.setUTCDate(1);
+    d.setUTCHours(0);
+    d.setUTCMinutes(0);
     for(var i = 0, l = solvers.length, r; i < l; i++){
         r = solvers[i]({y, m, val, d, allDays, lastDate})
         if(r.length) return r
@@ -158,7 +160,7 @@ const dom_solvers = [
         : [],
 
     // [1-31] / [1-31]
-    ({val, d, lastDate}) => {
+    ({val, lastDate}) => {
         const mat = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)\/(([1-9]|1[0-9]|2[0-9]|3[01]|\*))$/)
         let res = [];
         
@@ -383,16 +385,21 @@ const dow_solvers = [
 
     // [1-7]L
     // aL the last a of the month
-    ({val, d, lastDate}) => {
+    ({y,m,val, d, lastDate}) => {
         const mat = val.match(/^([1-7])L$/);
         let res = [],
             trg = lastDate;
         d.setUTCDate(lastDate);
-        let cursorDay = d.getUTCDay()+1 ; // [0-6] -> [1,7]
+        d.setUTCHours(0);
+        d.setUTCMinutes(0);
+        d.setUTCSeconds(0);
+        // d.setUTCHours(0);
         
+        let cursorDay = d.getUTCDay()+1 ; // [0-6] -> [1,7]
         
         if (mat) {
             let trgWd = parseInt(mat[1], 10);
+            console.log({d, 'wwaaaat': d.getUTCDay(), lastDate, cursorDay, trgWd})
             while(cursorDay !== trgWd){
                 cursorDay = cursorDay-1>0 ? cursorDay-1 : 7;
                 trg--;
@@ -411,10 +418,8 @@ const dow_solvers = [
             cursorDate = 1;
             cursorDay = d.getUTCDay() + 1; // [0-6] -> [1,7]
         if (mat) {
-            
             const wd = parseInt(mat[1], 10),
                 n = parseInt(mat[2], 10);
-
             while (cursorDay !== wd) {
                 cursorDay = cursorDay+1 > 7
                     ? 1

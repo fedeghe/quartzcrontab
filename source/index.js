@@ -13,7 +13,8 @@ const {
     solve_week_ranges,
     solve_month_ranges,
     solve_year_ranges,
-    solve_dom
+    solve_dom,
+    solve_dow,
 } = require('./dateutils')
 
 const C = require('./constants')
@@ -234,12 +235,11 @@ class CronTabist {
             seconds: solve_0_59_Range(elements.s),
             minutes: solve_0_59_Range(elements.i),
             hours: solve_hours_ranges(elements.h),
-            dow: solve_week_ranges(elements.dow),
+            dow: solve_dow(2025,2,elements.dow),
             dom: solve_dom(2025,2,elements.dom),
             months: solve_month_ranges(elements.m),
             years: solve_year_ranges(elements.y)
         }
-        console.log({all})
 
         // from elements get the starting earlier date   
         return now;
