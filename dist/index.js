@@ -20,6 +20,8 @@ const {
     solve_dow,
 } = require('./dateutils')
 
+const nextGen = require('./nextGen');
+
 const C = require('./constants')
 
 class CronTabist {
@@ -220,32 +222,34 @@ class CronTabist {
     /* istanbul ignore next */
     next({n = 1, date = null} = {}){
         const base = date || new Date(),
-            expr = this.out(),
             elements = this.elements;
         if (base == 'Invalid Date') {
             throw new Error(C.errors.invalidDate)
         }
-        // console.log(elements)
-        const now = {
-            s: base.getSeconds(),
-            i:  base.getMinutes(),
-            h: base.getHours(),
-            d: base.getDate(),
-            m: base.getMonth(),
-            y: base.getFullYear()
-        };
-        const all = {
-            seconds: solve_0_59_Range(elements.s),
-            minutes: solve_0_59_Range(elements.i),
-            hours: solve_hours_ranges(elements.h),
-            dow: solve_dow(2025,2,elements.dow),
-            dom: solve_dom(2025,2,elements.dom),
-            months: solve_month_ranges(elements.m),
-            years: solve_year_ranges(elements.y)
-        }
-
-        // from elements get the starting earlier date   
-        return now;
+        const y = base.getUTCFullYear(),
+            allgen = nextGen.generateDates(
+                base,
+                solve_year_ranges(elements.y).filter(ye => ye >= y), // remove past years
+                solve_month_ranges(elements.m),
+                elements.dom,
+                elements.dow,
+                solve_hours_ranges(elements.h),
+                solve_0_59_Range(elements.i),
+                solve_0_59_Range(elements.s),
+            );
+        // console.log([
+        //     solve_year_ranges(elements.y).filter(ye => ye >= y), // remove past years
+        //     solve_month_ranges(elements.m),
+        //     solve_dom(2024, 1, elements.dom),
+        //     solve_dow(2024, 1, elements.dow),
+        //     solve_hours_ranges(elements.h),
+        //     solve_0_59_Range(elements.i),
+        //     solve_0_59_Range(elements.s),
+        // ])
+        return Array.from(
+            { length: n },
+            () => allgen.next().value
+        ).filter(Boolean)
     }
 
     validate(){
@@ -292,14 +296,12 @@ class CronTabist {
         if (elements.y && !validators.year(elements.y)) {
             errors.push(C.errors.malformed.years);
         }
-
         if (!validators.dayOfMonth(elements.dom)) {
             errors.push(C.errors.malformed.dom);
         }
         if (!validators.dayOfWeek(elements.dow)) {
             errors.push(C.errors.malformed.dow);
         }
-
         return {
             valid: errors.length === 0,
             errors
