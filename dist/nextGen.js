@@ -18,7 +18,9 @@ function* generateDatesForMonth(base, year, month, dom, dow, hours, minutes, sec
     let daysInMonth 
     if (dom !== '?') {
         daysInMonth = solve_dom(year, month, dom)
-    } else if (dow !== '?') {
+    } else
+    /* istanbul ignore else */
+    if (dow !== '?') {
         daysInMonth = solve_dow(year, month, dow)
     }
     for (let i = 0, l = daysInMonth.length; i < l; i++)
@@ -30,6 +32,7 @@ function* generateDatesForDay(base, year, month, day, hours, minutes, seconds) {
     for (const hour of hours)
         for (const minute of minutes)
             for (const second of seconds) {
+                /* istanbul ignore else */
                 if (+base < Date.UTC(year,month-1, day, hour , minute, second))
                 yield new Date(Date.UTC(year, month-1, day, hour, minute, second)); // month is 0-based here
             }

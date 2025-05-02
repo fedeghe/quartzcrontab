@@ -29,9 +29,6 @@ const lastMonthDay = (y, m, wd) => {
     }
     if (wd) {
         const da = new Date(Date.UTC(y,m,ret,0,0));
-        // da.setUTCFullYear(y);
-        // da.setUTCMonth(m);
-        // da.setUTCDate(ret);
         day = da.getUTCDay();
         
         /* istanbul ignore else */
@@ -57,15 +54,15 @@ const nDaysBeforeEndOfMonth = (n, y, m) => {
  * returns the n-th weekday present in that month of that year 
  */
 const nDayOfMonth = (n, wd, y, m) => {
-    if(wd<0 || wd>6) throw new Error('given weekday does not exist [0-6]');
-    if(n<0 || n>5) throw new Error('not enough days in any month');
+    if (wd < 0 || wd > 6) throw new Error('given weekday does not exist [0-6]');
+    if (n < 0 || n > 5) throw new Error('not enough days in any month');
     const end = lastMonthDay(y, m),
-        da = new Date(Date.UTC(y,m,1,0,0));
-    const first = da.getUTCDay(),// 0-6
+        da = new Date(Date.UTC(y,m,1,0,0)),
+        first = da.getUTCDay(),// 0-6
         distance = (first-1+7)%7,
         firstTarget = (wd + 7 - distance) % 7,
         nthTarget = (n-1)*7 + firstTarget;
-    if(nthTarget > end) throw new Error('not enough days in this month');
+    if (nthTarget > end) throw new Error('not enough days in this month');
     return nthTarget;     
 };
 
@@ -502,6 +499,7 @@ const solve_0_59_Range = getRangeSolver({
  */
 
 //most likely not needed, TODO : double check
+/*
 const solveNumericRange = v => {
     // one
     if (`${v}`.match(/^\d*$/)) {
@@ -530,13 +528,13 @@ const solveNumericRange = v => {
         return ret
     }
     return null
-}
+}*/
 module.exports = {
     isLeap,
     lastMonthDay,
     nDaysBeforeEndOfMonth,
     nDayOfMonth,
-    solveNumericRange,
+    // solveNumericRange,
     solve_0_59_Range,
     solve_year_ranges,
     solve_month_ranges,

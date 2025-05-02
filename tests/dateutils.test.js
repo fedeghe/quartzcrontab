@@ -7,7 +7,7 @@ const {
     lastMonthDay,
     nDaysBeforeEndOfMonth,
     nDayOfMonth,
-    solveNumericRange,
+    // solveNumericRange,
     solve_year_ranges,
     solve_month_ranges,
     solve_week_ranges,
@@ -127,7 +127,7 @@ describe('date utils', () => {
             })
         })
     })
-
+/*
     describe('solveNumericRange', () => {
         test.each([
             ['one int', 2, [2]],
@@ -153,7 +153,7 @@ describe('date utils', () => {
             expect(solveNumericRange(n)).toBe(expected)
         })
     })
-
+*/
     describe('solve_year_ranges', () => {
         const allYears = Array.from({
             length:C.bounds.year.max - C.bounds.year.min + 1
