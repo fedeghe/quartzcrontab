@@ -9,7 +9,7 @@
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
  - **help to programmatically create those cron expressions**  
  - **validate an expression**  
- - **get the _n_ next precise occurrences**
+ - **get the _n_ next precise occurrences**  
 
 
 
@@ -295,6 +295,17 @@ adds `min` to the list of already set minutes; as in the previous can pass multi
 all years from `from` year to `to` year; optionally set the cadence passing an `every` integer.  
 
 ---
+
+
+## occurrences
+Fron an instance call the `next` function: 
+``` js
+const nextOccurrence = qct.next()
+// "Mon Jan 01 2024 02:00:00 GMT+0100 (Central European Standard Time)",
+```
+this function accepts two options:  
+- `n`: the number of occurrences needed (1 is the default)  
+- `date`: a reference date (js Date) to be used as _present time_ (default is the current date). No dates before the _present date_ will be returned.
 
 
 [quartz]: https://www.quartz-scheduler.org/
