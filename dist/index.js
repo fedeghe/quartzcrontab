@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.6)
+Quartz cron string creator (v.0.0.7)
 */
 
 const {
@@ -9,6 +9,20 @@ const {
     yearNow,
     removeSpaces
 } = require('./utils');
+
+const {
+    solve_0_59_Range,
+    solve_hours_ranges,
+    solve_week_ranges,
+    solve_month_ranges,
+    solve_year_ranges,
+    solve_dom,
+    solve_dow,
+} = require('./dateutils')
+
+const nextGen = require('./nextGen');
+
+const C = require('./constants')
 
 class CronTabist {
     constructor({
@@ -111,7 +125,10 @@ class CronTabist {
         return this.over({ dom: `${start}/${wd}`, dow: '?'})
     }
     everyWeekDay(d) {
-        return this.over({ dom: '?', dow: `${d}` })
+        return this.over({ dom: '?', dow: `${d ? d : '2-6'}` })
+    }   
+    everyWeekEnd() {
+        return this.over({ dom: '?', dow: '7-1' })
     }   
     everyWeekDayAdd(d) {
         var current = this.elements.dow === defaults.dow
@@ -191,7 +208,7 @@ class CronTabist {
     }
     
     /***********/
-
+    // TODO
     describe() {
         return [
             this.describeTime(),
@@ -199,70 +216,47 @@ class CronTabist {
             this.describeYears()
         ].join(' of ')
     }
-    describeTime() {
-        return 'every second'
-    }
-    describeDomDowOccurrence() {
-        return 'every day'
-    }
-    describeYears() {
-        return 'every year'
+    describeTime() { return 'every second' }
+    describeDomDowOccurrence() { return 'every day' }
+    describeYears() { return 'every year' }
+    /***********/
+
+
+    /* istanbul ignore next */
+    next({n = 1, date = null} = {}){
+        const base = date || new Date(),
+            elements = this.elements;
+        if (base == 'Invalid Date') {
+            throw new Error(C.errors.invalidDate)
+        }
+        const y = base.getUTCFullYear(),
+            allgen = nextGen.generateDates(
+                base,
+                solve_year_ranges(elements.y).filter(ye => ye >= y), // remove past years
+                solve_month_ranges(elements.m),
+                elements.dom,
+                elements.dow,
+                solve_hours_ranges(elements.h),
+                solve_0_59_Range(elements.i),
+                solve_0_59_Range(elements.s),
+            );
+        // console.log([
+        //     solve_year_ranges(elements.y).filter(ye => ye >= y), // remove past years
+        //     solve_month_ranges(elements.m),
+        //     solve_dom(2024, 1, elements.dom),
+        //     solve_dow(2024, 1, elements.dow),
+        //     solve_hours_ranges(elements.h),
+        //     solve_0_59_Range(elements.i),
+        //     solve_0_59_Range(elements.s),
+        // ])
+        return Array.from(
+            { length: n },
+            () => allgen.next().value
+        ).filter(Boolean)
     }
 
     validate(){
-        const errors = [];
-
-        fieldCorrelationValidators.forEach(({
-            validator, message
-        }) => {
-            if(!validator(this.elements)){
-                errors.push(message);
-            }
-        })
-        
-        if (!validators.second(this.elements.s)) {
-            errors.push('Seconds are not well formatted');
-        }
-        if (!validators.minute(this.elements.i)) {
-            errors.push('Minutes are not well formatted');
-        }
-        if (!validators.hour(this.elements.h)) {
-            errors.push('Hours are not well formatted');
-        }
-        if (!validators.month(this.elements.m)) {
-            errors.push('Months are not well formatted');
-        }
-        if (!validators.year(this.elements.y)) {
-            errors.push('Years are not well formatted');
-        }
-
-        if (!validators.dayOfMonth(this.elements.dom)) {
-            errors.push('Dom has unexpected value');
-        }
-        if (!validators.dayOfWeek(this.elements.dow)) {
-            errors.push('Dow has unexpected value');
-        }
-
-        return {
-            valid: errors.length === 0,
-            errors
-        }
-    }
-
-    /* istanbul ignore next */
-    next(n){
-        return CronTabist.next(n, this.elements);
-    }
-    /* istanbul ignore next */
-    static next(n, els){
-        const now = n || new Date(),
-            s = now.getSeconds(),
-            i = now.getMinutes(),
-            h = now.getHours(),
-            d = now.getDate(),
-            m = now.getMonth(),
-            y = now.getFullYear();
-        console.log({els});
+        return CronTabist.validate(this.out())
     }
 
     static validate(exp){
@@ -279,7 +273,7 @@ class CronTabist {
             };
         if(!local)return {
             valid: local,
-            errors
+            errors:[C.errors.staticValidationParamMissing]
         }
 
         fieldCorrelationValidators.forEach(({
@@ -291,28 +285,26 @@ class CronTabist {
         })
         
         if (!validators.second(elements.s)) {
-            errors.push('Seconds are not well formatted');
+            errors.push(C.errors.malformed.seconds);
         }
         if (!validators.minute(elements.i)) {
-            errors.push('Minutes are not well formatted');
+            errors.push(C.errors.malformed.minutes);
         }
         if (!validators.hour(elements.h)) {
-            errors.push('Hours are not well formatted');
+            errors.push(C.errors.malformed.hours);
         }
         if (!validators.month(elements.m)) {
-            errors.push('Months are not well formatted');
+            errors.push(C.errors.malformed.months);
         }
         if (elements.y && !validators.year(elements.y)) {
-            errors.push('Years are not well formatted');
+            errors.push(C.errors.malformed.years);
         }
-
         if (!validators.dayOfMonth(elements.dom)) {
-            errors.push('Dom has unexpected value');
+            errors.push(C.errors.malformed.dom);
         }
         if (!validators.dayOfWeek(elements.dow)) {
-            errors.push('Dow has unexpected value');
+            errors.push(C.errors.malformed.dow);
         }
-
         return {
             valid: errors.length === 0,
             errors

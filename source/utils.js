@@ -15,80 +15,11 @@ dow [1(SUN), 7(SAT)]*
 y   [2xxx,]*
 */
 
-const defaults = {
-        s : '0', // seconds   *   0,1,2,3,4,59   3-45   3-35/5
-        i : '0', // minutes   *   0,1,2,3,4,59   3-45   3-35/5
-        h : '0', // seconds   *   0,1,2,3,4,23   3-23   3-23/5
-        dom : '*', // day of month   *   ?   3/4  12 12,13,15
-        m : '*', // month
-        dow : '?', // day of week
-        y : '*', // year (1970-2099) ...how 1970 :D ??????
-    },
-    rx = {
-        asterx: /^\*(\/\d*)?$/,
-        zeroFiftynine: /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
-        zeroTwentythree: /^([01]\d|2[0-3]|\d)$/,
-        oneThirtyone: /^(?:[012]\d|3[0,1]|[1-9]{1})$/,
-        oneThirtyoneW: /^(?:[012]\d|3[0,1]|[1-9]{1})W$/,
-        weekday: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)$/i,     /* this belowis exactly oneThirtyone */
-        weekdayAfterX: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\/(?:[012]\d|3[0,1]|[1-9]{1})$/i,
-        LW: /^LW?$/,
+const C = require('./constants.js')
 
-        //even this uses oneThirtyone
-        Lx: /^(L-([012]\d|3[0,1]|[1-9]{1}))$/,
+const { defaults, rx, labels } = C
 
-        xL31: /^([012]\d|3[0,1]|[1-9]{1})L$/,
-        xLweekday: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)L$/i,
-
-        nthWeekDay: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\#[1-5]{1}$/i,
-        // dow/dow related
-        quest: /^(\?)$/,
-        /**
-         * ?
-         * *
-         * x/y : x weekday, y [1-31]
-         * x
-         * x,y,z
-         * x-y/z
-         * L
-         * LW
-         * L-x : x [1-31]
-         * xL: x [1-31]
-         * */
-        dom: /^(\?)|(\*)|()$/,
-        
-        
-        /**
-         * ?
-         * x weekday
-         * x-y weekday
-         * x-y/z weekday
-         * xL weekday
-         * x#y   y-th[1,5] weekday x [1,7]
-         */
-        dow: /^(\?)|$/,
-        
-        month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/i,
-        // year: /^(20[2-9][0-9])$/,
-        year: /^(19[7-9]\d)|(20\d\d)$/,
-
-        // match a valid cadence ()
-        wildCadence: /^\d*$/,
-
-        /**
-         * splits number-number/number (second and third optionals)
-         */
-        splitter: /^([\d,\w]*)(-([\d\w]*))?(\/([\d\w]*))?$/
-        /**
-         * to support ranges like MON,SUN or MON-SUN 
-         * the quite relaxed \w* was used here
-         * which is too relaxed,
-         * 
-         * validation on function parameters covers that edge
-         */
-    
-    },
-    getRangeValidator = ({mainRx, cadenceRx}) => val => {
+const getRangeValidator = ({mainRx, cadenceRx}) => val => {
         const v = `${val}`;
         if (v.match(rx.asterx)) return true
         const s = v.match(rx.splitter);
@@ -165,8 +96,13 @@ const defaults = {
     },
     fieldCorrelationValidators = [{
         validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?'),
-        message: 'either dom either dow must contain "?"'
+        message: C.errors.domdowExclusivity
     }],
+    daysLabels2Numbers = v => {
+        return labels.days.reduce((acc, label, i) => {
+            return acc.replace(label,i+1)
+        }, v)
+    }
     now = new Date(),
     yearNow = now.getFullYear(),
     removeSpaces = s => `${s}`.replace(/\s/mg, '');
@@ -176,5 +112,6 @@ module.exports = {
     fieldCorrelationValidators,
     defaults,
     yearNow,
-    removeSpaces
+    removeSpaces,
+    daysLabels2Numbers
 };

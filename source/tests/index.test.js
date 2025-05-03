@@ -1,5 +1,6 @@
 
 const Crontabist  = require('../dist/index.js');
+const C = require('../dist/constants.js')
 
 describe('Crontabist', () => {
 
@@ -171,6 +172,14 @@ describe('Crontabist', () => {
         it('every weekday starting from', () => {
             c.everyWeekDayStartingFromNMonthDay(3, 15)
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
+        })
+        it('every weekend', () => {
+            c.everyWeekEnd(3, 15)
+            expect(c.out()).toBe('0 0 0 ? * 7-1 *')
+        })
+        it('everyWeekDay - no params => weekdays mon-fri', () => {
+            c.everyWeekDay()
+            expect(c.out()).toBe('0 0 0 ? * 2-6 *')
         })
         it('everyWeekDay - num', () => {
             c.everyWeekDay(4)
@@ -420,6 +429,11 @@ describe('Crontabist', () => {
         })
     })
 
+    /**
+     * the whole validation test exploit directly the "over" method
+     * which is not actually supposed to be used directly,
+     * "over" allows to set the elements for the validation in one single call
+     */
     describe('validation', () => {
         describe('- seconds', () => {
             describe('- positives', () => {
@@ -597,8 +611,6 @@ describe('Crontabist', () => {
 
             describe('- positives', () => {
                 let c
-                // note: to support ranges like MON,SUN or MON-SUN 
-                // instead of numeric values we need a less trivial rx.splitter
                 beforeEach(() => {
                     c = new Crontabist()
                 })
@@ -622,6 +634,13 @@ describe('Crontabist', () => {
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
                 }) 
+                it('no params - everyWeekDay', ()=>{
+                    c.everyWeekDay()
+                    expect(c.validate().valid).toBeTruthy()
+                    expect(c.elements.dow).toBe('2-6')
+                    expect(c.elements.dom).toBe('?')
+                    
+                }) 
             })
             
             describe('- negatives', () => {
@@ -633,7 +652,7 @@ describe('Crontabist', () => {
                     c.over({dom: '?', dow:8})
                     expect(c.validate().valid).toBeFalsy()
                     expect(c.validate().errors.length).toBe(1)
-                    expect(c.validate().errors[0]).toBe('Dow has unexpected value')
+                    expect(c.validate().errors[0]).toBe(C.errors.malformed.dow)
                 })
             })
              
@@ -646,14 +665,14 @@ describe('Crontabist', () => {
                 })
                 test.each([
                     ['every', {m: '*'}],// every month does that
-                    ['single - num', {m: '3'}],// every month does that
-                    ['single - label', {m: 'JAN'}],// every month does that
-                    ['multiple - num', {m: '1,2,3'}],// every month does that
-                    ['multiple - label', {m: 'JAN,FEB,MAR'}],// every month does that
-                    ['interval - num', {m: '1-6'}],// every month does that
-                    ['interval - label', {m: 'JAN-JUN'}],// every month does that
-                    ['interval with cadence - num', {m: '1-8/2'}],// every month does that
-                    ['interval with cadence - label', {m: 'JAN-AUG/2'}],// every month does that  
+                    ['single - num', {m: '3'}],
+                    ['single - label', {m: 'JAN'}],
+                    ['multiple - num', {m: '1,2,3'}],
+                    ['multiple - label', {m: 'JAN,FEB,MAR'}],
+                    ['interval - num', {m: '1-6'}],
+                    ['interval - label', {m: 'JAN-JUN'}],
+                    ['interval with cadence - num', {m: '1-8/2'}],
+                    ['interval with cadence - label', {m: 'JAN-AUG/2'}],  
                 ])('%s', (_, arg) => {
                     c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
@@ -668,9 +687,9 @@ describe('Crontabist', () => {
                     c = new Crontabist()
                 })
                 test.each([
-                    ['single invalid', {m: '13'}],// every month does that
-                    ['some invalid', {m: '2,13'}],// every month does that
-                    ['all invalid', {m: '13,21,23'}],// every month does that
+                    ['single invalid', {m: '13'}],
+                    ['some invalid', {m: '2,13'}],
+                    ['all invalid', {m: '13,21,23'}],
                 ])('%s', (_, arg) => {
                     c.over(arg)
                     expect(c.validate().valid).toBeFalsy()
@@ -686,11 +705,11 @@ describe('Crontabist', () => {
                 })
 
                 test.each([
-                    ['every', {y: '*'}],// every month does that
-                    ['one number', {y: '2030'}],// every month does that
-                    ['more than one number', {y: '2030,2032'}],// every month does that
-                    ['interval', {y: '2020-2032'}],// every month does that
-                    ['interval with cadence', {y: '2010-2032/2'}],// every month does that
+                    ['every', {y: '*'}],
+                    ['one number', {y: '2030'}],
+                    ['more than one number', {y: '2030,2032'}],
+                    ['interval', {y: '2020-2032'}],
+                    ['interval with cadence', {y: '2010-2032/2'}],
                     
                 ])('%s', (_, arg) => {
                     c.over(arg)
@@ -706,10 +725,10 @@ describe('Crontabist', () => {
                     c = new Crontabist()
                 })
                 test.each([
-                    ['single invalid lower', {y: '1969'}],// every month does that
-                    ['single invalid higher', {y: '2100'}],// every month does that
-                    ['some invalid', {y: '1200,2000'}],// every month does that
-                    ['all invalid', {y: '1200,2300,34000'}],// every month does that
+                    ['single invalid lower', {y: '1969'}],
+                    ['single invalid higher', {y: '2100'}],
+                    ['some invalid', {y: '1200,2000'}],
+                    ['all invalid', {y: '1200,2300,34000'}],
                     
                     
                 ])('%s', (_, arg) => {
@@ -803,24 +822,24 @@ describe('Crontabist', () => {
             })
             describe('- negatives', () => {
                 test.each([
-                    ['-1 0 0 * * ? *', ['Seconds are not well formatted']],
-                    ['0 -1 0 * * ? *', ['Minutes are not well formatted']],
-                    ['0 0 -12 * * ? *', ['Hours are not well formatted']],
-                    ['0 0 0 s * ? *', ['Dom has unexpected value']],
-                    ['0 0 0 * aaa ? *', ['Months are not well formatted']],
-                    ['0 0 0 ? * 333 *', ['Dow has unexpected value']],
-                    ['0 0 0 ? * * aaaa', ['Years are not well formatted']],
-                    ['0 0 0 1 * 1 *', ['either dom either dow must contain "?"']],
+                    ['-1 0 0 * * ? *', [C.errors.malformed.seconds]],
+                    ['0 -1 0 * * ? *', [C.errors.malformed.minutes]],
+                    ['0 0 -12 * * ? *', [C.errors.malformed.hours]],
+                    ['0 0 0 s * ? *', [C.errors.malformed.dom]],
+                    ['0 0 0 * aaa ? *', [C.errors.malformed.months]],
+                    ['0 0 0 ? * 333 *', [C.errors.malformed.dow]],
+                    ['0 0 0 ? * * aaaa', [C.errors.malformed.years]],
+                    ['0 0 0 1 * 1 *', [C.errors.domdowExclusivity]],
                     // more than one
                     ['-1 -1 -12 s aaa 333 sss', [
-                        'either dom either dow must contain "?"',
-                        'Seconds are not well formatted',
-                        'Minutes are not well formatted',
-                        'Hours are not well formatted',
-                        'Months are not well formatted',
-                        'Years are not well formatted',
-                        'Dom has unexpected value',
-                        'Dow has unexpected value',
+                        C.errors.domdowExclusivity,
+                        C.errors.malformed.seconds,
+                        C.errors.malformed.minutes,
+                        C.errors.malformed.hours,
+                        C.errors.malformed.months,
+                        C.errors.malformed.years,
+                        C.errors.malformed.dom,
+                        C.errors.malformed.dow,
                     ]],
                 ])('%s', (arg, err) => {
                     const validation = Crontabist.validate(arg)
@@ -831,7 +850,7 @@ describe('Crontabist', () => {
                 it('nothing passed', () => {
                     const validation = Crontabist.validate()
                     expect(validation.valid).toBeFalsy()
-                    expect(validation.errors).toMatchObject([])
+                    expect(validation.errors).toMatchObject([C.errors.staticValidationParamMissing])
                 })
             })
             
@@ -847,31 +866,10 @@ describe('Crontabist', () => {
                         c.over({dom: 12, dow:2})
                         expect(c.validate().valid).toBeFalsy()
                         expect(c.validate().errors.length).toBe(1)
-                        expect(c.validate().errors[0]).toBe('either dom either dow must contain "?"')
+                        expect(c.validate().errors[0]).toBe(C.errors.domdowExclusivity)
                     })
                 })
             })
         })      
     })
-
-    describe('next', () => {
-        it.skip('basic', () => {
-            const d = new Date('18:19:20 3-12-2025');
-            Crontabist.next(d, {
-                s: 21,
-                i: 20,
-                h: 19,
-                dow: '?',
-                m: 3,
-                dom:11,
-                y: 2025
-            })
-
-        })
-    })
-
-    
 })
-
-
-

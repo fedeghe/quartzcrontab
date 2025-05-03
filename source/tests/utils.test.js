@@ -6,7 +6,8 @@ const {
     fieldCorrelationValidators,
     defaults,
     yearNow,
-    removeSpaces
+    removeSpaces,
+    daysLabels2Numbers
 } = utils
 describe('utils', () => {
     describe('validators', () => {
@@ -238,6 +239,19 @@ describe('utils', () => {
                 [' 45 c246u35w qc5yh    w45  ', '45c246u35wqc5yhw45'],
             ].forEach(o => 
                 expect(removeSpaces(o[0])).toBe(o[1])
+            )
+        })
+    })
+
+    describe('daysLabels2Numbers', () => {
+        it('as expected', () => {
+            [
+                ['MON,SUN', '2,1'],
+                ['MON,FRI,SAT', '2,6,7'],
+                ['MON,FRU,SAT', '2,FRU,7'],
+
+            ].forEach(o => 
+                expect(daysLabels2Numbers(o[0])).toBe(o[1])
             )
         })
     })
