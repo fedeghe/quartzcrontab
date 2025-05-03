@@ -49,14 +49,14 @@ describe('Crontabist.next', () => {
         c.atHour(1)
         const next = c.next({
             n:10,
-            date: new Date('00:00:01 1-15-2023')
+            date: new Date('00:00:01 1-15-2023 GMT')
         })
         // console.log({next})
         expect(
-            next.map(s=>s.toString())
+            next.map(s=>s.toGMTString())
         ).toMatchObject([
-            "Wed Jan 31 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Sat Jan 31 2026 02:00:00 GMT+0100 (Central European Standard Time)",
+            "Wed, 31 Jan 2024 01:00:00 GMT",
+            "Sat, 31 Jan 2026 01:00:00 GMT",
         ])
     })
     it('case 3 - weekdays', () => {
@@ -66,23 +66,61 @@ describe('Crontabist.next', () => {
         c.atHour(1)
         const next = c.next({
             n:10,
-            date: new Date('00:00:01 1-15-2023')
+            date: new Date('00:00:01 1-15-2023 GMT')
         })
-        // console.log({next})
         expect(
-            next.map(s=>s.toString())
+            next.map(s=>s.toUTCString())
         ).toMatchObject([
-            "Mon Jan 01 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Tue Jan 02 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Wed Jan 03 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Thu Jan 04 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Fri Jan 05 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Mon Jan 08 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Tue Jan 09 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Wed Jan 10 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Thu Jan 11 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-            "Fri Jan 12 2024 02:00:00 GMT+0100 (Central European Standard Time)",
+            "Mon, 01 Jan 2024 01:00:00 GMT",
+            "Tue, 02 Jan 2024 01:00:00 GMT",
+            "Wed, 03 Jan 2024 01:00:00 GMT",
+            "Thu, 04 Jan 2024 01:00:00 GMT",
+            "Fri, 05 Jan 2024 01:00:00 GMT",
+            "Mon, 08 Jan 2024 01:00:00 GMT",
+            "Tue, 09 Jan 2024 01:00:00 GMT",
+            "Wed, 10 Jan 2024 01:00:00 GMT",
+            "Thu, 11 Jan 2024 01:00:00 GMT",
+            "Fri, 12 Jan 2024 01:00:00 GMT",
         ])
+    })
+    describe('more case to return the expected', () => {
+        it('1 - return the expected', () => {
+            c.atYear('2025');
+            c.everyWeekDay('3,5')
+            c.atHour('2,4')   
+            c.atMonth('6,8')   
+            const next = c.next({
+                n:20,
+                date: new Date('03:00:00 6-5-2025 GMT')
+            })
+            expect(
+                next.map(s=>s.toUTCString())
+            ).toMatchObject([
+                // 1h too late for that
+                // "Thu, 05 Jun 2025 02:00:00 GMT",
+                "Thu, 05 Jun 2025 04:00:00 GMT",
+                "Tue, 10 Jun 2025 02:00:00 GMT",
+                "Tue, 10 Jun 2025 04:00:00 GMT",
+                "Thu, 12 Jun 2025 02:00:00 GMT",
+                "Thu, 12 Jun 2025 04:00:00 GMT",
+                "Tue, 17 Jun 2025 02:00:00 GMT",
+                "Tue, 17 Jun 2025 04:00:00 GMT",
+                "Thu, 19 Jun 2025 02:00:00 GMT",
+                "Thu, 19 Jun 2025 04:00:00 GMT",
+                "Tue, 24 Jun 2025 02:00:00 GMT",
+                "Tue, 24 Jun 2025 04:00:00 GMT",
+                "Thu, 26 Jun 2025 02:00:00 GMT",
+                "Thu, 26 Jun 2025 04:00:00 GMT",
+                // no july
+                "Tue, 05 Aug 2025 02:00:00 GMT",
+                "Tue, 05 Aug 2025 04:00:00 GMT",
+                "Thu, 07 Aug 2025 02:00:00 GMT",
+                "Thu, 07 Aug 2025 04:00:00 GMT",
+                "Tue, 12 Aug 2025 02:00:00 GMT",
+                "Tue, 12 Aug 2025 04:00:00 GMT",
+                "Thu, 14 Aug 2025 02:00:00 GMT",
+            ])
+        })
     })
 
 

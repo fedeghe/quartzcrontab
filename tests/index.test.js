@@ -173,6 +173,10 @@ describe('Crontabist', () => {
             c.everyWeekDayStartingFromNMonthDay(3, 15)
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
         })
+        it('every weekend', () => {
+            c.everyWeekEnd(3, 15)
+            expect(c.out()).toBe('0 0 0 ? * 7-1 *')
+        })
         it('everyWeekDay - no params => weekdays mon-fri', () => {
             c.everyWeekDay()
             expect(c.out()).toBe('0 0 0 ? * 2-6 *')

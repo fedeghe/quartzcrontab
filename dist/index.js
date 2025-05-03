@@ -127,6 +127,9 @@ class CronTabist {
     everyWeekDay(d) {
         return this.over({ dom: '?', dow: `${d ? d : '2-6'}` })
     }   
+    everyWeekEnd() {
+        return this.over({ dom: '?', dow: '7-1' })
+    }   
     everyWeekDayAdd(d) {
         var current = this.elements.dow === defaults.dow
             ? []

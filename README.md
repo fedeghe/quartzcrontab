@@ -171,6 +171,13 @@ every `wd` in `[1,7]` or (...and corresponding to) `{SUN,MON,TUE,WED,THU,FRI,SAT
     // { dom: '?`, dow: 'MON,WED,FRI', ...}
     ```
 
+- `everyWeekEnd()`  
+shortcut to set Saturnday and Sunday
+    ``` js
+    qtc.everyWeekEnd('MON')
+    // { dom: `?`, dow: 'SUN-SAT', ...}
+    ```
+
 - `atMonthDay(dom)`  
 sets the target day of month, can be: 
     - `*`: all days
