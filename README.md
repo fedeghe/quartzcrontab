@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
 
 
-# quartzcrontab (v. 0.0.12)
+# quartzcrontab (v. 0.0.13)
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -36,11 +36,9 @@ console.log(qct.out()) // 0 0 0 * ? * *
 qct.atHour(12)
     .atHourAdd(22)
     .onLastMonthDay()
-    .everyNYears(5)
+    .everyNYears(5, 2025)
 
-console.log(qct.out()) 
-/* 0 0 12,22 LW * ? 2025/5 */
-
+qct.out() /* 0 0 12,22 L * ? 2025/5 */
 /*
 alternatively the cron expression is also returned
 as the _toString_ result og the class instance
@@ -50,6 +48,17 @@ console.log(qct.toString())
 console.log(''+qct) 
 console.log(String(qct)) 
 console.log(`${qct}`) 
+
+const next = qct.next({date: new Date('00:00:00 01-01-2024'), n: 3})
+/*
+[
+  2025-01-31T12:00:00.000Z,
+  2025-01-31T22:00:00.000Z,
+  2025-02-28T12:00:00.000Z
+]
+*/
+
+
 ```
 ## validation API
 
