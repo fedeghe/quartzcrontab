@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
 
 
-# quartzcrontab (v. 0.0.9)
+# quartzcrontab (v. 0.0.10)
 <pre style="font-size:2em">s i h dom m dow y</pre>
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
@@ -11,14 +11,6 @@ That additional freedom clearly maps into less trivial composition for the cron 
  - **validate an expression**  
  - **get the _n_ next precise occurrences**  
 
-
-
-Compared to [cron][cron], [Quartz scheduler][quartz] offers in addition the ability to target:
- - last day of the month
- - n-th last day of the month
- - working day closest to the n-th week of the month
- - a week day of the n-th week  
- ...and more
 
 ## example
 ``` js

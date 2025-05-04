@@ -12,14 +12,6 @@ That additional freedom clearly maps into less trivial composition for the cron 
  - **get the _n_ next precise occurrences**  
 
 
-
-Compared to [cron][cron], [Quartz scheduler][quartz] offers in addition the ability to target:
- - last day of the month
- - n-th last day of the month
- - working day closest to the n-th week of the month
- - a week day of the n-th week  
- ...and more
-
 ## example
 ``` js
 const QuartzCrontab = require('quartzcrontab');
