@@ -1,6 +1,6 @@
 {
   "name": "quartzcrontab",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "dist/min/index.js",
   "repository": {
     "type": "git",
