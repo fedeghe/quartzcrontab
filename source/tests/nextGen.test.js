@@ -84,6 +84,15 @@ describe('Crontabist.next', () => {
         ])
     })
     describe('more case to return the expected', () => {
+        it('use the remotest (cover real date)', () => {
+            c.atYear('2099');
+            const next = c.next()
+            expect(
+                next.map(s=>s.toUTCString())
+            ).toMatchObject([
+                "Thu, 01 Jan 2099 00:00:00 GMT"
+            ])
+        })
         it('1 - returns the expected', () => {
             c.atYear('2025');
             c.everyWeekDay('3,5')
