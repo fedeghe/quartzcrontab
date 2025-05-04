@@ -3,9 +3,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
 
 
-# quartzcrontab (v. 0.0.11)
+# quartzcrontab (v. 0.0.12)
 
-###  ` s  i  h dom m dow y `
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
@@ -13,6 +12,17 @@ That additional freedom clearly maps into less trivial composition for the cron 
  - **validate an expression**  
  - **get the _n_ next precise occurrences**  
 
+A `quartz cron expression` has the following structure: 
+```
+s  i  h dom m dow y
+⎜  ⎜  ⎜  ⎜  ⎜  ⎜  ∖- years
+⎜  ⎜  ⎜  ⎜  ⎜  ∖---- days of week
+⎜  ⎜  ⎜  ⎜  ∖------- months
+⎜  ⎜  ⎜  ∖---------- days of month
+⎜  ⎜  ∖------------- hours
+⎜  ∖---------------- minutes
+∖------------------- seconds
+```
 
 ## example
 ``` js
@@ -29,10 +39,7 @@ qct.atHour(12)
     .everyNYears(5)
 
 console.log(qct.out()) 
-/* 0 0 12,22 LW * ? 2025/5
-
-At second :00, at minute :00, at 12pm and 22pm, on the last weekday of the month, every month, every 5 years starting in 2025
-*/
+/* 0 0 12,22 LW * ? 2025/5 */
 
 /*
 alternatively the cron expression is also returned

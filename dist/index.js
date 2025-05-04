@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.11)
+Quartz cron string creator (v.0.0.12)
 */
 
 const {
@@ -13,7 +13,7 @@ const {
 const {
     solve_0_59_Range,
     solve_hours_ranges,
-    solve_week_ranges,
+    // solve_week_ranges,
     solve_month_ranges,
     solve_year_ranges,
     solve_dom,
@@ -67,7 +67,7 @@ class CronTabist {
     everySecond() {
         return this.over({ s: '*'})
     }
-    everyNSeconds({freq, start = 0}) {
+    everyNSeconds(freq, start = 0) {
         return this.over({ s: `${start}/${freq}` })
     }
     atSecond(s) {
@@ -85,7 +85,7 @@ class CronTabist {
     everyMinute() {
         return this.over({ i: '*'})
     }
-    everyNMinutes({freq, start = 0}) {
+    everyNMinutes(freq, start = 0) {
         return this.over({ i: `${start}/${freq}` })
     }
     atMinute(i) {
@@ -103,7 +103,7 @@ class CronTabist {
     everyHour() {
         return this.over({ h: '*'})
     }
-    everyNHours({freq, start = 0}) {
+    everyNHours(freq, start = 0) {
         return this.over({ h: `${start}/${freq}` })
     }
     atHour(h) {
@@ -171,7 +171,7 @@ class CronTabist {
     everyMonth() {
         return this.over({ m: '*'})
     }
-    everyNMonths({freq, start = 0}) {
+    everyNMonths(freq, start = 0) {
         return this.over({ m: `${start}/${freq}` })
     }
     atMonth(m) {
@@ -191,7 +191,7 @@ class CronTabist {
     everyYear() {
         return this.over({ y: '*'})
     }
-    everyNYears({freq, start = yearNow}) {
+    everyNYears(freq, start = yearNow) {
         return this.over({ y: `${start}/${freq}` })
     }
     atYear(y) {
@@ -221,8 +221,6 @@ class CronTabist {
     describeYears() { return 'every year' }
     /***********/
 
-
-    /* istanbul ignore next */
     next({n = 1, date = null} = {}){
         const base = date || new Date(),
             elements = this.elements;

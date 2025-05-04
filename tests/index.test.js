@@ -45,11 +45,11 @@ describe('Crontabist', () => {
             expect(c.out()).toBe('* 0 0 * * ? *')
         })
         it('everyNSeconds every x from 0', () => {
-            c.everyNSeconds({ freq: 6 })
+            c.everyNSeconds(6)
             expect(c.out()).toBe('0/6 0 0 * * ? *')
         })
         it('everyNSeconds every x from y', () => {
-            c.everyNSeconds({ freq: 6, start:13 })
+            c.everyNSeconds(6, 13)
             expect(c.out()).toBe('13/6 0 0 * * ? *')
         })
         it('atSecond', () => {
@@ -90,11 +90,11 @@ describe('Crontabist', () => {
             expect(c.out()).toBe('0 * 0 * * ? *')
         })
         it('everyNMinutes every x from 0', () => {
-            c.everyNMinutes({ freq: 6 })
+            c.everyNMinutes(6)
             expect(c.out()).toBe('0 0/6 0 * * ? *')
         })
         it('everyNMinutes every x from y', () => {  
-            c.everyNMinutes({ freq: 6, start:13 })
+            c.everyNMinutes(6, 13)
             expect(c.out()).toBe('0 13/6 0 * * ? *')
         })
         it('atMinute', () => {  
@@ -130,11 +130,11 @@ describe('Crontabist', () => {
             expect(c.out()).toBe('0 0 * * * ? *')
         })
         it('everyNHours every x from 0', () => {
-            c.everyNHours({ freq: 6 })
+            c.everyNHours(6)
             expect(c.out()).toBe('0 0 0/6 * * ? *')
         })
         it('everyNHours every x from y', () => {  
-            c.everyNHours({ freq: 6, start:13 })
+            c.everyNHours(6, 13)
             expect(c.out()).toBe('0 0 13/6 * * ? *')
         })
         it('atHour', () => {  
@@ -260,11 +260,11 @@ describe('Crontabist', () => {
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('everyNMonths every x from 0', () => {
-            c.everyNMonths({ freq: 6 })
+            c.everyNMonths(6)
             expect(c.out()).toBe('0 0 0 * 0/6 ? *')
         })
         it('everyNMonths every x from y', () => {  
-            c.everyNMonths({ freq: 6, start:13 })
+            c.everyNMonths(6, 13)
             expect(c.out()).toBe('0 0 0 * 13/6 ? *')
         })
         it('atMonth', () => {
@@ -302,11 +302,11 @@ describe('Crontabist', () => {
         it('everyNYears every x from 0', () => {
             var d = new Date(),
                 y = d.getFullYear();
-            c.everyNYears({ freq: 6 })
+            c.everyNYears(6)
             expect(c.out()).toBe(`0 0 0 * * ? ${y}/6`)
         })
         it('everyNYears every x from y', () => {  
-            c.everyNYears({ freq: 6, start:2025 })
+            c.everyNYears(6, 2025)
             expect(c.out()).toBe('0 0 0 * * ? 2025/6')
         })
         it('atYear', () => {

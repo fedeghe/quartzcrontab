@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.11)
+Quartz cron string creator (v.0.0.12)
 */
 const C = require('./constants.js')
 
