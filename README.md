@@ -16,9 +16,9 @@ A `quartz cron expression` has the following structure:
 ```
 s  i  h dom m dow y
 ⎜  ⎜  ⎜  ⎜  ⎜  ⎜  ∖- years
-⎜  ⎜  ⎜  ⎜  ⎜  ∖---- days of week
-⎜  ⎜  ⎜  ⎜  ∖------- months
-⎜  ⎜  ⎜  ∖---------- days of month
+⎜  ⎜  ⎜  ⎜  ⎜  ∖---- days of week  -\
+⎜  ⎜  ⎜  ⎜  ∖------- months          | mutually exclusive
+⎜  ⎜  ⎜  ∖---------- days of month -/
 ⎜  ⎜  ∖------------- hours
 ⎜  ∖---------------- minutes
 ∖------------------- seconds
