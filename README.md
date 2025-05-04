@@ -4,7 +4,7 @@
 
 
 # quartzcrontab (v. 0.0.7)
-<pre style="font-size:2em">s i h dom m dow y</pre>
+
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
  - **help to programmatically create those cron expressions**  
@@ -12,15 +12,10 @@ That additional freedom clearly maps into less trivial composition for the cron 
  - **get the _n_ next precise occurrences**  
 
 
+###  ` s  i  h dom m dow y `
 
-Compared to [cron][cron], [Quartz scheduler][quartz] offers in addition the ability to target:
- - last day of the month
- - n-th last day of the month
- - working day closest to the n-th week of the month
- - a week day of the n-th week  
- ...and more
 
-## example
+## sample usage
 ``` js
 const QuartzCrontab = require('quartzcrontab');
 
@@ -315,16 +310,22 @@ this function accepts two options:
 - `date`: a reference date (js Date) to be used as _present time_ (default is the current date). No dates before the _present date_ will be returned.
 
 
-# timezones 
+## timezones 
 In case one plans to use that utility on the client the chances the client and server run on a different timezones is quite high, thus there is the need to set it correctly for what concerns the server; about the client, in case, it is enough to declare it uses the local timezone:
-```
-// one among Intl.supportedValuesOf("timeZone")
 
-QuartzCrontab.useClientLocalTimezone(); // this is the default
+On the client 
+```
+
+QuartzCrontab.useClientLocalTimezone();
+
+// this is the default
 QuartzCrontab.useClientUTCTimezone(); 
 
-QuartzCrontab.setServerUTCTimezone(); // this is the default
+// this is the default
+QuartzCrontab.setServerUTCTimezone(); 
+
 QuartzCrontab.setServerTimezone("Europe/Berlin");
+// use one among Intl.supportedValuesOf("timeZone")
 ```
 <details>
 <summary>click here to see the full list</summary>
