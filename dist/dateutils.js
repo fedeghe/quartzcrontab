@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.10)
+Quartz cron string creator (v.0.0.11)
 */
 const C = require('./constants.js')
 
@@ -221,6 +221,35 @@ const dom_solvers = [
         }
         return [];
     },
+
+    ({val, lastDate, d}) => {
+        let mat = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])W$/)
+        if(mat){
+            let v = parseInt(mat[1], 10),
+                res;
+            d.setUTCDate(v);
+            res = d.getUTCDay(); // [0-6]
+            if (v===1) {
+                // if sat or sun return next mon
+                if(res === 6) return [3]
+                if(res === 0) return [2]
+                return [1]
+            }
+            //same on the other side
+            if (v===lastDate) {
+                if(res === 6) return [lastDate-1]
+                if(res === 0) return [lastDate-2]
+                return [lastDate]
+            }
+            if(res === 0)return [v+1]
+            if(res === 6)return [v-1]
+            return [v]
+        }
+        return [];
+    },
+    // [1-31]W
+    // /^([1-9]|1[0-9]|2[0-9]|3[01])W$/
+
     // L-[1-31]
     ({val, lastDate, d}) => {
         const vals = val.match(/^L-([1-9]|1[0-9]|2[0-9]|3[01])$/);

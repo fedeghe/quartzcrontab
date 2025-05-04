@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.10)
+Quartz cron string creator (v.0.0.11)
 */
 const {
     solve_dom,

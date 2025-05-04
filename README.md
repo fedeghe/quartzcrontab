@@ -3,8 +3,10 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
 
 
-# quartzcrontab (v. 0.0.10)
-<pre style="font-size:2em">s i h dom m dow y</pre>
+# quartzcrontab (v. 0.0.11)
+
+###  ` s  i  h dom m dow y `
+
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
  - **help to programmatically create those cron expressions**  

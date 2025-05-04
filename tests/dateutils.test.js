@@ -375,6 +375,24 @@ describe('date utils', () => {
                 expect(solve_dom(y, m, dom)).toMatchObject(expected)
             })
         })
+        describe('[1-31]W', () => {
+            test.each([
+                ['1W (2025 mar)', 2025, 3, '1W', [3]],
+                ['2W (2025 mar)', 2025, 3, '2W', [3]],
+                ['13W (2025 mar)', 2025, 3, '13W', [13]],
+                ['22W (2025 mar)', 2025, 3, '22W', [21]],
+                ['23W (2025 mar)', 2025, 3, '23W', [24]],
+                ['30W (2025 mar)', 2025, 3, '30W', [31]],
+                ['1W (2025 jun)', 2025, 6, '1W', [2]],
+                ['31W (2025 aug)', 2025, 8, '31W', [29]],
+                ['29W (2025 jun)', 2025, 6, '29W', [30]],   
+                ['1W (2025 jan)', 2025, 1, '1W', [1]],   
+                ['30W (2025 apr)', 2025, 4, '30W', [30]],   
+                ['31W (2025 may)', 2025, 5, '31W', [30]],   
+            ])('%s', (_, y, m, dom, expected) => {
+                expect(solve_dom(y, m, dom)).toMatchObject(expected)
+            })
+        })
 
         describe('L-[1-31]', () => {
             test.each([
