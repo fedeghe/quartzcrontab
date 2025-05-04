@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
 
 
-# quartzcrontab (v. maltaV('PACKAGE.version'))
+# quartzcrontab (v. 0.0.7)
 <pre style="font-size:2em">s i h dom m dow y</pre>
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
@@ -305,7 +305,7 @@ all years from `from` year to `to` year; optionally set the cadence passing an `
 
 
 ## occurrences
-Fron an instance call the `next` function: 
+From an instance call the `next` function: 
 ``` js
 const nextOccurrence = qct.next()
 // "Mon Jan 01 2024 02:00:00 GMT+0100 (Central European Standard Time)",
@@ -315,5 +315,29 @@ this function accepts two options:
 - `date`: a reference date (js Date) to be used as _present time_ (default is the current date). No dates before the _present date_ will be returned.
 
 
+# limitations and plans
+
+### timezones
+In case one plans to use that utility on a browser the chances the client and server run on different timezones is quite high.  
+
+One workaround would be so set the timezone to UTC on the server and in the UI explicitly inform the user that all dates & times are UTC.
+
+> **For the moment this library relies 100% on [UTC][utc]**
+
+**The plan** is to provide 2 static methods to allow to set the timezones for the client and the server.
+
+``` js
+QuartzCrontab.useClientLocalTimezone() // auto (e.g -2)
+// or useClientUTCTimezone()
+
+QuartzCrontab.setServerTimezone("America/Los_Angeles"); // +6
+// or setServerUTCTimezone()
+```
+
+### descriptions
+Having a quick way to get a more readable internationalized string out of the occurrences would be quite useful.  
+
+
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron
+[utc]: https://en.wikipedia.org/wiki/Coordinated_Universal_Time
