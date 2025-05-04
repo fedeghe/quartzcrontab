@@ -24,6 +24,8 @@ const nextGen = require('./nextGen');
 
 const C = require('./constants')
 
+const offsetDate = new Date();
+
 class CronTabist {
     constructor({
         s = defaults.s,         // seconds
@@ -37,7 +39,9 @@ class CronTabist {
         this.months = { min: 0, max: 11 }
         this.elements = { s, i, h, dom, m, dow, y }
     }
-    
+    static srvTimeZone = C.UTC;
+    static cliTimeZone = C.UTC;
+    static offset = offsetDate.getTimezoneOffset();
 
     static getRanger(max) {
         return n => {
@@ -46,6 +50,11 @@ class CronTabist {
             return normN
         }
     }
+    useClientUTCTimezone(){ CronTabist.cliTimeZone = C.UTC; }
+    useClientLocalTimezone(){ CronTabist.cliTimeZone = C.UTC; }
+    setServerUTCTimezone(){ CronTabist.srvTimeZone = C.UTC;}
+    setServerTimezone(tz){ CronTabist.srvTimeZone = tz; }
+    
 
     range24 = CronTabist.getRanger(24)
     range12 = CronTabist.getRanger(12)

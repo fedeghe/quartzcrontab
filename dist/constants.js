@@ -158,5 +158,6 @@ module.exports = {
     THIRTYONE,
     THIRTY,
     TWENTYNINE,
-    TWENTYEIGTH
+    TWENTYEIGTH,
+    UTC: 'UTC'
 }

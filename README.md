@@ -305,7 +305,7 @@ all years from `from` year to `to` year; optionally set the cadence passing an `
 
 
 ## occurrences
-Fron an instance call the `next` function: 
+From an instance call the `next` function: 
 ``` js
 const nextOccurrence = qct.next()
 // "Mon Jan 01 2024 02:00:00 GMT+0100 (Central European Standard Time)",
@@ -316,11 +316,15 @@ this function accepts two options:
 
 
 # timezones 
-In case one plans to use that utility on the client the chances the server runs ona different timezone is quite high, thus there is the need to set it correctly using a static method:
+In case one plans to use that utility on the client the chances the client and server run on a different timezones is quite high, thus there is the need to set it correctly for what concerns the server; about the client, in case, it is enough to declare it uses the local timezone:
 ```
 // one among Intl.supportedValuesOf("timeZone")
-QuartzCrontab.setClientTimezone() //
-QuartzCrontab.setServerTimezone() // default UTC
+
+QuartzCrontab.useClientLocalTimezone(); // this is the default
+QuartzCrontab.useClientUTCTimezone(); 
+
+QuartzCrontab.setServerUTCTimezone(); // this is the default
+QuartzCrontab.setServerTimezone("Europe/Berlin");
 ```
 <details>
 <summary>click here to see the full list</summary>
