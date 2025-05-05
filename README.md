@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
 
 
-# quartzcrontab (v. 0.0.14)
+# quartzcrontab (v. 0.0.15)
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -345,7 +345,8 @@ QuartzCrontab.setServerTimezone("America/Los_Angeles"); // +6
 ```
 
 ### Descriptions
-Having a quick way to get a more readable internationalized string out of the occurrences would be quite useful. You might be luckier than me trying [this npm package](https://www.npmjs.com/package/cronstrue); it claims to be quartz compliant but when I tried the [demo](https://bradymholt.github.io/cRonstrue/#cronstrue-demo) with a simple expression like `*/5 * * * * */5` I got a quite wrong description `"Every 5 seconds, every 5 days of the week"`.
+Having a quick way to get a readable internationalized string out of an expression would be quite useful.  
+Another option is to try out [this npm package](https://www.npmjs.com/package/cronstrue).
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron
