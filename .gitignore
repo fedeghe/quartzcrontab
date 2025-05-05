@@ -6,3 +6,5 @@ main.bmpr
 manual.js
 gen1.js
 gen2.js
+tests
+.coveralls.yml
