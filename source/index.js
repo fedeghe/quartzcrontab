@@ -15,11 +15,11 @@ const {
     solve_year_ranges,
     solve_dom,
     solve_dow,
-} = require('./dateutils')
+} = require('./dateutils');
 
 const nextGen = require('./nextGen');
 
-const C = require('./constants')
+const C = require('./constants');
 
 class CronTabist {
     constructor({
@@ -31,22 +31,22 @@ class CronTabist {
         m = defaults.m,         // month
         y = defaults.y,         // year
     } = {}) {
-        this.months = { min: 0, max: 11 }
-        this.elements = { s, i, h, dom, m, dow, y }
-    }
+        this.months = { min: 0, max: 11 };
+        this.elements = { s, i, h, dom, m, dow, y };
+    };
     
 
     static getRanger(max) {
         return n => {
-            let normN = parseInt(n, 10) % max
-            while (normN < 0) normN += max
-            return normN
+            let normN = parseInt(n, 10) % max;
+            while (normN < 0) normN += max;
+            return normN;
         }
     }
 
-    range24 = CronTabist.getRanger(24)
-    range12 = CronTabist.getRanger(12)
-    range60 = CronTabist.getRanger(60)
+    range24 = CronTabist.getRanger(24);
+    range12 = CronTabist.getRanger(12);
+    range60 = CronTabist.getRanger(60);
 
     over({ s, i, h, dom, m, dow, y }) {
         this.elements = {
@@ -57,7 +57,7 @@ class CronTabist {
             m: removeSpaces(m ?? this.elements.m),
             dow: removeSpaces(dow ?? this.elements.dow),
             y: removeSpaces(y ?? this.elements.y),
-        }
+        };
         return this;
     }
     /* seconds */
@@ -71,7 +71,7 @@ class CronTabist {
         return this.over({ s: `${s}` })
     }
     atSecondAdd(s) {
-        var current = this.elements.s.split(',')
+        var current = this.elements.s.split(',');
         return this.over({ s: [...current, s].map(c=>`${c}`).join(',') })
     }
     betweenSeconds(from, to, every) {
@@ -89,7 +89,7 @@ class CronTabist {
         return this.over({ i: `${i}` })
     }
     atMinuteAdd(i) {
-        var current = this.elements.i.split(',')
+        var current = this.elements.i.split(',');
         return this.over({ i: [...current, i].map(c=>`${c}`).join(',') })
     }
     betweenMinutes(from, to, every) {
@@ -107,7 +107,7 @@ class CronTabist {
         return this.over({ h: `${h}` })
     }
     atHourAdd(h) {
-        var current = this.elements.h.split(',')
+        var current = this.elements.h.split(',');
         return this.over({ h: [...current, h].map(c=>`${c}`).join(',') })
     }
     betweenHours(from, to, every) {
@@ -130,7 +130,7 @@ class CronTabist {
     everyWeekDayAdd(d) {
         var current = this.elements.dow === defaults.dow
             ? []
-            : this.elements.dow.split(',')
+            : this.elements.dow.split(',');
         return this.over({ dom: '?', dow: [...current, d].map(c=>`${c}`).join(',') })
     }
     atMonthDay(dom) {
@@ -139,7 +139,7 @@ class CronTabist {
     atMonthDayAdd(dom) {
         var current = this.elements.dom === defaults.dom
             ? []
-            : this.elements.dom.split(',')
+            : this.elements.dom.split(',');
         return this.over({ dom: [...current, dom].map(c=>`${c}`).join(','), dow: '?' })
     }
     betweenMonthDays(from, to, every) {
@@ -177,7 +177,7 @@ class CronTabist {
     atMonthAdd(m) {
         var current = this.elements.m === defaults.m
             ? []
-            : this.elements.m.split(',')
+            : this.elements.m.split(',');
         return this.over({ m: [...current, m].map(c=>`${c}`).join(',') })
     }
     betweenMonths(from, to, every) {
@@ -197,7 +197,7 @@ class CronTabist {
     atYearAdd(y) {
         var current = this.elements.y === defaults.y
             ? []
-            : this.elements.y.split(',')
+            : this.elements.y.split(',');
         return this.over({ y: [...current, y].map(c=>`${c}`).join(',') })
     }
     betweenYears(from, to, every) {
@@ -222,7 +222,7 @@ class CronTabist {
         const base = date || new Date(),
             elements = this.elements;
         if (base == 'Invalid Date') {
-            throw new Error(C.errors.invalidDate)
+            throw new Error(C.errors.invalidDate);
         }
         const y = base.getUTCFullYear(),
             allgen = nextGen.generateDates(
@@ -250,9 +250,7 @@ class CronTabist {
         ).filter(Boolean)
     }
 
-    validate(){
-        return CronTabist.validate(this.out())
-    }
+    validate(){ return CronTabist.validate(this.out())}
 
     static validate(exp){
         const errors = [],
@@ -269,7 +267,7 @@ class CronTabist {
         if(!local)return {
             valid: local,
             errors:[C.errors.staticValidationParamMissing]
-        }
+        };
 
         fieldCorrelationValidators.forEach(({
             validator, message
@@ -277,7 +275,7 @@ class CronTabist {
             if(!validator(elements)){
                 errors.push(message);
             }
-        })
+        });
         
         if (!validators.second(elements.s)) {
             errors.push(C.errors.malformed.seconds);
@@ -303,7 +301,7 @@ class CronTabist {
         return {
             valid: errors.length === 0,
             errors
-        }
+        };
     }
 
     out() {
@@ -317,10 +315,9 @@ class CronTabist {
             this.elements.y,
         ]
             .filter(e => e !== undefined && e !== null)
-            .join(' ')
+            .join(' ');
     }
     toString = this.out;
-
 }
 
 module.exports =  CronTabist;

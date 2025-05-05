@@ -5,7 +5,7 @@
     ],
     "#source/*.js" : [
         "dist -plugins=malta-header-comment[name:\"source/header.txt\",nostrict:true] -options=verbose:2,placeholderMode:'func'",
-        "dist/min -plugins=malta-millijs...malta-header-comment[name:\"source/header.txt\",nostrict:true] -options=verbose:2,placeholderMode:'func'"
+        "dist/min -plugins=malta-header-comment[name:\"source/header.txt\",nostrict:true] -options=verbose:2,placeholderMode:'func'"
     ],
     "#source/tests/*.js" : "tests",
     "#source/*.md": ". -options=placeholderMode:'func'"

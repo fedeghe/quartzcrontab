@@ -1,18 +1,16 @@
 const {
     solve_dom,
     solve_dow,
-} = require('./dateutils')
+} = require('./dateutils');
 
 function* generateDates(base, years, months, dom, dow, hours, minutes, seconds) {
-    // console.log(1, {base, years, months, dom, dow, hours, minutes, seconds})
     for (const year of years)
         for (const month of months)
             yield* generateDatesForMonth(base, year, month, dom, dow, hours, minutes, seconds);// month is 1-based
 }
 
 function* generateDatesForMonth(base, year, month, dom, dow, hours, minutes, seconds) {
-    // console.log(2, {base, year, month, dom, dow, hours, minutes, seconds})
-    let daysInMonth 
+    let daysInMonth; 
     if (dom !== '?') {
         daysInMonth = solve_dom(year, month, dom)
     } else
@@ -25,7 +23,6 @@ function* generateDatesForMonth(base, year, month, dom, dow, hours, minutes, sec
 }
 
 function* generateDatesForDay(base, year, month, day, hours, minutes, seconds) {
-    // console.log(3, {base, year, month, day, hours, minutes, seconds})
     for (const hour of hours)
         for (const minute of minutes)
             for (const second of seconds) {

@@ -1,5 +1,5 @@
 
-const Crontabist  = require('../dist/index.js');
+const Crontabist  = require('../dist/min/index.js');
 
 describe('Crontabist.next', () => {
     let c

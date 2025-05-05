@@ -18,15 +18,15 @@ dow [1(SUN), 7(SAT)]*
 y   [2xxx,]*
 */
 
-const C = require('./constants.js')
+const C = require('./constants.js');
 
-const { defaults, rx, labels } = C
+const { defaults, rx, labels } = C;
 
 const getRangeValidator = ({mainRx, cadenceRx}) => val => {
         const v = `${val}`;
-        if (v.match(rx.asterx)) return true
+        if (v.match(rx.asterx)) return true;
         const s = v.match(rx.splitter);
-        if (!s) return false
+        if (!s) return false;
         const starts = s[1].split(/,/),
             to = s[3],
             cadence = s[5];
@@ -41,11 +41,11 @@ const getRangeValidator = ({mainRx, cadenceRx}) => val => {
                     )
                 )
             )
-        )
+        );
     },
     getValidator = rxs => v => rxs.find(r => {
-        if(typeof r === 'function') return r(v)
-        return `${v}`.match(r)
+        if(typeof r === 'function') return r(v);
+        return `${v}`.match(r);
     }),
     rx059 = getRangeValidator({
         mainRx: rx.zeroFiftynine,
@@ -103,9 +103,9 @@ const getRangeValidator = ({mainRx, cadenceRx}) => val => {
     }],
     daysLabels2Numbers = v => {
         return labels.days.reduce((acc, label, i) => {
-            return acc.replace(label,i+1)
-        }, v)
-    }
+            return acc.replace(label,i+1);
+        }, v);
+    },
     now = new Date(),
     yearNow = now.getFullYear(),
     removeSpaces = s => `${s}`.replace(/\s/mg, '');
