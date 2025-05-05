@@ -1,6 +1,6 @@
 {
   "name": "quartzcron",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "main": "dist/min/index.js",
   "repository": {
     "type": "git",
@@ -10,7 +10,10 @@
     "cron string builder",
     "quartz cron string builder",
     "quartz cron",
-    "quartz crontab"
+    "quartz crontab",
+    "quartz",
+    "cron",
+    "quartzcron"
   ],
   "author": "Federico Ghedina <fedeghe@gmail.com>",
   "license": "MIT",
