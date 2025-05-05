@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.19)
+Quartz cron string creator (v.0.0.21)
 */
 const labels = {
         days: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
