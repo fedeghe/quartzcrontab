@@ -1,33 +1,33 @@
 
-const Crontabist  = require('../dist/index.js');
+const Quartzcrontab  = require('../dist/index.js');
 const C = require('../dist/constants.js')
 
-describe('Crontabist', () => {
+describe('Quartzcrontab', () => {
 
     describe('constructor', () => {
         
         it('should Initialize as default', () => {
-            const c = new Crontabist()
+            const c = new Quartzcrontab()
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('should Initialize with month', () => {
-            const c = new Crontabist({ m: 3 })
+            const c = new Quartzcrontab({ m: 3 })
             expect(c.out()).toBe('0 0 0 * 3 ? *')
         })
         it('should Initialize with month-year', () => {
-            const c = new Crontabist({ m: 3, y: 2023 })
+            const c = new Quartzcrontab({ m: 3, y: 2023 })
             expect(c.out()).toBe('0 0 0 * 3 ? 2023')
         })
         it('should Initialize with month-daysOfMonth', () => {
-            const c = new Crontabist({ m: 3, dom: '9,12,17' })
+            const c = new Quartzcrontab({ m: 3, dom: '9,12,17' })
             expect(c.out()).toBe('0 0 0 9,12,17 3 ? *')
         })
         it('should Initialize with every second', () => {
-            const c = new Crontabist({ s:'*', i: '*', h:'*' })
+            const c = new Quartzcrontab({ s:'*', i: '*', h:'*' })
             expect(c.out()).toBe('* * * * * ? *')
         })
         it('should toString as expected', () => {
-            const c = new Crontabist({ s:'*', i: '*', h:'*' })
+            const c = new Quartzcrontab({ s:'*', i: '*', h:'*' })
             expect(c.toString()).toBe('* * * * * ? *')
             expect(c+'').toBe('* * * * * ? *')
             expect(String(c)).toBe('* * * * * ? *')
@@ -38,7 +38,7 @@ describe('Crontabist', () => {
     describe('seconds', () => {
         let c
         beforeEach(() => {
-            c = new Crontabist()
+            c = new Quartzcrontab()
         })
         it('everySecond', () => {
             c.everySecond()
@@ -83,7 +83,7 @@ describe('Crontabist', () => {
     describe('minutes', () => {
         let c
         beforeEach(() => {
-            c = new Crontabist()
+            c = new Quartzcrontab()
         })
         it('everyMinute', () => {
             c.everyMinute()
@@ -123,7 +123,7 @@ describe('Crontabist', () => {
     describe('hours', () => {
         let c
         beforeEach(() => {
-            c = new Crontabist()
+            c = new Quartzcrontab()
         })
         it('everyHour', () => {
             c.everyHour()
@@ -163,7 +163,7 @@ describe('Crontabist', () => {
     describe('day of month/week', () => {
         let c
         beforeEach(() => {
-            c = new Crontabist()
+            c = new Quartzcrontab()
         })
         it('everyDay', () => {
             c.everyDay()
@@ -253,7 +253,7 @@ describe('Crontabist', () => {
     describe('months', () => {
         let c
         beforeEach(() => {
-            c = new Crontabist()
+            c = new Quartzcrontab()
         })
         it('everyMonth', () => {
             c.everyMonth()
@@ -293,7 +293,7 @@ describe('Crontabist', () => {
     describe('years', () => {
         let c
         beforeEach(() => {
-            c = new Crontabist()
+            c = new Quartzcrontab()
         })
         it('everyYear', () => {
             c.everyYear()
@@ -335,7 +335,7 @@ describe('Crontabist', () => {
     describe('chained actions', () => {
         let c
         beforeEach(() => {
-            c = new Crontabist()
+            c = new Quartzcrontab()
         })
         it('atSecond atMinute atHour', () => {
             c.atSecond(3)
@@ -368,7 +368,7 @@ describe('Crontabist', () => {
     describe('edge examples', () => {
         let c
         beforeEach(() => {
-            c = new Crontabist()
+            c = new Quartzcrontab()
         })
         it('atSecond atMinute atHour atMonth all at range+cadence', () => {
             c.atSecond('3-30/2')
@@ -389,7 +389,7 @@ describe('Crontabist', () => {
     describe('describe as expected', () => {
         let c
         beforeEach(() => {
-            c = new Crontabist()
+            c = new Quartzcrontab()
         })
         it('default', () => {
             expect(c.describe()).toBe('every second of every day of every year')
@@ -397,9 +397,9 @@ describe('Crontabist', () => {
     })
 
     describe('static', () => {
-        it('CronTabist.getRanger should work as expected', () => {
-            const ranger24 = Crontabist.getRanger(24),
-                ranger60 = Crontabist.getRanger(60),
+        it('Quartzcrontab.getRanger should work as expected', () => {
+            const ranger24 = Quartzcrontab.getRanger(24),
+                ranger60 = Quartzcrontab.getRanger(60),
                 exp24 = [
                     {inp:0,out:0},
                     {inp:11,out:11},
@@ -439,7 +439,7 @@ describe('Crontabist', () => {
             describe('- positives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['every', {s: '*'}],
@@ -457,7 +457,7 @@ describe('Crontabist', () => {
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['negative', {s: -1}],
@@ -480,7 +480,7 @@ describe('Crontabist', () => {
             describe('- positives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['every', {i: '*'}],
@@ -498,7 +498,7 @@ describe('Crontabist', () => {
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['negative', {i: -1}],
@@ -521,7 +521,7 @@ describe('Crontabist', () => {
             describe('- positives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['every', {h: '*'}],
@@ -540,7 +540,7 @@ describe('Crontabist', () => {
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['negative', {h: -1}],
@@ -563,7 +563,7 @@ describe('Crontabist', () => {
             describe('- positives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['?', {dom: '?', dow:2}],
@@ -586,7 +586,7 @@ describe('Crontabist', () => {
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['too big', {dom: 32}],
@@ -612,7 +612,7 @@ describe('Crontabist', () => {
             describe('- positives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['?', {dom: '*', dow:'?'}],
@@ -646,7 +646,7 @@ describe('Crontabist', () => {
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 it('out of expected range', () => {
                     c.over({dom: '?', dow:8})
@@ -661,7 +661,7 @@ describe('Crontabist', () => {
             describe('- positives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['every', {m: '*'}],// every month does that
@@ -683,7 +683,7 @@ describe('Crontabist', () => {
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['single invalid', {m: '13'}],
@@ -701,7 +701,7 @@ describe('Crontabist', () => {
             describe('- positives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['every', {y: '*'}],
@@ -720,7 +720,7 @@ describe('Crontabist', () => {
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
-                    c = new Crontabist()
+                    c = new Quartzcrontab()
                 })
                 test.each([
                     ['single invalid lower', {y: '1969'}],
@@ -813,7 +813,7 @@ describe('Crontabist', () => {
                     '0 0 12 ? 9-12 *',
                     '0 0 12 ? 9-12 */3',
                 ])('%s', (arg) => {
-                    const validation = Crontabist.validate(arg)
+                    const validation = Quartzcrontab.validate(arg)
                     expect(validation.valid).toBeTruthy()
                     expect(validation.errors.length).toBe(0)
                 })
@@ -841,13 +841,13 @@ describe('Crontabist', () => {
                         C.errors.malformed.dow,
                     ]],
                 ])('%s', (arg, err) => {
-                    const validation = Crontabist.validate(arg)
+                    const validation = Quartzcrontab.validate(arg)
                     expect(validation.valid).toBeFalsy()
                     expect(validation.errors).toMatchObject(err)
                 })
 
                 it('nothing passed', () => {
-                    const validation = Crontabist.validate()
+                    const validation = Quartzcrontab.validate()
                     expect(validation.valid).toBeFalsy()
                     expect(validation.errors).toMatchObject([C.errors.staticValidationParamMissing])
                 })
@@ -858,11 +858,11 @@ describe('Crontabist', () => {
         describe('correlations', () => {
 
             describe('- dow <> dom', () => { 
-                
+
                 describe('- negatives', () => {
                     let c
                     beforeEach(() => {
-                        c = new Crontabist()
+                        c = new Quartzcrontab()
                     })
                     it('dow and dow cant be both set', () => {
                         c.over({dom: 12, dow:2})

@@ -1,10 +1,10 @@
 
-const Crontabist  = require('../dist/index.js');
+const Quartzcrontab  = require('../dist/index.js');
 
-describe('Crontabist.next', () => {
+describe('Quartzcrontab.next', () => {
     let c
     beforeEach(() => {
-        c = new Crontabist()
+        c = new Quartzcrontab()
     })
 
     it('case 1- too late', () => {
