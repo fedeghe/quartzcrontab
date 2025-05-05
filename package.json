@@ -1,7 +1,7 @@
 {
   "name": "quartzcrontab",
   "version": "0.0.16",
-  "main": "dist/index.js",
+  "main": "dist/min/index.js",
   "repository": {
     "type": "git",
     "url": "https://fedeghe@github.com/fedeghe/quartzcrontab.git"
