@@ -1,1 +1,1 @@
-Quartz cron string creator (v.maltaV('PACKAGE.version'))
+Quartzcron (v.maltaV('PACKAGE.version'))
