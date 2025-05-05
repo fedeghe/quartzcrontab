@@ -1,6 +1,6 @@
 {
   "name": "quartzcrontab",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "dist/min/index.js",
   "repository": {
     "type": "git",
@@ -15,7 +15,8 @@
   "author": "Federico Ghedina <fedeghe@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "malta source/build.json",
+    "dev": "malta source/buildev.json",
+    "build": "malta source/build.json",
     "test": "jest  --verbose --rootDir=tests",
     "watch": "jest --watch --rootDir=tests",
     "cover": "jest --collectCoverage --rootDir=tests",

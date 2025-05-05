@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
 
 
-# quartzcrontab (v. 0.0.13)
+# quartzcrontab (v. 0.0.14)
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -29,7 +29,7 @@ s  i  h dom m dow y
 const QuartzCrontab = require('quartzcrontab');
 
 const qct = new QuartzCrontab()
-console.log(qct.out()) // 0 0 0 * ? * *
+console.log(qct.out()) // 0 0 0 * * ? *
 // thus the default is
 // at midnight of everyday
 // but default values can be changed when calling the constructor
@@ -314,7 +314,7 @@ all years from `from` year to `to` year; optionally set the cadence passing an `
 ---
 
 
-## occurrences
+## Occurrences
 From an instance call the `next` function: 
 ``` js
 const nextOccurrence = qct.next()
@@ -325,9 +325,9 @@ this function accepts two options:
 - `date`: a reference date (js Date) to be used as _present time_ (default is the current date). No dates before the _present date_ will be returned.
 
 
-# limitations and plans
+# Limitations and plans
 
-### timezones
+### Timezones
 In case one plans to use that utility on a browser the chances the client and server run on different timezones is quite high.  
 
 One workaround would be so set the timezone to UTC on the server and in the UI explicitly inform the user that all dates & times are UTC.
@@ -344,9 +344,8 @@ QuartzCrontab.setServerTimezone("America/Los_Angeles"); // +6
 // or setServerUTCTimezone()
 ```
 
-### descriptions
-Having a quick way to get a more readable internationalized string out of the occurrences would be quite useful.  
-
+### Descriptions
+Having a quick way to get a more readable internationalized string out of the occurrences would be quite useful. You might be luckier than me trying [this npm package](https://www.npmjs.com/package/cronstrue); it claims to be quartz compliant but when I tried the [demo](https://bradymholt.github.io/cRonstrue/#cronstrue-demo) with a simple expression like `*/5 * * * * */5` I got a quite wrong description `"Every 5 seconds, every 5 days of the week"`.
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron

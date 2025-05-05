@@ -680,7 +680,6 @@ describe('Crontabist', () => {
                 })
             })
 
-
             describe('- negatives', () => {
                 let c
                 beforeEach(() => {
@@ -697,13 +696,13 @@ describe('Crontabist', () => {
                 })
             })
         })
+
         describe('- years', () => {
             describe('- positives', () => {
                 let c
                 beforeEach(() => {
                     c = new Crontabist()
                 })
-
                 test.each([
                     ['every', {y: '*'}],
                     ['one number', {y: '2030'}],
@@ -717,7 +716,6 @@ describe('Crontabist', () => {
                     expect(c.validate().errors.length).toBe(0)
                 })
             })
-
 
             describe('- negatives', () => {
                 let c
@@ -738,8 +736,8 @@ describe('Crontabist', () => {
                 })
             })
         })
-        describe('static validate', () => {
-            
+
+        describe('static validate', () => {    
             describe('- positives', () => {
                 test.each([
                     '0 0 0 * * ? *',
@@ -820,6 +818,7 @@ describe('Crontabist', () => {
                     expect(validation.errors.length).toBe(0)
                 })
             })
+
             describe('- negatives', () => {
                 test.each([
                     ['-1 0 0 * * ? *', [C.errors.malformed.seconds]],
@@ -855,8 +854,11 @@ describe('Crontabist', () => {
             })
             
         }) 
+
         describe('correlations', () => {
+
             describe('- dow <> dom', () => { 
+                
                 describe('- negatives', () => {
                     let c
                     beforeEach(() => {

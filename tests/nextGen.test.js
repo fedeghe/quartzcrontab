@@ -154,9 +154,9 @@ describe('Crontabist.next', () => {
             ])
         })
     })
-    describe('all cases as in static validate', () => {
-        var d = new Date('01:00:00 6-5-2025 GMT')// 5th june 2025
-        it('#1 - returns the expected from 0 0 0 * * ? *', () => {
+    describe('some cases from static validate', () => {
+        const d = new Date('01:00:00 6-5-2025 GMT')// 5th june 2025
+        it('#1 - returns the expected from `0 0 0 * * ? *`', () => {
             const next = c.next({ n: 3, date: d })
             expect(
                 next.map(s=>s.toUTCString())
@@ -166,10 +166,10 @@ describe('Crontabist.next', () => {
                 "Sun, 08 Jun 2025 00:00:00 GMT",
             ])
         })
-        it('#2 - returns the expected from * * * * * ? *', () => {
+        it('#2 - returns the expected from `* * * * * ? *`', () => {
             c.everySecond()
-            c.everyMinute()
-            c.everyHour()
+                .everyMinute()
+                .everyHour()
             const next = c.next({ n: 3, date: d })
             expect(
                 next.map(s=>s.toUTCString())
@@ -179,7 +179,7 @@ describe('Crontabist.next', () => {
                 "Thu, 05 Jun 2025 01:00:03 GMT",
             ])
         })
-        it('#3 - returns the expected from 0 0 0 1 * ? *', () => {
+        it('#3 - returns the expected from `0 0 0 1 * ? *`', () => {
             c.atMonthDay(1)
             const next = c.next({ n: 3, date: d })
             expect(
@@ -190,10 +190,9 @@ describe('Crontabist.next', () => {
                 "Mon, 01 Sep 2025 00:00:00 GMT",
             ])
         })
-
-        it('#4 - returns the expected from 0 0 0 1 1 ? *', () => {
+        it('#4 - returns the expected from `0 0 0 1 1 ? *`', () => {
             c.atMonthDay(1)
-            c.atMonth(1)
+                .atMonth(1)
             const next = c.next({ n: 3, date: d })
             expect(
                 next.map(s=>s.toUTCString())
@@ -203,10 +202,9 @@ describe('Crontabist.next', () => {
                 "Sat, 01 Jan 2028 00:00:00 GMT",
             ])
         })
-
-        it('#5 - returns the expected from 0 0 0 L 1 ? *', () => {
+        it('#5 - returns the expected from `0 0 0 L 1 ? *`', () => {
             c.onLastMonthDay()
-            c.atMonth(1)
+                .atMonth(1)
             const next = c.next({ n: 3, date: d })
             expect(
                 next.map(s=>s.toUTCString())
@@ -216,10 +214,9 @@ describe('Crontabist.next', () => {
                 "Mon, 31 Jan 2028 00:00:00 GMT",
             ])
         })
-
-        it('#6 - returns the expected from 0 0 0 LW 1 ? *', () => {
+        it('#6 - returns the expected from `0 0 0 LW 1 ? *`', () => {
             c.onLastMonthWeekDay()
-            c.atMonth(1)
+                .atMonth(1)
             const next = c.next({ n: 3, date: d })
             expect(
                 next.map(s=>s.toUTCString())
@@ -229,10 +226,9 @@ describe('Crontabist.next', () => {
                 "Mon, 31 Jan 2028 00:00:00 GMT",
             ])
         })
-
-        it('#7 - returns the expected from 0 0 0 3W 1 ? *', () => {
+        it('#7 - returns the expected from `0 0 0 3W 1 ? *`', () => {
             c.onClosestWorkingDayToTheNMonthDay(3)
-            c.atMonth(1)
+                .atMonth(1)
             const next = c.next({ n: 3, date: d })
             expect(c.out()).toBe('0 0 0 3W 1 ? *')
             expect(
@@ -243,8 +239,7 @@ describe('Crontabist.next', () => {
                 "Mon, 03 Jan 2028 00:00:00 GMT",
             ])
         })
-
-        it('#8 - returns the expected from 0,1,5 1-31/5 * ? JAN,FeB 7#3 2026,2028,2032', () => {
+        it('#8 - returns the expected from `0,1,5 1-31/5 * ? JAN,FeB 7#3 2026,2028,2032`', () => {
             c.atSecond('0,1,5')
                 .betweenMinutes(1,31,5)
                 .everyHour()
@@ -267,6 +262,80 @@ describe('Crontabist.next', () => {
                 "Sat, 17 Jan 2026 00:11:01 GMT",
                 "Sat, 17 Jan 2026 00:11:05 GMT",
                 "Sat, 17 Jan 2026 00:16:00 GMT",
+            ])
+        })
+        it('#9 - returns the expected from `* * * ? JAN,FEB 7#3 2026,2028,2032`', () => {
+            c.everySecond()
+                .everyMinute()
+                .everyHour()
+                .atMonth('1,2')
+                .onNWeekDayOfTheMonth(3,7)
+                .atYear(2026)
+                    .atYearAdd(2028).atYearAdd(2032)
+            const next = c.next({ n: 3, date: d })
+            expect(c.out()).toBe('* * * ? 1,2 7#3 2026,2028,2032')
+            expect(
+                next.map(s=>s.toUTCString())
+            ).toMatchObject([
+                "Sat, 17 Jan 2026 00:00:00 GMT",
+                "Sat, 17 Jan 2026 00:00:01 GMT",
+                "Sat, 17 Jan 2026 00:00:02 GMT",
+            ])
+        })
+        it('#10 - returns the expected from `* * * ? JAN-DEC/2 7#3 2026-2080/4`', () => {
+            c.everySecond()
+                .everyMinute()
+                .everyHour()
+                .betweenMonths('JAN', 'DEC', 2)
+                .onNWeekDayOfTheMonth(3,7)
+                .betweenYears(2026, 2080, 4)
+            const next = c.next({ n: 3, date: d })
+            expect(c.out()).toBe('* * * ? JAN-DEC/2 7#3 2026-2080/4')
+            expect(
+                next.map(s=>s.toUTCString())
+            ).toMatchObject([
+                "Sat, 17 Jan 2026 00:00:00 GMT",
+                "Sat, 17 Jan 2026 00:00:01 GMT",
+                "Sat, 17 Jan 2026 00:00:02 GMT",
+            ])
+        })
+        it('#11 - returns the expected from `0 */2 * ? * * *`', () => {
+            c.everyNMinutes(2)
+                .everyHour()
+            const next = c.next({ n: 3, date: d })
+            expect(c.out()).toBe('0 0/2 * * * ? *')
+            expect(
+                next.map(s=>s.toUTCString())
+            ).toMatchObject([
+                "Thu, 05 Jun 2025 01:02:00 GMT",
+                "Thu, 05 Jun 2025 01:04:00 GMT",
+                "Thu, 05 Jun 2025 01:06:00 GMT",
+            ])
+        })
+        it('#12 - returns the expected from `0 1/2 * ? * * *`', () => {
+            c.everyNMinutes(2, 1)
+                .everyHour()
+            const next = c.next({ n: 3, date: d })
+            expect(c.out()).toBe('0 1/2 * * * ? *')
+            expect(
+                next.map(s=>s.toUTCString())
+            ).toMatchObject([
+                "Thu, 05 Jun 2025 01:01:00 GMT",
+                "Thu, 05 Jun 2025 01:03:00 GMT",
+                "Thu, 05 Jun 2025 01:05:00 GMT",
+            ])
+        })
+        it('#13 - returns the expected from `0 1/2 * ? * * *`', () => {
+            c.everyNMinutes(2, 1)
+                .everyHour()
+            const next = c.next({ n: 3, date: d })
+            expect(c.out()).toBe('0 1/2 * * * ? *')
+            expect(
+                next.map(s=>s.toUTCString())
+            ).toMatchObject([
+                "Thu, 05 Jun 2025 01:01:00 GMT",
+                "Thu, 05 Jun 2025 01:03:00 GMT",
+                "Thu, 05 Jun 2025 01:05:00 GMT",
             ])
         })
     })
