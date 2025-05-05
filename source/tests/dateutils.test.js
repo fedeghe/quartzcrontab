@@ -359,7 +359,6 @@ describe('date utils', () => {
                 ['L (2025 may)', 2025, 5, 'L', [31]],
                 ['L (2025 feb)', 2025, 2, 'L', [28]],
                 ['L (2024 feb*)', 2024, 2, 'L', [29]],
-                
             ])('%s', (_, y, m, dom, expected) => {
                 expect(solve_dom(y, m, dom)).toMatchObject(expected)
             })
@@ -511,6 +510,9 @@ describe('date utils', () => {
             test.each([
                 ['2#2 (2025 jan)', 2025, 1, '2#1', [6]],
                 ['2#2 (2025 jan)', 2025, 1, '2#2', [13]],
+                ['2#2 (2026 feb)', 2026, 2, '2#2', [9]],
+                ['2#2 (2028 feb)', 2026, 2, '3#5', []],// edge
+                ['2#2 (2028 feb)', 2028, 2, '3#5', [29]],
             ])('%s', (_, y, m, dow, expected) => {
                 expect(solve_dow(y, m, dow)).toMatchObject(expected)
             })

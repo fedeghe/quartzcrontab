@@ -246,7 +246,7 @@ const dom_solvers = [
     // /^([1-9]|1[0-9]|2[0-9]|3[01])W$/
 
     // L-[1-31]
-    ({val, lastDate, d}) => {
+    ({val, lastDate}) => {
         const vals = val.match(/^L-([1-9]|1[0-9]|2[0-9]|3[01])$/);
         if(vals){
             const last = lastDate-parseInt(vals[1]);
@@ -426,7 +426,7 @@ const dow_solvers = [
 
     // [1-7]#[1-5]
     // a#b the b-th a weekday of the month
-    ({val, d}) => {
+    ({val, d, lastDate}) => {
         const mat = val.match(/^([1-7])#([1-5])$/),
             res = [];
         d.setUTCDate(1);
@@ -441,7 +441,8 @@ const dow_solvers = [
                     : cursorDay+1;
                 cursorDate++;
             }
-            return [cursorDate+(n-1)*7];
+            let ret = cursorDate+(n-1)*7
+            return ret <= lastDate ? [ret] : [];
         }
         return res;
     },
