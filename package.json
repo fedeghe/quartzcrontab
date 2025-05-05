@@ -1,10 +1,10 @@
 {
-  "name": "quartzcrontab",
-  "version": "0.0.19",
+  "name": "quartzcron",
+  "version": "0.0.20",
   "main": "dist/min/index.js",
   "repository": {
     "type": "git",
-    "url": "https://fedeghe@github.com/fedeghe/quartzcrontab.git"
+    "url": "https://fedeghe@github.com/fedeghe/quartzcron.git"
   },
   "keywords": [
     "cron string builder",
