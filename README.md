@@ -3,13 +3,13 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcron/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcron?branch=master)
 
 
-# quartzcron (v. 0.0.22)
+# quartzcron (v. 0.0.23)
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
 That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
- - **help to programmatically create those cron expressions**  
- - **validate an expression**  
+ - **help to programmatically create cron expressions**  
+ - **validate cron expressions**  
  - **get the _n_ next precise occurrences**  
 
 A `quartz cron expression` has the following structure: 
@@ -322,7 +322,8 @@ const nextOccurrence = qct.next()
 ```
 this function accepts two options:  
 - `n`: the number of occurrences needed (1 is the default)  
-- `date`: a reference date (js Date) to be used as _present time_ (default is the current date). No dates before the _present date_ will be returned.
+- `date`: a reference date (js Date) to be used as _present date_ (default is the current date). No dates before the _present date_ will be returned.
+- `exp`: in case from an instance one wants to validate a different expression
 
 
 # Limitations and plans

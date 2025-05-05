@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.22)
+Quartz cron string creator (v.0.0.23)
 */
 
 const {
