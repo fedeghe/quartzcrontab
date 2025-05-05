@@ -1,9 +1,9 @@
 
 
-[![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcrontab/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcrontab?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcron/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcron?branch=master)
 
 
-# quartzcrontab (v. 0.0.19)
+# quartzcron (v. 0.0.19)
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -26,9 +26,9 @@ s  i  h dom m dow y
 
 ## example
 ``` js
-const QuartzCrontab = require('quartzcrontab');
+const QuartzCron = require('quartzcron');
 
-const qct = new QuartzCrontab()
+const qct = new QuartzCron()
 console.log(qct.out()) // 0 0 0 * * ? *
 // thus the default is
 // at midnight of everyday
@@ -62,7 +62,7 @@ const next = qct.next({date: new Date('00:00:00 01-01-2024'), n: 3})
 ```
 ## validation API
 
-`QuartzCrontab.validate(exp)`  
+`QuartzCron.validate(exp)`  
 when invoked it will return an object shaped like follows:
 `{ valid: boolean, errors: ['error description',...]}`
 
@@ -337,10 +337,10 @@ One workaround would be so set the timezone to UTC on the server and in the UI e
 **The plan** is to provide 2 static methods to allow to set the timezones for the client and the server.
 
 ``` js
-QuartzCrontab.useClientLocalTimezone() // auto (e.g -2)
+QuartzCron.useClientLocalTimezone() // auto (e.g -2)
 // or useClientUTCTimezone()
 
-QuartzCrontab.setServerTimezone("America/Los_Angeles"); // +6
+QuartzCron.setServerTimezone("America/Los_Angeles"); // +6
 // or setServerUTCTimezone()
 ```
 

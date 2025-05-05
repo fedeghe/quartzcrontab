@@ -1,10 +1,10 @@
 
-const Quartzcrontab  = require('../dist/index.js');
+const Quartzcron  = require('../dist/index.js');
 
-describe('Quartzcrontab.next', () => {
+describe('Quartzcron.next', () => {
     let c
     beforeEach(() => {
-        c = new Quartzcrontab()
+        c = new Quartzcron()
     })
 
     it('case 1- too late', () => {

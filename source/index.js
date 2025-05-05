@@ -21,7 +21,7 @@ const nextGen = require('./nextGen');
 
 const C = require('./constants');
 
-class Quartzcrontab {
+class Quartzcron {
     constructor({
         s = defaults.s,         // seconds
         i = defaults.i,         // minutes
@@ -44,9 +44,9 @@ class Quartzcrontab {
         }
     }
 
-    range24 = Quartzcrontab.getRanger(24);
-    range12 = Quartzcrontab.getRanger(12);
-    range60 = Quartzcrontab.getRanger(60);
+    range24 = Quartzcron.getRanger(24);
+    range12 = Quartzcron.getRanger(12);
+    range60 = Quartzcron.getRanger(60);
 
     over({ s, i, h, dom, m, dow, y }) {
         this.elements = {
@@ -250,7 +250,7 @@ class Quartzcrontab {
         ).filter(Boolean)
     }
 
-    validate(){ return Quartzcrontab.validate(this.out())}
+    validate(){ return Quartzcron.validate(this.out())}
 
     static validate(exp){
         const errors = [],
@@ -320,4 +320,4 @@ class Quartzcrontab {
     toString = this.out;
 }
 
-module.exports =  Quartzcrontab;
+module.exports =  Quartzcron;
