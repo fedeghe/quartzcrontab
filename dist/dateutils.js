@@ -1,5 +1,5 @@
 /*
-Quartz cron string creator (v.0.0.18)
+Quartz cron string creator (v.0.0.19)
 */
 const C = require('./constants.js'),
     {daysLabels2Numbers} = require('./utils.js');
