@@ -441,7 +441,7 @@ const dow_solvers = [
                     : cursorDay+1;
                 cursorDate++;
             }
-            let ret = cursorDate+(n-1)*7
+            let ret = cursorDate+(n-1)*7;
             return ret <= lastDate ? [ret] : [];
         }
         return res;
