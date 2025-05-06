@@ -31,17 +31,17 @@ describe('Quartzcron.next', () => {
                     .everyWeekDay('2')
                     .atHour('1,5'),
                 10,
-                s=>s.toString(),
+                s=>s.toUTCString(),
                 new Date('18:00:00 1-2-2024'),
                 [
-                    "Mon Feb 05 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-                    "Mon Feb 05 2024 06:00:00 GMT+0100 (Central European Standard Time)",
-                    "Mon Feb 12 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-                    "Mon Feb 12 2024 06:00:00 GMT+0100 (Central European Standard Time)",
-                    "Mon Feb 19 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-                    "Mon Feb 19 2024 06:00:00 GMT+0100 (Central European Standard Time)",
-                    "Mon Feb 26 2024 02:00:00 GMT+0100 (Central European Standard Time)",
-                    "Mon Feb 26 2024 06:00:00 GMT+0100 (Central European Standard Time)",
+                    "Mon, 05 Feb 2024 01:00:00 GMT",
+                    "Mon, 05 Feb 2024 05:00:00 GMT",
+                    "Mon, 12 Feb 2024 01:00:00 GMT",
+                    "Mon, 12 Feb 2024 05:00:00 GMT",
+                    "Mon, 19 Feb 2024 01:00:00 GMT",
+                    "Mon, 19 Feb 2024 05:00:00 GMT",
+                    "Mon, 26 Feb 2024 01:00:00 GMT",
+                    "Mon, 26 Feb 2024 05:00:00 GMT",
                 ]
             ],
             [
