@@ -189,6 +189,15 @@ describe('Quartzcron.next', () => {
                 "Thu, 01 Jan 2099 00:00:00 GMT"
             ])
         })
+        it('next handles the passed', () => {
+            c.atYear('2099');
+            const next = c.next()
+            expect(
+                next.map(s=>s.toUTCString())
+            ).toMatchObject([
+                "Thu, 01 Jan 2099 00:00:00 GMT"
+            ])
+        })
     })
     describe('some cases from static validate', () => {
         const date = new Date('01:00:00 6-5-2025 GMT')// 5th june 2025
