@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.27)
+quartzcron (v.0.0.28)
 */
 const labels = {
         days: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],

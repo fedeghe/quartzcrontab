@@ -397,35 +397,37 @@ describe('Quartzcron', () => {
     })
 
     describe('static', () => {
-        it('Quartzcron.getRanger should work as expected', () => {
-            const ranger24 = Quartzcron.getRanger(24),
-                ranger60 = Quartzcron.getRanger(60),
-                exp24 = [
-                    {inp:0,out:0},
-                    {inp:11,out:11},
-                    {inp:23,out:23},
-                    {inp:24,out:0},
-                    {inp:26,out:2},
-                    {inp:47,out:23},
-                    {inp:49,out:1},
-                    {inp:-1,out:23},
-                ],
-                exp60=[
-                    {inp:0,out:0},
-                    {inp:11,out:11},
-                    {inp:12,out:12},
-                    {inp:59,out:59},
-                    {inp:60,out:0},
-                    {inp:62,out:2},
-                    {inp:118,out:58},
-                    {inp:-1,out:59},
-                ];
-            exp24.forEach(({inp, out}) => {
+        const ranger24 = Quartzcron.getRanger(24),
+            ranger60 = Quartzcron.getRanger(60);
+        
+        describe('Quartzcron.getRanger(24) returned ranger should work as expected', () => {
+            test.each([
+                {inp:0,out:0},
+                {inp:11,out:11},
+                {inp:23,out:23},
+                {inp:24,out:0},
+                {inp:26,out:2},
+                {inp:47,out:23},
+                {inp:49,out:1},
+                {inp:-1,out:23},
+            ])('', ({inp, out}) => {
                 expect(ranger24(inp)).toBe(out)
             });
-            exp60.forEach(({inp, out}) => {
+        })
+
+        describe('Quartzcron.getRanger(60) returned ranger should work as expected', () => {
+            test.each([
+                {inp:0,out:0},
+                {inp:11,out:11},
+                {inp:12,out:12},
+                {inp:59,out:59},
+                {inp:60,out:0},
+                {inp:62,out:2},
+                {inp:118,out:58},
+                {inp:-1,out:59},
+            ])('', ({inp, out}) => {
                 expect(ranger60(inp)).toBe(out)
-            })
+            });
         })
     })
 
@@ -452,6 +454,8 @@ describe('Quartzcron', () => {
                     c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
                     expect(c.validate().errors.length).toBe(0)
+                    expect(c.validate(c.out()).valid).toBeTruthy()
+                    expect(c.validate(c.out()).errors.length).toBe(0)
                 })
             })
             describe('- negatives', () => {
@@ -473,6 +477,8 @@ describe('Quartzcron', () => {
                     c.over(arg)
                     expect(c.validate().valid).toBeFalsy()
                     expect(c.validate().errors.length).toBe(1)
+                    expect(c.validate(c.out()).valid).toBeFalsy()
+                    expect(c.validate(c.out()).errors.length).toBe(1)
                 })
             })
         })

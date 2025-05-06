@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.27)
+quartzcron (v.0.0.28)
 */
 
 const {
@@ -253,7 +253,7 @@ class Quartzcron {
         ).filter(Boolean)
     }
 
-    validate(){ return Quartzcron.validate(this.out())}
+    validate(exp){ return Quartzcron.validate(exp || this.out())}
 
     static validate(exp){
         const errors = [],

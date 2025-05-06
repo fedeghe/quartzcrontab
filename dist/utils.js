@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.27)
+quartzcron (v.0.0.28)
 */
 /*
 validations
@@ -108,7 +108,19 @@ const getRangeValidator = ({mainRx, cadenceRx}) => val => {
     },
     now = new Date(),
     yearNow = now.getFullYear(),
-    removeSpaces = s => `${s}`.replace(/\s/mg, '');
+    removeSpaces = s => `${s}`.replace(/\s/mg, ''),
+    exp2elements = exp => {
+        const e = exp.split(/\s/);
+        return {
+            s: e[0],
+            i: e[1],
+            h: e[2],
+            dom: e[3],
+            m: e[4],
+            dow: e[5],
+            y: e[6],
+        }
+    };
 
 module.exports = {
     validators,
@@ -116,5 +128,6 @@ module.exports = {
     defaults,
     yearNow,
     removeSpaces,
-    daysLabels2Numbers
+    daysLabels2Numbers,
+    exp2elements
 };

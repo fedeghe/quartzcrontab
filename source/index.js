@@ -250,7 +250,7 @@ class Quartzcron {
         ).filter(Boolean)
     }
 
-    validate(){ return Quartzcron.validate(this.out())}
+    validate(exp){ return Quartzcron.validate(exp || this.out())}
 
     static validate(exp){
         const errors = [],
