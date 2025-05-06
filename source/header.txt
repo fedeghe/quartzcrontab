@@ -1,1 +1,1 @@
-Quartzcron (v.maltaV('PACKAGE.version'))
+maltaV('PACKAGE.name') (v.maltaV('PACKAGE.version'))

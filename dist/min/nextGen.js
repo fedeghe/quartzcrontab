@@ -1,4 +1,4 @@
 /*
-Quartzcron (v.0.0.24)
+quartzcron (v.0.0.25)
 */
 const{solve_dom, solve_dow,}=require('./dateutils');function*generateDates(base, years, months, dom, dow, hours, minutes, seconds){for(const year of years)for(const month of months)yield*generateDatesForMonth(base, year, month, dom, dow, hours, minutes, seconds);}function*generateDatesForMonth(base, year, month, dom, dow, hours, minutes, seconds){let daysInMonth;if(dom !=='?'){daysInMonth=solve_dom(year, month, dom)}else if(dow !=='?'){daysInMonth=solve_dow(year, month, dow)}for(let i=0, l=daysInMonth.length;i < l;i++)yield*generateDatesForDay(base, year, month, daysInMonth[i], hours, minutes, seconds);}function*generateDatesForDay(base, year, month, day, hours, minutes, seconds){for(const hour of hours)for(const minute of minutes)for(const second of seconds){if(+base < Date.UTC(year,month-1, day, hour , minute, second))yield new Date(Date.UTC(year, month-1, day, hour, minute, second));}}module.exports={generateDates}
