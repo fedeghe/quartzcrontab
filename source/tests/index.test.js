@@ -6,6 +6,7 @@ describe('Quartzcron', () => {
 
     describe('constructor', () => {
         
+        // with object
         it('should Initialize as default', () => {
             const c = new Quartzcron()
             expect(c.out()).toBe('0 0 0 * * ? *')
@@ -32,6 +33,33 @@ describe('Quartzcron', () => {
             expect(c+'').toBe('* * * * * ? *')
             expect(String(c)).toBe('* * * * * ? *')
             expect(`${c}`).toBe('* * * * * ? *')
+        })
+
+        // with string
+        it('should Initialize with hour - from string', () => {
+            const c = new Quartzcron('0 0 1 * * ? *')
+            expect(c.out()).toBe('0 0 1 * * ? *')
+        })
+        it('should Initialize with h:i:s - from string', () => {
+            const c = new Quartzcron('59 15 1 * * ? *')
+            expect(c.out()).toBe('59 15 1 * * ? *')
+        })
+        //throws in case
+        describe('throws in case an incompatible string is passed', () => {
+            test.each([
+                ['not enough', '59 15 1 *'],
+                ['seconds oob', '69 15 1 * * ? *'],
+                ['minutes oob', '59 61 1 * * ? *'],
+                ['hours oob', '59 30 24 * * ? *'],
+                ['dom oob', '0 0 0 32 * ? *'],
+                ['month oob', '0 0 0 * 13 ? *'],
+                ['dow unexpected', '0 0 0 * * LOM *'],
+                ['year oob', '0 0 0 * * ? 2100'],
+            ])('%s', (_, p) => {
+                expect(() => {
+                    new Quartzcron(p)
+                }).toThrow(C.errors.constructorErr)
+            })
         })
     })
     

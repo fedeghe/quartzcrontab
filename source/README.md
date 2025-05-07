@@ -55,6 +55,21 @@ const next = qct.next({
 ]
 */
 ```  
+## constructor
+Constructor can handle: 
+
+- **0 parameters**  
+    default used `0 0 0 * * ? *`  
+- **1 valid expression string**  
+    when invalid throws and exception
+- **1 object corresponding to a valid expression** 
+    ``` js
+    {
+        s:0, i: 0, h: 0,
+        dom:'*', m:'*', dow: '?', y: '*'
+    }
+    ```
+
 
 ## get the quartz cron expression
 Just invoke `out()` ƒunction on the _quartzcron_ instance to get the related expression

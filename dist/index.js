@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.28)
+quartzcron (v.0.0.29)
 */
 
 const {
@@ -7,7 +7,8 @@ const {
     fieldCorrelationValidators,
     defaults,
     yearNow,
-    removeSpaces
+    removeSpaces,
+    exp2elements
 } = require('./utils');
 
 const {
@@ -25,19 +26,22 @@ const nextGen = require('./nextGen');
 const C = require('./constants');
 
 class Quartzcron {
-    constructor({
-        s = defaults.s,         // seconds
-        i = defaults.i,         // minutes
-        h = defaults.h,         // seconds
-        dom = defaults.dom,     // day of month
-        dow = defaults.dow,     // day of week
-        m = defaults.m,         // month
-        y = defaults.y,         // year
-    } = {}) {
+    constructor(o) {
+        let els = null;
+        if(typeof o === 'string'){
+            els = exp2elements(o);
+        }
+        if(typeof o === 'object'){
+            els = {...defaults, ...o}
+        }
+        if(els === null) {
+            els = {...defaults};
+        }
         this.months = { min: 0, max: 11 };
-        this.elements = { s, i, h, dom, m, dow, y };
+        this.elements = els;
+        const validity = this.validate();
+        if(!validity.valid) throw new Error(C.errors.constructorErr)
     };
-    
 
     static getRanger(max) {
         return n => {

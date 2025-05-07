@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.28)
+quartzcron (v.0.0.29)
 */
 const labels = {
         days: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
@@ -59,7 +59,8 @@ const labels = {
         },
         invalidDate: 'Invalid Date',
         staticValidationParamMissing: 'static validation needs an expression to validate',
-        domdowExclusivity: 'either dom either dow must contain "?"'
+        domdowExclusivity: 'either dom either dow must contain "?"',
+        constructorErr: 'wrong params for constructor'
     },
     rx = {
         asterx: /^\*(\/\d*)?$/,

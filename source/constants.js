@@ -56,7 +56,8 @@ const labels = {
         },
         invalidDate: 'Invalid Date',
         staticValidationParamMissing: 'static validation needs an expression to validate',
-        domdowExclusivity: 'either dom either dow must contain "?"'
+        domdowExclusivity: 'either dom either dow must contain "?"',
+        constructorErr: 'wrong params for constructor'
     },
     rx = {
         asterx: /^\*(\/\d*)?$/,
