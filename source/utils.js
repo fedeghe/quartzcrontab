@@ -95,7 +95,7 @@ const getRangeValidator = ({mainRx, cadenceRx}) => val => {
         dayOfWeek: rxDow
     },
     fieldCorrelationValidators = [{
-        validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?'),
+        validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?') && !(dow==='?'&&dom==='?'),
         message: C.errors.domdowExclusivity
     }],
     daysLabels2Numbers = v => {

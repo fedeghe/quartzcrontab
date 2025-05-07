@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcron/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcron?branch=master)
 
 
-# quartzcron (v. 0.0.29)
+# quartzcron (v. 0.0.30)
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -69,7 +69,7 @@ Constructor can handle:
         dom:'*', m:'*', dow: '?', y: '*'
     }
     ```
-
+throws an exception when the resulting expression is not valid
 
 ## get the quartz cron expression
 Just invoke `out()` ƒunction on the _quartzcron_ instance to get the related expression
@@ -341,6 +341,20 @@ all years from `from` year to `to` year; optionally set the cadence passing an `
 
 
 
+## more instance methods
+
+- `updateExp(exp)`  
+updates the current instance expression, handles  
+- **an expression string**  
+    when invalid throws and exception
+- **an object corresponding to an expression** 
+    ``` js
+    {
+        s:0, i: 0, h: 0,
+        dom:'*', m:'*', dow: '?', y: '*'
+    }
+    ```
+throws an exception when the resulting expression is not valid
 
 ## Occurrences
 From an instance call the `next` ƒunction: 

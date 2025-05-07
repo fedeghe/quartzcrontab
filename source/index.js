@@ -52,6 +52,22 @@ class Quartzcron {
     range12 = Quartzcron.getRanger(12);
     range60 = Quartzcron.getRanger(60);
 
+    updateExp(o) {
+        let els = null;
+        if(typeof o === 'string'){
+            els = exp2elements(o);
+        }
+        if(typeof o === 'object'){
+            els = {...defaults, ...o}
+        }
+        if(els === null) {
+            els = {...defaults};
+        }
+        this.elements = els;
+        const validity = this.validate();
+        if(!validity.valid) throw new Error(C.errors.updateExpErr)
+    }
+
     over({ s, i, h, dom, m, dow, y }) {
         this.elements = {
             s: removeSpaces(s ?? this.elements.s),

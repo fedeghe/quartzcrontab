@@ -63,6 +63,37 @@ describe('Quartzcron', () => {
         })
     })
     
+    describe('updateExp', () => {
+        let c
+        beforeEach(() => {
+            c = new Quartzcron()
+        })
+        test.each([
+            ['1 1 1 * * ? 2013'],
+            [{s:1,i:1,h:1,dom:'*',m:'*',dow:'?',y:2013}, '1 1 1 * * ? 2013'],
+        ])('update to %s', (s, exp = null) => {
+            c.updateExp(s);
+            expect(c.out()).toBe(exp || s)
+        })
+        it('nothing passed goes to defaults', () => {
+            c.updateExp();
+            expect(c.out()).toBe(Object.values(C.defaults).join(' '));
+        })
+
+        test.each([
+            ['1 1 59 * * ? 20133423'],
+            ['-1 1 1 * * ? 2013'],
+            ['1 60 1 * * ? 2013'],
+            ['1 0 441 * * ? 2013'],
+            ['1 0 1 ? * ? 2013'],
+        ])('update to %s', s => {
+            expect(() => 
+                c.updateExp(s)
+            ).toThrow(C.errors.updateExpErr)
+        })
+    })
+
+
     describe('seconds', () => {
         let c
         beforeEach(() => {

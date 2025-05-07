@@ -170,7 +170,6 @@ describe('utils', () => {
         test.each([
             { dom: '?', dow: '*'},
             { dom: '*', dow: '?'},
-            { dom: '?', dow: '?'},
         ])('positives', o => {
             fieldCorrelationValidators.forEach(
                 ({validator}) => {
@@ -178,8 +177,9 @@ describe('utils', () => {
                 }
             )
         })
-
+        
         test.each([
+            { dom: '?', dow: '?'},
             { dom: '3', dow: '4'},
             { dom: '*', dow: '*'},
         ])('negatives', o => {
