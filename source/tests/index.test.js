@@ -488,6 +488,22 @@ describe('Quartzcron', () => {
                 expect(ranger60(inp)).toBe(out)
             });
         })
+
+        describe('Quartzcron.solvers contains all range solvers', () => {
+            test.each([
+                ['solve_0_59_ranges'],
+                ['solve_hours_ranges'],
+                ['solve_week_ranges'],
+                ['solve_month_ranges'],
+                ['solve_year_ranges'],
+                ['solve_dom'],
+                ['solve_dow']
+            ])('', inp => {
+                expect(typeof Quartzcron.solvers[inp]).toBe('function')
+            });
+        })
+
+
     })
 
     /**

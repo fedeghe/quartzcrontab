@@ -449,7 +449,7 @@ const dow_solvers = [
 ];
 const solve_dow = getSpecialSolver(dow_solvers);
 
-const solve_0_59_Range = getRangeSolver({
+const solve_0_59_ranges = getRangeSolver({
         bounds: C.bounds.seconds,
         minMaxCadenceGetter: cs => ({
             min: parseInt(cs[1],10),
@@ -516,8 +516,8 @@ const solve_0_59_Range = getRangeSolver({
 
 /**
  solve_hours_ranges 
- solve_minutes_ranges < solve_0_59_Range
- solve_seconds_ranges < solve_0_59_Range
+ solve_minutes_ranges < solve_0_59_ranges
+ solve_seconds_ranges < solve_0_59_ranges
  */
 
 //most likely not needed, TODO : double check
@@ -557,7 +557,7 @@ module.exports = {
     nDaysBeforeEndOfMonth,
     nDayOfMonth,
     // solveNumericRange,
-    solve_0_59_Range,
+    solve_0_59_ranges,
     solve_year_ranges,
     solve_month_ranges,
     solve_week_ranges,

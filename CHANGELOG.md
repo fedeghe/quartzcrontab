@@ -1,3 +1,8 @@
+
+
+## 0.0.31  
+all 7 range resolvers are exposed in static `Quartzcron.solvers`  
+
 ## 0.0.29  
 fix: `dow` and `dow` additionally cant be both `?`  
 

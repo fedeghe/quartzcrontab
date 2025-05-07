@@ -9,9 +9,9 @@ const {
 } = require('./utils');
 
 const {
-    solve_0_59_Range,
+    solve_0_59_ranges,
     solve_hours_ranges,
-    // solve_week_ranges,
+    solve_week_ranges,
     solve_month_ranges,
     solve_year_ranges,
     solve_dom,
@@ -38,6 +38,16 @@ class Quartzcron {
         this.elements = els;
         const validity = this.validate();
         if(!validity.valid) throw new Error(C.errors.constructorErr)
+    };
+
+    static solvers = {
+        solve_0_59_ranges,
+        solve_hours_ranges,
+        solve_week_ranges,
+        solve_month_ranges,
+        solve_year_ranges,
+        solve_dom,
+        solve_dow,
     };
 
     static getRanger(max) {
@@ -252,8 +262,8 @@ class Quartzcron {
                 elements.dom,
                 elements.dow,
                 solve_hours_ranges(elements.h),
-                solve_0_59_Range(elements.i),
-                solve_0_59_Range(elements.s),
+                solve_0_59_ranges(elements.i),
+                solve_0_59_ranges(elements.s),
             );
         // console.log([
         //     solve_year_ranges(elements.y).filter(ye => ye >= y), // remove past years
@@ -261,8 +271,8 @@ class Quartzcron {
         //     solve_dom(2024, 1, elements.dom),
         //     solve_dow(2024, 1, elements.dow),
         //     solve_hours_ranges(elements.h),
-        //     solve_0_59_Range(elements.i),
-        //     solve_0_59_Range(elements.s),
+        //     solve_0_59_ranges(elements.i),
+        //     solve_0_59_ranges(elements.s),
         // ])
         return Array.from(
             { length: n },

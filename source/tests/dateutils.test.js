@@ -12,7 +12,7 @@ const {
     solve_month_ranges,
     solve_week_ranges,
     solve_hours_ranges,
-    solve_0_59_Range,
+    solve_0_59_ranges,
     solve_dom,
     solve_dow
 } = dateutils
@@ -264,7 +264,7 @@ describe('date utils', () => {
         })
     })
 
-    describe('solve_0_59_Range', () => {
+    describe('solve_0_59_ranges', () => {
         const all60 = Array.from({
             length:C.bounds.seconds.max - C.bounds.seconds.min + 1
         }, (_,i) => i + C.bounds.seconds.min)
@@ -279,13 +279,13 @@ describe('date utils', () => {
             ['range', '34-45', all60.filter(e=> e>33 && e<46)],
             ['range with cadence', '34-45/3', [34,37,40,43]],
         ])('%s', (_, n, expected) => {
-            expect(solve_0_59_Range(n)).toMatchObject(expected)
+            expect(solve_0_59_ranges(n)).toMatchObject(expected)
         })
         test.each([
             ['null #1', 'aaa', null],
             ['null #2', ' ', null],
         ])('%s', (_, n, expected) => {
-            expect(solve_0_59_Range(n)).toBe(expected)
+            expect(solve_0_59_ranges(n)).toBe(expected)
         })
     })
     
