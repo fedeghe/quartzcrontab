@@ -4,6 +4,15 @@ version: 2.1
 orbs:
   node: circleci/node@5
 jobs:
+  build-node:
+    # Build node project
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: yarn run build
   test-node:
     # Install node dependencies and run tests
     executor: node/default
@@ -14,19 +23,23 @@ jobs:
       - run:
           name: Run tests
           command: yarn test
-  build-node:
-    # Build node project
+  coveralls: 
+    # update coveralls
     executor: node/default
-    steps:
-      - checkout
+    steps: 
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          command: yarn run build
+          name: Update coveralls
+          command: yarn coveralls
+    
 workflows:
-  build-and-test:
+  build-and-test-and-coveralls:
     jobs:
       - build-node
       - test-node:
           requires:
             - build-node
+      - coveralls:
+          requires:
+            - test-node
