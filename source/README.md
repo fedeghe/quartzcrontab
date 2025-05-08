@@ -2,7 +2,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcron/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcron?branch=master)
 
 
-# quartzcron (v. maltaV('PACKAGE.version'))
+# quartzcron  
+version: maltaV('PACKAGE.version')
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -11,16 +12,17 @@ That additional freedom clearly maps into less trivial composition for the cron 
  - **validate cron expressions**  
  - **get the _n_ next precise occurrences**  
 
-A `quartz cron expression` has the following structure: 
+A `quartz cron expression` is characterized by the following structure: 
 ```
-s  i  h dom m dow y
-⎜  ⎜  ⎜  ⎜  ⎜  ⎜  ∖- years
-⎜  ⎜  ⎜  ⎜  ⎜  ∖---- days of week  -\
-⎜  ⎜  ⎜  ⎜  ∖------- months          | mutually exclusive
-⎜  ⎜  ⎜  ∖---------- days of month -/
-⎜  ⎜  ∖------------- hours
-⎜  ∖---------------- minutes
-∖------------------- seconds
+s  i  h dom m dow y  
+⎜  ⎜  ⎜  ⎜  ⎜  ⎜  ⎜  
+⎜  ⎜  ⎜  ⎜  ⎜  ⎜  '-> years (optional)
+⎜  ⎜  ⎜  ⎜  ⎜  '----> days of week  -\
+⎜  ⎜  ⎜  ⎜  '-------> months          | mutually exclusive
+⎜  ⎜  ⎜  '----------> days of month -/
+⎜  ⎜  '-------------> hours
+⎜  '----------------> minutes
+'-------------------> seconds
 ```
 
 ## sample usage
@@ -37,7 +39,7 @@ qct.atHour(12)
     .onLastMonthDay()
     .everyNYears(5, 2025);
 
-exp = qct.out(); // ->  0 0 12,22 L * ? 2025/5
+exp = qct.out(); //-> 0 0 12,22 L * ? 2025/5
 /*
 alternatively the cron expression is also returned
 as the instance _toString_ invokation
@@ -55,7 +57,9 @@ const next = qct.next({
 ]
 */
 ```  
-## constructor
+# API  
+
+## constructor 👷🏽‍♂️ 
 Constructor can handle: 
 
 - **0 parameters**  
@@ -69,15 +73,15 @@ Constructor can handle:
         dom:'*', m:'*', dow: '?', y: '*'
     }
     ```
-throws an exception when the resulting expression is not valid
+throws an exception when the resulting expression is not valid.
 
-## get the quartz cron expression
-Just invoke `out()` ƒunction on the _quartzcron_ instance to get the related expression
+## get the quartz cron expression 🧊🐝
+Invoke `out()` ƒunction on the _quartzcron_ instance to get the related expression
 ``` js
-qct.out(); // returns "0 0 12,22 L * ? 2025/5"
+qct.out(); // -> "0 0 12,22 L * ? 2025/5"
 ```
 
-## validation API
+## validation API ✅  
 
 Validation can be done on the _quartzcron_ instance just invoking the `validate` ƒunction. Pass the string to be evaluated as parameter.  
 
@@ -99,20 +103,36 @@ QuartzCron.validate(yourExp)
 ``` 
 
 
-## composition API
+## composition API 🧱  
 
-Almost all _seven_ fields composing the final _cron expression_ are independent.  
-The only exception is represented by the "days of month" (4th field) and the "days of week" (6th field) cause they cannot coexsist.  
-Whenever one of the two is set the other one must just contain `?`.
+Almost all 7 fields composing the final _cron expression_ are independent.  
+The **only exception** is represented by the "days of month" (4th field) and the "days of week" (6th field) cause they cannot coexsist.  
+Within the involved months/years: 
+- `dom` sets target days referencing the month
+- `dow` sets target days referencing the week  
+
+One of the two must hold something valid different from `?` and the other one must just contain `?`.
+
+## week days and month names aliases 
 
 For weeekdays one can use seamlessly:  
-`[1,2,3,4,5,6,7]` or `['SUN','MON','TUE','WED','THU', 'FRI', 'SAT']`  
+``` js
+[1,2,3,4,5,6,7]
+// OR 
+['SUN','MON','TUE','WED',
+    'THU', 'FRI', 'SAT']
+```  
 
 similarly for months:  
-`[1,2,3,4,5,6,7,8,9,10,11,12]` or `['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']`.  
+``` js
+[1,2,3,4,5,6,7,8,9,10,11,12]
+// OR 
+['JAN','FEB','MAR','APR',
+ 'MAY','JUN','JUL','AUG',
+ 'SEP','OCT','NOV','DEC']`.  
+```
 
-
-### seconds
+### seconds ⏱️   
 
 - `everySecond()`  
 no explanation needed; still one should consider that this command will only update the `s` to `*`.  
@@ -135,7 +155,7 @@ all seconds from `from` to `to` seconds; optionally set the cadence passing an `
 
 
 
-### minutes
+### minutes ⏱️   
 
 - `everyMinute()`  
 no explanation needed
@@ -154,7 +174,8 @@ adds `min` to the list of already set minutes (`0` there by default); as in the 
 all minutes from `from` to `to` minutes; optionally set the cadence passing an `every` integer.  
 
 
-### hours  
+### hours ⏱️  
+
 - `everyHour()`  
 no explanation needed
 
@@ -173,7 +194,7 @@ adds `h` to the list of already set hours (0 there by default); as in the previo
 all hours from `from` to `to` hours; optionally set the cadence passing an `every` integer.  
 
 
-### day of month / day of week  
+### day of month / day of week 📆  
 - `everyDay()`  
 no explanation needed  
     ``` js
@@ -304,7 +325,8 @@ set as target the n-th week day of the month
     ```
 
 
-### months  
+### months 📆  
+
 - `everyMonth()`  
 no explanation needed
 
@@ -322,7 +344,8 @@ adds `m` to the list of already set months; as in the previous can pass multiple
 all months from `from` month to `to` month; optionally set the cadence passing an `every` integer. 
 
 
-### years  
+### years 📆  
+
 - `everyYear()`  
 no explanation needed
 
@@ -341,36 +364,79 @@ all years from `from` year to `to` year; optionally set the cadence passing an `
 
 
 
-## more instance methods
+## more ➕   
+
+This library was primarily designed to achieve a quite simple task: compose the expression through methods; then validation, occurrences, ..  
+The occurrences composition depends 100% on two data:
+1) the current expression
+2) the fererence date  
+
+thus, calculate the occurrences of an already existing expression (for example given back from and endpoint) one could
+override manually one or more elements in the expression `s,i,h,dom,m,dow,y`
+
+ ``` js 
+ inst.elements.s = 1
+ ```
+
+OR use 
 
 - `updateExp(exp)`  
-updates the current instance expression, handles  
-- **an expression string**  
-    when invalid throws and exception
-- **an object corresponding to an expression** 
-    ``` js
-    {
-        s:0, i: 0, h: 0,
-        dom:'*', m:'*', dow: '?', y: '*'
-    }
-    ```
-throws an exception when the resulting expression is not valid
+updates the current instance expression, handles   
 
-## Occurrences
+    - **an expression string**  
+        when invalid throws and exception
+    - **an object corresponding to an expression** 
+        ``` js
+        {
+            s:0, i: 0, h: 0,
+            dom:'*', m:'*', dow: '?', y: '*'
+        }
+        ```
+    throws an exception when the resulting expression is not valid
+
+## range resolvers 🛸
+Another important tool are the range resolvers. Initially only part of an internal utility, now are exposed in a static object.
+``` js  
+qct.out()// -> 45/2 1,2,3 15-19 L 1/2 ? *
+Quartzcron.solvers.solve_0_59_ranges(qtc.elements.s)
+// -> [45,47,49,51,53,55,57,59]
+Quartzcron.solvers.solve_0_59_ranges(qtc.elements.i)
+// -> [1,2,3]
+Quartzcron.solvers.solve_hours_ranges(qtc.elements.h)
+// -> [15,16,17,18,19]
+Quartzcron.solvers.solve_dom(2025, 2, qtc.elements.dom)
+// -> [28]
+Quartzcron.solvers.solve_month_ranges(qtc.elements.m)
+// [1,3,5,7,9,11]
+Quartzcron.solvers.solve_dow(2025, 2, qtc.elements.dow)
+// -> []
+Quartzcron.solvers.solve_year_ranges(qtc.elements.y)
+// -> [2025, ..., 2099] // here supposing we are in 2025
+
+```
+Clearly enough the two about `dom` and `dow` are function since they strictly depend on the _year_ and the _month_.  
+_Solvers_ come quite in hand when from an expression one needs the actual targets.  
+
+*Months* and *week days* will be always resolved numerically, thus `[1,12]` and `[1,7]` respectively.
+
+
+##  Occurrences 🔭  
 From an instance call the `next` ƒunction: 
 ``` js
-const nextOccurrence = qct.next()
-// "Mon Jan 01 2024 02:00:00 GMT+0100 (Central European Standard Time)",
+const nextOccurrence = qct.next().map(s=>s.toString())
+// ["Mon Jan 01 2024 02:00:00 GMT+0100"],
 ```
 this ƒunction accepts three options:  
 - `n`: the number of occurrences needed (1 is the default)  
-- `date`: a reference date (js Date) to be used as _present date_ (default is the current date). No dates before the _present date_ will be returned.
+- `date`: a reference date (js Date object) to be used as _present date_ (default is the current date). No dates before the _present date_ will be returned.
+
+<br>
+<br>
 
 
+# 🩼 Limitations and plans  💡  
 
-# Limitations and plans
-
-### Timezones
+### ⏱️ Timezones 🗺️   
 If the plan to use that utility on a browser the chances the client and server run on different timezones is quite high.  
 
 A workaround would be so set the timezone to UTC on the server and in the UI explicitly inform the user that all dates & times are UTC.
@@ -387,9 +453,12 @@ QuartzCron.setServerTimezone("America/Los_Angeles"); // +6
 // or setServerUTCTimezone()
 ```
 
-### Descriptions
-Having a quick way to get a readable internationalized string out of an expression would be quite useful.  
-Another option is to give a try to [cronstrue][cronstrue] npm package.
+### Descriptions 📜
+Having a quick way to get a user readable internationalized description out of an expression is quite useful.  
+Meanwhile give a try to the awesome [cronstrue][cronstrue] npm package.
+
+---
+Last edit: __DATE__ at __TIME__
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron
