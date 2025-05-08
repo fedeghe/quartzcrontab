@@ -75,7 +75,7 @@ Constructor can handle:
     ```
 throws an exception when the resulting expression is not valid.
 
-## get the quartz cron expression 🧊🐝
+## get the quartz cron expression 🧊
 Invoke `out()` ƒunction on the _quartzcron_ instance to get the related expression
 ``` js
 qct.out(); // -> "0 0 12,22 L * ? 2025/5"
@@ -111,7 +111,8 @@ Within the involved months/years:
 - `dom` sets target days referencing the month
 - `dow` sets target days referencing the week  
 
-One of the two must hold something valid different from `?` and the other one must just contain `?`.
+One of the two must hold something valid different from `?`  
+and the other one must just contain `?`.
 
 ## week days and month names aliases 
 
@@ -395,7 +396,7 @@ updates the current instance expression, handles
     throws an exception when the resulting expression is not valid
 
 ## range resolvers 🛸
-Another important tool are the range resolvers. Initially only part of an internal utility, now are exposed in a static object.
+_Range resolvers_ might be useful, initially only part of an internal utility, now are exposed in a static object.
 ``` js  
 qct.out()// -> 45/2 1,2,3 15-19 L 1/2 ? *
 Quartzcron.solvers.solve_0_59_ranges(qtc.elements.s)
