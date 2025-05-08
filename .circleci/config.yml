@@ -13,7 +13,7 @@ jobs:
           pkg-manager: yarn
       - run:
           name: Run tests
-          command: yarn test --passWithNoTests
+          command: yarn test
   build-node:
     # Build node project
     executor: node/default
