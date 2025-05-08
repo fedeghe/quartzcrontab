@@ -45,10 +45,11 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - test-node
-      - build-node:
+
+      - build-node
+      - test-node:
           requires:
-            - test-node
+            - build-node
     # - deploy:
     #     requires:
     #       - build-node
