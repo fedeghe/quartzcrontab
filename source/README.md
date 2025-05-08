@@ -3,7 +3,7 @@
 
 
 # quartzcron  
-version: maltaV('PACKAGE.version')
+version: `maltaV('PACKAGE.version')`
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
