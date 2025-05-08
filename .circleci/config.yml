@@ -27,6 +27,7 @@ jobs:
     # update coveralls
     executor: node/default
     steps: 
+      - checkout
       - node/install-packages:
           pkg-manager: yarn
       - run:
