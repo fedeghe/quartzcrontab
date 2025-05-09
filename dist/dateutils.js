@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.35)
+quartzcron (v.0.0.36)
 */
 const C = require('./constants.js'),
     {daysLabels2Numbers} = require('./utils.js');

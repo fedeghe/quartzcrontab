@@ -1,6 +1,6 @@
 
 
-## 0.0.34  
+## 0.0.36  
 all 7 range resolvers are exposed in static `Quartzcron.solvers`  
 
 ## 0.0.29 (unpublished)  
