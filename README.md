@@ -1,11 +1,11 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcron/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcron?branch=master)
-
+![GitHub top language](https://img.shields.io/github/languages/top/fedeghe/quartzcron?labelColor=%23fede76)
+![NPM License](https://img.shields.io/npm/l/quartzcron?style=plastic&color=blue)
 [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master)
 
-
 # quartzcron  
-version: `0.0.34`
+version: `0.0.35`
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -461,7 +461,7 @@ Having a quick way to get a user readable internationalized description out of a
 Meanwhile give a try to the awesome [cronstrue][cronstrue] npm package.
 
 ---
-Last edit: 8/5/2025 at 12:14:26
+Last edit: 9/5/2025 at 21:54:5
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron

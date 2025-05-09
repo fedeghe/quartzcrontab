@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.34)
+quartzcron (v.0.0.35)
 */
 /*
 validations
@@ -101,11 +101,10 @@ const getRangeValidator = ({mainRx, cadenceRx}) => val => {
         validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?') && !(dow==='?'&&dom==='?'),
         message: C.errors.domdowExclusivity
     }],
-    daysLabels2Numbers = v => {
-        return labels.days.reduce((acc, label, i) => {
-            return acc.replace(label,i+1);
-        }, v);
-    },
+    daysLabels2Numbers = v => 
+        labels.days.reduce(
+            (acc, label, i) => acc.replace(label,i+1), v
+        ),
     now = new Date(),
     yearNow = now.getFullYear(),
     removeSpaces = s => `${s}`.replace(/\s/mg, ''),
