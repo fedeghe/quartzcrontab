@@ -66,14 +66,21 @@ Constructor can handle:
 
 - **0 parameters**  
     default used `0 0 0 * * ? *`  
+    ``` js
+    const qc = new Quartzcron();
+    ```
 - **1 valid expression string**  
     when invalid throws and exception
+    ``` js
+    const qc = new Quartzcron('0 0 12,22 L * ? 2025/5');
+    ```
 - **1 object corresponding to a valid expression** 
     ``` js
-    {
+    const exp = {
         s:0, i: 0, h: 0,
         dom:'*', m:'*', dow: '?', y: '*'
     }
+    const qc = new Quartzcron(exp);
     ```
 throws an exception when the resulting expression is not valid.
 

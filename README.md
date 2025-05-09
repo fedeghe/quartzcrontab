@@ -5,7 +5,7 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master)
 
 # quartzcron  
-version: `0.0.36`
+version: `0.0.37`
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -66,14 +66,21 @@ Constructor can handle:
 
 - **0 parameters**  
     default used `0 0 0 * * ? *`  
+    ``` js
+    const qc = new Quartzcron();
+    ```
 - **1 valid expression string**  
     when invalid throws and exception
+    ``` js
+    const qc = new Quartzcron('0 0 12,22 L * ? 2025/5');
+    ```
 - **1 object corresponding to a valid expression** 
     ``` js
-    {
+    const exp = {
         s:0, i: 0, h: 0,
         dom:'*', m:'*', dow: '?', y: '*'
     }
+    const qc = new Quartzcron(exp);
     ```
 throws an exception when the resulting expression is not valid.
 
@@ -461,7 +468,7 @@ Having a quick way to get a user readable internationalized description out of a
 Meanwhile give a try to the awesome [cronstrue][cronstrue] npm package.
 
 ---
-Last edit: 9/5/2025 at 21:58:14
+Last edit: 9/5/2025 at 22:2:58
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron
