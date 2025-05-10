@@ -25,20 +25,20 @@ const nextGen = require('./nextGen');
 
 const C = require('./constants');
 
+const argumentize = o => {
+    const ty = typeof o;
+    switch(ty) {
+        case 'string': return exp2elements(o);
+        case 'object': return {...defaults, ...o};
+        default:;
+    }
+    return {...defaults};
+}
+
 class Quartzcron {
     constructor(o) {
-        let els = null;
-        if(typeof o === 'string'){
-            els = exp2elements(o);
-        }
-        if(typeof o === 'object'){
-            els = {...defaults, ...o}
-        }
-        if(els === null) {
-            els = {...defaults};
-        }
         this.months = { min: 0, max: 11 };
-        this.elements = els;
+        this.elements = argumentize(o);
         const validity = this.validate();
         if(!validity.valid) throw new Error(C.errors.constructorErr)
     };
@@ -66,31 +66,17 @@ class Quartzcron {
     range60 = Quartzcron.getRanger(60);
 
     updateExp(o) {
-        let els = null;
-        if(typeof o === 'string'){
-            els = exp2elements(o);
-        }
-        if(typeof o === 'object'){
-            els = {...defaults, ...o}
-        }
-        if(els === null) {
-            els = {...defaults};
-        }
-        this.elements = els;
+        this.elements = argumentize(o);
         const validity = this.validate();
-        if(!validity.valid) throw new Error(C.errors.updateExpErr)
+        if(!validity.valid) throw new Error(C.errors.updateExpErr);
+        return this;
     }
 
-    over({ s, i, h, dom, m, dow, y }) {
-        this.elements = {
-            s: removeSpaces(s ?? this.elements.s),
-            i: removeSpaces(i ?? this.elements.i),
-            h: removeSpaces(h ?? this.elements.h),
-            dom: removeSpaces(dom ?? this.elements.dom),
-            m: removeSpaces(m ?? this.elements.m),
-            dow: removeSpaces(dow ?? this.elements.dow),
-            y: removeSpaces(y ?? this.elements.y),
-        };
+    over(ov) {
+        this.elements = Object.entries(this.elements).reduce((acc, [k, v]) => {
+            acc[k] = removeSpaces(ov[k] ?? v);
+            return acc;
+        }, {});
         return this;
     }
     /* seconds */
