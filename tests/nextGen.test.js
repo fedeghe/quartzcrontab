@@ -1,5 +1,6 @@
 
 const Quartzcron  = require('../dist/index.js');
+const C = require('../dist/constants.js');
 
 describe('Quartzcron.next', () => {
     let c
@@ -83,93 +84,93 @@ describe('Quartzcron.next', () => {
             [
                 'weekdays',
                 i => i.atYear('2025')
-                        .everyWeekDay('3,5')
-                        .atHour('2,4')   
-                        .atMonth('6,8'),
-                    20,
-                    s=>s.toUTCString(),
-                    new Date('03:00:00 6-5-2025 GMT'),
-                    [
-                        // 1h too late for that
-                        // "Thu, 05 Jun 2025 02:00:00 GMT",
-                        "Thu, 05 Jun 2025 04:00:00 GMT",
-                        "Tue, 10 Jun 2025 02:00:00 GMT",
-                        "Tue, 10 Jun 2025 04:00:00 GMT",
-                        "Thu, 12 Jun 2025 02:00:00 GMT",
-                        "Thu, 12 Jun 2025 04:00:00 GMT",
-                        "Tue, 17 Jun 2025 02:00:00 GMT",
-                        "Tue, 17 Jun 2025 04:00:00 GMT",
-                        "Thu, 19 Jun 2025 02:00:00 GMT",
-                        "Thu, 19 Jun 2025 04:00:00 GMT",
-                        "Tue, 24 Jun 2025 02:00:00 GMT",
-                        "Tue, 24 Jun 2025 04:00:00 GMT",
-                        "Thu, 26 Jun 2025 02:00:00 GMT",
-                        "Thu, 26 Jun 2025 04:00:00 GMT",
-                        // no july
-                        "Tue, 05 Aug 2025 02:00:00 GMT",
-                        "Tue, 05 Aug 2025 04:00:00 GMT",
-                        "Thu, 07 Aug 2025 02:00:00 GMT",
-                        "Thu, 07 Aug 2025 04:00:00 GMT",
-                        "Tue, 12 Aug 2025 02:00:00 GMT",
-                        "Tue, 12 Aug 2025 04:00:00 GMT",
-                        "Thu, 14 Aug 2025 02:00:00 GMT",
-                    ]
+                    .everyWeekDay('3,5')
+                    .atHour('2,4')   
+                    .atMonth('6,8'),
+                20,
+                s=>s.toUTCString(),
+                new Date('03:00:00 6-5-2025 GMT'),
+                [
+                    // 1h too late for that
+                    // "Thu, 05 Jun 2025 02:00:00 GMT",
+                    "Thu, 05 Jun 2025 04:00:00 GMT",
+                    "Tue, 10 Jun 2025 02:00:00 GMT",
+                    "Tue, 10 Jun 2025 04:00:00 GMT",
+                    "Thu, 12 Jun 2025 02:00:00 GMT",
+                    "Thu, 12 Jun 2025 04:00:00 GMT",
+                    "Tue, 17 Jun 2025 02:00:00 GMT",
+                    "Tue, 17 Jun 2025 04:00:00 GMT",
+                    "Thu, 19 Jun 2025 02:00:00 GMT",
+                    "Thu, 19 Jun 2025 04:00:00 GMT",
+                    "Tue, 24 Jun 2025 02:00:00 GMT",
+                    "Tue, 24 Jun 2025 04:00:00 GMT",
+                    "Thu, 26 Jun 2025 02:00:00 GMT",
+                    "Thu, 26 Jun 2025 04:00:00 GMT",
+                    // no july
+                    "Tue, 05 Aug 2025 02:00:00 GMT",
+                    "Tue, 05 Aug 2025 04:00:00 GMT",
+                    "Thu, 07 Aug 2025 02:00:00 GMT",
+                    "Thu, 07 Aug 2025 04:00:00 GMT",
+                    "Tue, 12 Aug 2025 02:00:00 GMT",
+                    "Tue, 12 Aug 2025 04:00:00 GMT",
+                    "Thu, 14 Aug 2025 02:00:00 GMT",
+                ]
             ],
             [
                 'too late #2',
                 i => i.atYear('2025')
-                        .everyWeekDay('3,5')
-                        .atHour('2,4')   
-                        .atMonth('6,8'),
-                    20,
-                    s=>s.toUTCString(),
-                    new Date('03:00:00 6-5-2025 GMT'),
-                    [
-                        // 1h too late for that
-                        // "Thu, 05 Jun 2025 02:00:00 GMT",
-                        "Thu, 05 Jun 2025 04:00:00 GMT",
-                        "Tue, 10 Jun 2025 02:00:00 GMT",
-                        "Tue, 10 Jun 2025 04:00:00 GMT",
-                        "Thu, 12 Jun 2025 02:00:00 GMT",
-                        "Thu, 12 Jun 2025 04:00:00 GMT",
-                        "Tue, 17 Jun 2025 02:00:00 GMT",
-                        "Tue, 17 Jun 2025 04:00:00 GMT",
-                        "Thu, 19 Jun 2025 02:00:00 GMT",
-                        "Thu, 19 Jun 2025 04:00:00 GMT",
-                        "Tue, 24 Jun 2025 02:00:00 GMT",
-                        "Tue, 24 Jun 2025 04:00:00 GMT",
-                        "Thu, 26 Jun 2025 02:00:00 GMT",
-                        "Thu, 26 Jun 2025 04:00:00 GMT",
-                        // no july
-                        "Tue, 05 Aug 2025 02:00:00 GMT",
-                        "Tue, 05 Aug 2025 04:00:00 GMT",
-                        "Thu, 07 Aug 2025 02:00:00 GMT",
-                        "Thu, 07 Aug 2025 04:00:00 GMT",
-                        "Tue, 12 Aug 2025 02:00:00 GMT",
-                        "Tue, 12 Aug 2025 04:00:00 GMT",
-                        "Thu, 14 Aug 2025 02:00:00 GMT",
-                    ]
+                    .everyWeekDay('3,5')
+                    .atHour('2,4')   
+                    .atMonth('6,8'),
+                20,
+                s=>s.toUTCString(),
+                new Date('03:00:00 6-5-2025 GMT'),
+                [
+                    // 1h too late for that
+                    // "Thu, 05 Jun 2025 02:00:00 GMT",
+                    "Thu, 05 Jun 2025 04:00:00 GMT",
+                    "Tue, 10 Jun 2025 02:00:00 GMT",
+                    "Tue, 10 Jun 2025 04:00:00 GMT",
+                    "Thu, 12 Jun 2025 02:00:00 GMT",
+                    "Thu, 12 Jun 2025 04:00:00 GMT",
+                    "Tue, 17 Jun 2025 02:00:00 GMT",
+                    "Tue, 17 Jun 2025 04:00:00 GMT",
+                    "Thu, 19 Jun 2025 02:00:00 GMT",
+                    "Thu, 19 Jun 2025 04:00:00 GMT",
+                    "Tue, 24 Jun 2025 02:00:00 GMT",
+                    "Tue, 24 Jun 2025 04:00:00 GMT",
+                    "Thu, 26 Jun 2025 02:00:00 GMT",
+                    "Thu, 26 Jun 2025 04:00:00 GMT",
+                    // no july
+                    "Tue, 05 Aug 2025 02:00:00 GMT",
+                    "Tue, 05 Aug 2025 04:00:00 GMT",
+                    "Thu, 07 Aug 2025 02:00:00 GMT",
+                    "Thu, 07 Aug 2025 04:00:00 GMT",
+                    "Tue, 12 Aug 2025 02:00:00 GMT",
+                    "Tue, 12 Aug 2025 04:00:00 GMT",
+                    "Thu, 14 Aug 2025 02:00:00 GMT",
+                ]
             ],
             [
                 'too late #3 - weekdays',
                 i => i.atYear('2023')
-                        .everyWeekDay('3,5')   // TUE, THU
-                        .atMonth('2,4'),        // FEB, APR
-                    10,
-                    s=>s.toUTCString(),
-                    new Date('03:00:00 2-6-2023 GMT'),// today 6th feb 2023
-                    [
-                        "Tue, 07 Feb 2023 00:00:00 GMT",
-                        "Thu, 09 Feb 2023 00:00:00 GMT",
-                        "Tue, 14 Feb 2023 00:00:00 GMT",
-                        "Thu, 16 Feb 2023 00:00:00 GMT",
-                        "Tue, 21 Feb 2023 00:00:00 GMT",
-                        "Thu, 23 Feb 2023 00:00:00 GMT",
-                        "Tue, 28 Feb 2023 00:00:00 GMT",
-                        "Tue, 04 Apr 2023 00:00:00 GMT",
-                        "Thu, 06 Apr 2023 00:00:00 GMT",
-                        "Tue, 11 Apr 2023 00:00:00 GMT",
-                    ]
+                    .everyWeekDay('3,5')   // TUE, THU
+                    .atMonth('2,4'),        // FEB, APR
+                10,
+                s=>s.toUTCString(),
+                new Date('03:00:00 2-6-2023 GMT'),// today 6th feb 2023
+                [
+                    "Tue, 07 Feb 2023 00:00:00 GMT",
+                    "Thu, 09 Feb 2023 00:00:00 GMT",
+                    "Tue, 14 Feb 2023 00:00:00 GMT",
+                    "Thu, 16 Feb 2023 00:00:00 GMT",
+                    "Tue, 21 Feb 2023 00:00:00 GMT",
+                    "Thu, 23 Feb 2023 00:00:00 GMT",
+                    "Tue, 28 Feb 2023 00:00:00 GMT",
+                    "Tue, 04 Apr 2023 00:00:00 GMT",
+                    "Thu, 06 Apr 2023 00:00:00 GMT",
+                    "Tue, 11 Apr 2023 00:00:00 GMT",
+                ]
             ],
 
         ])('%s', (_ , prep, n, trans, date, expected) => {
@@ -332,8 +333,7 @@ describe('Quartzcron.next', () => {
             ],
             [
                 '0 0/2 * * * ? *',
-                i => i.everyNMinutes(2)
-                    .everyHour(),
+                i => i.everyNMinutes(2).everyHour(),
                 3,
                 [
                     "Thu, 05 Jun 2025 01:02:00 GMT",
@@ -343,8 +343,7 @@ describe('Quartzcron.next', () => {
             ],
             [
                 '0 1/2 * * * ? *',
-                i => i.everyNMinutes(2, 1)
-                    .everyHour(),
+                i => i.everyNMinutes(2, 1).everyHour(),
                 3,
                 [
                     "Thu, 05 Jun 2025 01:01:00 GMT",
@@ -366,12 +365,11 @@ describe('Quartzcron.next', () => {
         })
     })
 
-
     it('throws when invalid date is passed', () => {
         expect(
             () => c.next({
                 date: new Date('18:19:20 56-37-2025')
             })
-        ).toThrow('Invalid Date')
+        ).toThrow(C.errors.invalidDate)
     })
 })

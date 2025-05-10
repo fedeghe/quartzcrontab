@@ -73,7 +73,7 @@ describe('date utils', () => {
 
                 expect(
                     () => nDaysBeforeEndOfMonth(n, y, m)
-                ).toThrow('not enough days');
+                ).toThrow(C.errors.notEnoughDays);
             })
         })
 
@@ -109,21 +109,21 @@ describe('date utils', () => {
                 ['lower wd violation', 1, -1, 2025, 0],
                 ['higher wd violation', 1, 7, 2025, 0],
             ])('%s', (_, n, wd, y, m) => {
-                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('given weekday does not exist [0-6]')
+                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow(C.errors.nonWeekday)
             })
 
             test.each([
                 ['lower target #wd violation', -1, 1, 2025, 0],
                 ['higher target #wd violation', 6, 1, 2025, 0],
             ])('%s', (_, n, wd, y, m) => {
-                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('not enough days in any month')
+                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow(C.errors.monthsOutOfBounds)
             })
 
             test.each([
                 ['5th sat would be 32', 5, 6, 2025, 0],
                 ['5th sun would be 33', 5, 0, 2025, 0],
             ])('%s', (_, n, wd, y, m) => {
-                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('not enough days in this month')
+                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow(C.errors.monthOutOfBounds)
             })
         })
     })

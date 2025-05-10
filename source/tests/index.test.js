@@ -287,6 +287,10 @@ describe('Quartzcron', () => {
             c.onLastMonthDay()
             expect(c.out()).toBe('0 0 0 L * ? *')
         })
+        it('onFirstMonthWeekDay', () => {
+            c.onFirstMonthWeekDay()
+            expect(c.out()).toBe('0 0 0 1W * ? *')
+        })
         it('onLastMonthWeekDay', () => {
             c.onLastMonthWeekDay()
             expect(c.out()).toBe('0 0 0 LW * ? *')
@@ -451,7 +455,7 @@ describe('Quartzcron', () => {
             c = new Quartzcron()
         })
         it('default', () => {
-            expect(c.describe()).toBe('every second of every day of every year')
+            expect(c.describe()).toBe('at midnight of every day')
         })
     })
 
@@ -502,8 +506,6 @@ describe('Quartzcron', () => {
                 expect(typeof Quartzcron.solvers[inp]).toBe('function')
             });
         })
-
-
     })
 
     /**
@@ -569,7 +571,6 @@ describe('Quartzcron', () => {
                     ['more than one number', {i: '3,11,36'}],
                     ['interval', {i: '11-36'}],
                     ['interval with cadence', {i: '11-36/2'}],
-                    
                 ])('%s', (_, arg) => {
                     c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
@@ -610,7 +611,6 @@ describe('Quartzcron', () => {
                     ['more than one number', {h: '3,5,9'}],
                     ['interval', {h: '3-9'}],
                     ['interval with cadence', {h: '3-9/2'}],
-                    
                 ])('%s', (_, arg) => {
                     c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
@@ -655,6 +655,7 @@ describe('Quartzcron', () => {
                     ['weekdays/cadence', {dom: '1-5/2', dow:'?'}],
                     ['L', {dom: 'L', dow:'?'}],
                     ['LW', {dom: 'LW', dow:'?'}],
+                    ['1W', {dom: '1W', dow:'?'}],
                     ['L-x', {dom: 'L-12', dow:'?'}],
                     ['xL', {dom: '13L', dow:'?'}],
                 ])('%s', (_, arg) => {

@@ -1,4 +1,6 @@
-
+## 0.0.39
+added methods:
+- `onFirstMonthWeekDay` (shortcut for `dom:1W`)
 
 ## 0.0.38  
 all 7 range resolvers are exposed in static `Quartzcron.solvers`  

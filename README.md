@@ -1,8 +1,10 @@
 
-[![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcron/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcron?branch=master)
-![GitHub top language](https://img.shields.io/github/languages/top/fedeghe/quartzcron?labelColor=%23fede76)
-![NPM License](https://img.shields.io/npm/l/quartzcron?style=plastic&color=blue)
-[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master)
+[![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcron/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcron?branch=master) ![NPM License](https://img.shields.io/npm/l/quartzcron?style=plastic&color=blue) [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master)
+
+![GitHub top language](https://img.shields.io/github/languages/top/fedeghe/quartzcron?labelColor=%23fede76) ![Static Badge](https://img.shields.io/badge/Human%20coded-100%25-blue?style=plastic)
+
+
+
 
 # quartzcron  
 version: `0.0.38`
@@ -291,15 +293,20 @@ set target days from `from` to `to` with, if passed > 1, a cadence bigger than 1
 - `onLastMonthDay`  
 set the target day to the last day of the target months
     ``` js
-    qtc.onLastMonthDay() 
-    // { dom: 'L', dow: '?', ...} 
+    qtc.onLastMonthDay()  // { dom: 'L', dow: '?', ...} 
+    ```
+
+- `onFirstMonthWeekDay`  
+set as target day the first weekday of the month (working day)  
+(same as `qtc.onClosestWorkingDayToTheNMonthDay(1)`)  
+    ``` js
+    qtc.onFirstMonthWeekDay() // { dom: '1W', dow: '?', ...} 
     ```
 
 - `onLastMonthWeekDay`  
 set as target day the last weekday of the month (working day)
     ``` js
-    qtc.onLastMonthWeekDay() 
-    // { dom: 'LW', dow: '?', ...} 
+    qtc.onLastMonthWeekDay() // { dom: 'LW', dow: '?', ...} 
     ```
 
 - `onLastMonthNWeekDay(x)`  
@@ -468,7 +475,7 @@ Having a quick way to get a user readable internationalized description out of a
 Meanwhile give a try to the awesome [cronstrue][cronstrue] npm package.
 
 ---
-Last edit: 10/5/2025 at 16:49:26
+Last edit: 10/5/2025 at 23:4:27
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron

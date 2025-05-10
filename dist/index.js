@@ -167,6 +167,9 @@ class Quartzcron {
     onLastMonthDay(){
         return this.over({ dom: 'L', dow: '?' })
     }
+    onFirstMonthWeekDay(){
+        return this.over({ dom:`1W`, dow: '?' })
+    }
     onLastMonthWeekDay(){
         return this.over({ dom: 'LW', dow: '?' })
     }
@@ -227,14 +230,20 @@ class Quartzcron {
     // TODO
     describe() {
         return [
-            this.describeTime(),
+            this.describeSeconds(),
+            this.describeMinutes(),
+            this.describeHours(),
             this.describeDomDowOccurrence(),
+            this.describeMonths(),
             this.describeYears()
-        ].join(' of ')
+        ].filter(Boolean).join(' of ')
     }
-    describeTime() { return 'every second' }
+    describeSeconds() { return false }
+    describeMinutes() { return false }
+    describeHours() { return 'at midnight' }
     describeDomDowOccurrence() { return 'every day' }
-    describeYears() { return 'every year' }
+    describeMonths() { return false }
+    describeYears() { return false }
     /***********/
 
     next({n = 1, date = null} = {}){

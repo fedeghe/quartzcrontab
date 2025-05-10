@@ -59,6 +59,10 @@ const labels = {
         domdowExclusivity: 'either dom either dow must contain "?"',
         constructorErr: 'wrong params for constructor',
         updateExpErr: 'invalid resulting expression',
+        nonWeekday: 'given weekday does not exist [0-6]',
+        notEnoughDays: 'not enough days',
+        monthsOutOfBounds: 'not enough days in any month',
+        monthOutOfBounds: 'not enough days in this month'
     },
     rx = {
         asterx: /^\*(\/\d*)?$/,
@@ -120,9 +124,12 @@ const labels = {
             hasWeekdays: /SUN|MON|TUE|WED|THU|FRI|SAT/
         },
         ranges: {
-            zero59cadence: /^(\*|(\d)|([1-5][0-9]))(\/((\d)|([1-5][0-9])))$/,
-            one7cadence: /^(\*|([1-7]?))(\/([1-7]?))$/,
-            one12cadence: /^(\*|([1-9][0-2]?))(\/([1-9][0-2]?))$/,
+            // zero59cadence: /^(\*|(\d)|([1-5][0-9]))(\/((\d)|([1-5][0-9])))$/,
+            zero59cadence: /^((\d)|([1-5][0-9]))(\/((\d)|([1-5][0-9])))$/,
+            // one7cadence: /^(\*|([1-7]?))(\/([1-7]?))$/,
+            one7cadence: /^(([1-7]?))(\/([1-7]?))$/,
+            // one12cadence: /^(\*|([1-9][0-2]?))(\/([1-9][0-2]?))$/,
+            one12cadence: /^(([1-9][0-2]?))(\/([1-9][0-2]?))$/,
 
             // TODO: those two must be replaced with something range specific
             wildRangeCadence: /^([\d,]+)-([\d,]+)(\/(\d*))?$/,
