@@ -9,7 +9,7 @@ const describeSeconds = ()  => { return false },
     describeYears = () => { return false };
 
 
-const describe = ({s,i,h,dom,m,dow,y}) => {
+const describe = ({s, i, h, dom, m, dow, y}) => {
     return [
         describeSeconds(s),
         describeMinutes(i),
