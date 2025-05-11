@@ -3,7 +3,7 @@
 
 ![GitHub top language](https://img.shields.io/github/languages/top/fedeghe/quartzcron?labelColor=%23fede76) ![Static Badge](https://img.shields.io/badge/Human%20coded-100%25-blue?style=plastic)
 
-
+![urlotrack](https://click.jmvc.org/p/5I8eDsOJ/1)
 
 
 # quartzcron  
@@ -475,7 +475,7 @@ Having a quick way to get a user readable internationalized description out of a
 Meanwhile give a try to the awesome [cronstrue][cronstrue] npm package.
 
 ---
-Last edit: 10/5/2025 at 23:4:27
+Last edit: 11/5/2025 at 12:26:25
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron

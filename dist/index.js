@@ -21,6 +21,8 @@ const {
     solve_dow,
 } = require('./dateutils');
 
+const describer = require('./describe');
+
 const nextGen = require('./nextGen');
 
 const C = require('./constants');
@@ -229,21 +231,9 @@ class Quartzcron {
     /***********/
     // TODO
     describe() {
-        return [
-            this.describeSeconds(),
-            this.describeMinutes(),
-            this.describeHours(),
-            this.describeDomDowOccurrence(),
-            this.describeMonths(),
-            this.describeYears()
-        ].filter(Boolean).join(' of ')
+        return describer.describe(this.elements)
     }
-    describeSeconds() { return false }
-    describeMinutes() { return false }
-    describeHours() { return 'at midnight' }
-    describeDomDowOccurrence() { return 'every day' }
-    describeMonths() { return false }
-    describeYears() { return false }
+    
     /***********/
 
     next({n = 1, date = null} = {}){
