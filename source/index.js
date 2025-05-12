@@ -92,13 +92,13 @@ class Quartzcron {
     }
     /* seconds */
     everySecond() {
-        return this.over({ s: '*'})
+        return this.over({ s: '*'});
     }
     everyNSeconds(freq, start = 0) {
-        return this.over({ s: `${start}/${freq}` })
+        return this.over({ s: `${start}/${freq}` });
     }
     atSecond(s) {
-        return this.over({ s: `${s}` })
+        return this.over({ s: `${s}` });
     }
     atSecondAdd(s) {
         var current = this.elements.s.split(',');
@@ -110,13 +110,13 @@ class Quartzcron {
 
     /* minutes */
     everyMinute() {
-        return this.over({ i: '*'})
+        return this.over({ i: '*'});
     }
     everyNMinutes(freq, start = 0) {
-        return this.over({ i: `${start}/${freq}` })
+        return this.over({ i: `${start}/${freq}` });
     }
     atMinute(i) {
-        return this.over({ i: `${i}` })
+        return this.over({ i: `${i}` });
     }
     atMinuteAdd(i) {
         var current = this.elements.i.split(',');
@@ -128,13 +128,13 @@ class Quartzcron {
 
     /* hours */
     everyHour() {
-        return this.over({ h: '*'})
+        return this.over({ h: '*'});
     }
     everyNHours(freq, start = 0) {
-        return this.over({ h: `${start}/${freq}` })
+        return this.over({ h: `${start}/${freq}` });
     }
     atHour(h) {
-        return this.over({ h: `${h}` })
+        return this.over({ h: `${h}` });
     }
     atHourAdd(h) {
         var current = this.elements.h.split(',');
@@ -146,25 +146,31 @@ class Quartzcron {
 
     /* dom/dow */
     everyDay(){
-        return this.over({ dom: '*', dow:'?'})
+        return this.over({ dom: '*', dow:'?'});
     }
-    everyWeekDayStartingFromNMonthDay(wd, start){
-        return this.over({ dom: `${start}/${wd}`, dow: '?'})
+    everyNDays(n, start = 1){
+        return this.over({ dom: `${start}/${n}`, dow: '?'});
     }
-    everyWeekDay(d) {
-        return this.over({ dom: '?', dow: `${d ? d : '2-6'}` })
-    }   
     everyWeekEnd() {
-        return this.over({ dom: '?', dow: '7-1' })
+        return this.over({ dom: '?', dow: '7-1' });
     }   
-    everyWeekDayAdd(d) {
+    everyWeekDay() {
+        return this.over({ dom: '?', dow: '2-6' });
+    }
+    atWeekDay(d){
+        return this.over({ dom: '?', dow: d });
+    }
+    atWeekDayAdd(d) {
         var current = this.elements.dow === defaults.dow
             ? []
             : this.elements.dow.split(',');
         return this.over({ dom: '?', dow: [...current, d].map(c=>`${c}`).join(',') })
     }
+    betweenWeekDays(from, to, every) {
+        return this.over({ dom: '?', dow: `${from}-${to}${every ? `/${every}`: ''}`})
+    }
     atMonthDay(dom) {
-        return this.over({ dom, dow: '?' })
+        return this.over({ dom, dow: '?' });
     }
     atMonthDayAdd(dom) {
         var current = this.elements.dom === defaults.dom
@@ -176,22 +182,22 @@ class Quartzcron {
         return this.over({ dom: `${from}-${to}${every ? `/${every}`: ''}`, dow: '?' })
     }
     onLastMonthDay(){
-        return this.over({ dom: 'L', dow: '?' })
+        return this.over({ dom: 'L', dow: '?' });
     }
     onLastMonthWeekDay(){
-        return this.over({ dom: 'LW', dow: '?' })
+        return this.over({ dom: 'LW', dow: '?' });
     }
     onLastMonthNWeekDay(x){
-        return this.over({ dom: '?', dow: `${x}L` })
+        return this.over({ dom: '?', dow: `${x}L` });
     }
     onNDayBeforeTheEndOfTheMonth(x){
-        return this.over({ dom:`L-${x}`, dow: '?' })
+        return this.over({ dom:`L-${x}`, dow: '?' });
     }
     onClosestWorkingDayToTheNMonthDay(x) {
-        return this.over({ dom:`${x}W`, dow: '?' })
+        return this.over({ dom:`${x}W`, dow: '?' });
     }
     onNWeekDayOfTheMonth(n,wd) {
-        return this.over({ dom:'?', dow: `${wd}#${n}` })
+        return this.over({ dom:'?', dow: `${wd}#${n}` });
     }
 
     /* month */
@@ -265,15 +271,7 @@ class Quartzcron {
                 solve_0_59_ranges(elements.i),
                 solve_0_59_ranges(elements.s),
             );
-        // console.log([
-        //     solve_year_ranges(elements.y).filter(ye => ye >= y), // remove past years
-        //     solve_month_ranges(elements.m),
-        //     solve_dom(2024, 1, elements.dom),
-        //     solve_dow(2024, 1, elements.dow),
-        //     solve_hours_ranges(elements.h),
-        //     solve_0_59_ranges(elements.i),
-        //     solve_0_59_ranges(elements.s),
-        // ])
+
         return Array.from(
             { length: n },
             () => allgen.next().value

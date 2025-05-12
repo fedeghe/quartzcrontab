@@ -17,7 +17,7 @@ describe('Quartzcron.next', () => {
                 'too late',
                 i => i.atYear(2024)
                     .betweenMonths(1, 3)
-                    .everyWeekDay('1')
+                    .atWeekDay('1')
                     .atHour('1,5'),
                 1,
                 s=>s.toString(),
@@ -28,7 +28,7 @@ describe('Quartzcron.next', () => {
                 'dow',
                 i => i.atYear(2024)
                     .atMonth(2)
-                    .everyWeekDay('2')
+                    .atWeekDay('2')
                     .atHour('1,5'),
                 10,
                 s=>s.toUTCString(),
@@ -62,7 +62,7 @@ describe('Quartzcron.next', () => {
                 'weekdays',
                 i => i.atYear('2024,2026')
                     .atMonth(1)
-                    .everyWeekDay('2,3,4,5,6')
+                    .atWeekDay('2,3,4,5,6')
                     .atHour(1),
                 10,
                 s=>s.toUTCString(),
@@ -83,7 +83,7 @@ describe('Quartzcron.next', () => {
             [
                 'weekdays',
                 i => i.atYear('2025')
-                        .everyWeekDay('3,5')
+                        .atWeekDay('3,5')
                         .atHour('2,4')   
                         .atMonth('6,8'),
                     20,
@@ -118,7 +118,7 @@ describe('Quartzcron.next', () => {
             [
                 'too late #2',
                 i => i.atYear('2025')
-                        .everyWeekDay('3,5')
+                        .atWeekDay('3,5')
                         .atHour('2,4')   
                         .atMonth('6,8'),
                     20,
@@ -153,7 +153,7 @@ describe('Quartzcron.next', () => {
             [
                 'too late #3 - weekdays',
                 i => i.atYear('2023')
-                        .everyWeekDay('3,5')   // TUE, THU
+                        .atWeekDay('3,5')   // TUE, THU
                         .atMonth('2,4'),        // FEB, APR
                     10,
                     s=>s.toUTCString(),

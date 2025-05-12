@@ -228,36 +228,46 @@ describe('Quartzcron', () => {
             c.everyDay()
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
-        it('every weekday starting from', () => {
-            c.everyWeekDayStartingFromNMonthDay(3, 15)
+        it('every n days', () => {
+            c.everyNDays(3)
+            expect(c.out()).toBe('0 0 0 1/3 * ? *')
+        })
+        it('every n days starting from', () => {
+            c.everyNDays(3, 15)
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
         })
         it('every weekend', () => {
             c.everyWeekEnd(3, 15)
             expect(c.out()).toBe('0 0 0 ? * 7-1 *')
         })
-        it('everyWeekDay - no params => weekdays mon-fri', () => {
+        it('everyWeekDay => weekdays mon-fri', () => {
             c.everyWeekDay()
             expect(c.out()).toBe('0 0 0 ? * 2-6 *')
         })
-        it('everyWeekDay - num', () => {
-            c.everyWeekDay(4)
-            expect(c.out()).toBe('0 0 0 ? * 4 *')
+
+        it('atWeekDay', () => {
+            c.atWeekDay(3)
+            expect(c.out()).toBe('0 0 0 ? * 3 *')
         })
-        it('everyWeekDay - label', () => {
-            c.everyWeekDay('MON')
-            expect(c.out()).toBe('0 0 0 ? * MON *')
+        it('atWeekDayAdd', () => {
+            c.atWeekDayAdd(5)
+            expect(c.out()).toBe('0 0 0 ? * 5 *')
         })
-        it('everyWeekDayAdd - num', () => {
-            c.everyWeekDayAdd(2)
-            c.everyWeekDayAdd(4)
-            expect(c.out()).toBe('0 0 0 ? * 2,4 *')
+        it('atWeekDayAdd on something', () => {
+            c.atWeekDay(2)
+                .atWeekDayAdd(5)
+            expect(c.out()).toBe('0 0 0 ? * 2,5 *')
         })
-        it('everyWeekDayAdd - label', () => {
-            c.everyWeekDayAdd('MON')
-            c.everyWeekDayAdd('FRI')
-            expect(c.out()).toBe('0 0 0 ? * MON,FRI *')
+
+        it('betweenWeekDays', () => {
+            c.betweenWeekDays(2, 5)
+            expect(c.out()).toBe('0 0 0 ? * 2-5 *')
         })
+        it('betweenWeekDays with cadence', () => {
+            c.betweenWeekDays(2, 5, 2)
+            expect(c.out()).toBe('0 0 0 ? * 2-5/2 *')
+        })
+
         it('atMonthDay', () => {
             c.atMonthDay(21)
             expect(c.out()).toBe('0 0 0 21 * ? *')
@@ -406,7 +416,7 @@ describe('Quartzcron', () => {
             c.atSecond(30)
                 .atMinute(0)
                 .atHour(12)
-                .everyWeekDayStartingFromNMonthDay(5, 2)
+                .everyNDays(5, 2)
             expect(c.out()).toBe('30 0 12 2/5 * ? *')
         })
         it('atSecond atMinute every hour in the 3rd saturday of JAN and FEB on years 2026,2028,2032', () => {
