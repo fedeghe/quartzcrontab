@@ -7,7 +7,7 @@
 
 
 # quartzcron  
-version: `0.0.38`
+version: `0.0.39`
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -214,40 +214,47 @@ no explanation needed
     // { dom: '*', dow:'?', ...}
     ```
 
-- `everyWeekDayStartingFromNMonthDay(x, y)`  
+- `everyNDays(x, y)`  
 every `x` `[1-7][SUN-SAT]` day of the week starting from `y`th day `[1-31]` of the target months. 
     ``` js
-    qct.everyWeekDayStartingFromNMonthDay('SUN', 10) 
+    qct.everyNDays('SUN', 10) 
     // { dom: `10/SUN`, dow: '?', ...}
     ```
 
-- `everyWeekDay(wd)`  
+- `atWeekDay(wd)`  
 every `wd` `[1-7][SUN-SAT]`; resets any previous value set there; even here more than one comma separated value can be passed. 
     ``` js
-    qtc.everyWeekDay('WED')
+    qtc.atWeekDay('WED')
     // { dom: `?`, dow: 'WED', ...}
-    qtc.everyWeekDay('WED,FRI')
+    qtc.atWeekDay('WED,FRI')
     // { dom: `?`, dow: 'WED,FRI', ...}
-    qtc.everyWeekDay('MON-FRI/2')
+    qtc.atWeekDay('MON-FRI/2')
     // { dom: '?`, dow: 'MON-FRI/2', ...}
     ```
 
-- `everyWeekDayAdd(wd)`  
+- `atWeekDayAdd(wd)`  
 every `wd` in `[1,7]` or (...and corresponding to) `{SUN,MON,TUE,WED,THU,FRI,SAT}`; adds one more weekday in the current (default empty) list.
     ``` js
-    qtc.everyWeekDayAdd('MON')
+    qtc.atWeekDayAdd('MON')
     // { dom: `?`, dow: 'MON', ...}
-    qtc.everyWeekDayAdd('WED')
+    qtc.atWeekDayAdd('WED')
     // { dom: `?`, dow: 'MON,WED', ...}
-    qtc.everyWeekDayAdd('FRI')
+    qtc.atWeekDayAdd('FRI')
     // { dom: '?`, dow: 'MON,WED,FRI', ...}
+    ```
+
+- `everyWeekDay()`  
+    shortcut to set Saturnday and Sunday  
+    ``` js
+    qtc.everyWeekDay()
+    // { dom: `?`, dow: '2-6', ...}
     ```
 
 - `everyWeekEnd()`  
 shortcut to set Saturnday and Sunday
     ``` js
-    qtc.everyWeekEnd('MON')
-    // { dom: `?`, dow: 'SUN-SAT', ...}
+    qtc.everyWeekEnd()
+    // { dom: `?`, dow: '7-1', ...}
     ```
 
 - `atMonthDay(dom)`  
@@ -475,7 +482,7 @@ Having a quick way to get a user readable internationalized description out of a
 Meanwhile give a try to the awesome [cronstrue][cronstrue] npm package.
 
 ---
-Last edit: 11/5/2025 at 12:26:25
+Last edit: 13/5/2025 at 18:29:43
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron

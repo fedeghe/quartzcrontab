@@ -1,6 +1,19 @@
-## 0.0.39
+
+## 0.0.40
 added methods:
 - `onFirstMonthWeekDay` (shortcut for `dom:1W`)
+
+## 0.0.39  
+some changes on the api  
+changes: 
+- `everyWeekDayStartingFromNMonthDay` replaced for `everyNDays`  
+- `everyWeekDay` chage behaviour, now does not accept parameters, it jsut set `dow` to `2-6`
+
+additions
+- `everyWeekDay` to set `dow` to `2-6`
+- `atWeekDay` and `atWeekDayAdd`
+- `betweenWeekDays`
+
 
 ## 0.0.38  
 all 7 range resolvers are exposed in static `Quartzcron.solvers`  
