@@ -19,7 +19,7 @@ const {
     solve_year_ranges,
     solve_dom,
     solve_dow,
-} = require('./dateutils');
+} = require('./dateutils.js');
 
 const langUtils = require('./langUtils.js');
 
@@ -148,7 +148,7 @@ class Quartzcron {
         return this.over({ dom: `${start}/${n}`, dow: '?'});
     }
     everyWeekEnd() {
-        return this.over({ dom: '?', dow: '7-1' });
+        return this.over({ dom: '?', dow: '7,1' });
     }   
     everyWeekDay() {
         return this.over({ dom: '?', dow: '2-6' });
@@ -162,7 +162,10 @@ class Quartzcron {
             : this.elements.dow.split(',');
         return this.over({ dom: '?', dow: [...current, d].map(c=>`${c}`).join(',') })
     }
+
+    // the relative validator should check it
     betweenWeekDays(from, to, every) {
+        if(from>=to) return this;
         return this.over({ dom: '?', dow: `${from}-${to}${every ? `/${every}`: ''}`})
     }
     atMonthDay(dom) {

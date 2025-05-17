@@ -238,7 +238,7 @@ describe('Quartzcron', () => {
         })
         it('every weekend', () => {
             c.everyWeekEnd(3, 15)
-            expect(c.out()).toBe('0 0 0 ? * 7-1 *')
+            expect(c.out()).toBe('0 0 0 ? * 7,1 *')
         })
         it('everyWeekDay => weekdays mon-fri', () => {
             c.everyWeekDay()
@@ -255,13 +255,17 @@ describe('Quartzcron', () => {
         })
         it('atWeekDayAdd on something', () => {
             c.atWeekDay(2)
-                .atWeekDayAdd(5)
-            expect(c.out()).toBe('0 0 0 ? * 2,5 *')
+                .atWeekDayAdd('5/2')
+            expect(c.out()).toBe('0 0 0 ? * 2,5/2 *')
         })
 
         it('betweenWeekDays', () => {
             c.betweenWeekDays(2, 5)
             expect(c.out()).toBe('0 0 0 ? * 2-5 *')
+        })
+        it('betweenWeekDays wrong (unchanged)', () => {
+            c.betweenWeekDays(7, 1)
+            expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('betweenWeekDays with cadence', () => {
             c.betweenWeekDays(2, 5, 2)
@@ -282,8 +286,9 @@ describe('Quartzcron', () => {
         })
         it('atMonthDayAdd', () => {
             c.atMonthDayAdd(13)
-            c.atMonthDayAdd(21)
-            expect(c.out()).toBe('0 0 0 13,21 * ? *')
+            c.atMonthDayAdd('21/2')
+            c.atMonthDayAdd(24)
+            expect(c.out()).toBe('0 0 0 13,21/2,24 * ? *')
         })
         it('betweenMonthDays', () => {
             c.betweenMonthDays(12,19)

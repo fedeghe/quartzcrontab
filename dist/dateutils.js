@@ -234,7 +234,9 @@ const dom_solvers = [
         }
         return [];
     },
-
+    //nW
+    // [1-31]W
+    // /^([1-9]|1[0-9]|2[0-9]|3[01])W$/
     ({val, lastDate, d}) => {
         let mat = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])W$/);
         if(mat){
@@ -260,9 +262,7 @@ const dom_solvers = [
         }
         return [];
     },
-    // [1-31]W
-    // /^([1-9]|1[0-9]|2[0-9]|3[01])W$/
-
+    
     // L-[1-31]
     ({val, lastDate}) => {
         const vals = val.match(/^L-([1-9]|1[0-9]|2[0-9]|3[01])$/);
@@ -272,21 +272,21 @@ const dom_solvers = [
         }
         return [];
     },
-    // [1-7]L
-    ({val, lastDate, d}) => {
-        const vals = val.match(/^([1-7])L$/);
-        if(vals){
-            d.setUTCDate(lastDate);
-            const targetWeekDay = (parseInt(vals[1], 10) - 1 +7)%7, //rem quartz[1-7], js [0-6]
-                res = d.getUTCDay(); // [0-6]
-            let min = 0;
-            while((res - min + 7)%7 !== targetWeekDay){
-                min++;
-            }
-            return [lastDate-min];
-        }
-        return [];
-    }
+    // [1-7]W
+    // ({val, lastDate, d}) => {
+    //     const vals = val.match(/^([1-7])W$/);
+    //     if(vals){
+    //         d.setUTCDate(lastDate);
+    //         const targetWeekDay = (parseInt(vals[1], 10) - 1 +7)%7, //rem quartz[1-7], js [0-6]
+    //             res = d.getUTCDay(); // [0-6]
+    //         let min = 0;
+    //         while((res - min + 7)%7 !== targetWeekDay){
+    //             min++;
+    //         }
+    //         return [lastDate-min];
+    //     }
+    //     return [];
+    // }
 
 ];
 const solve_dom = getSpecialSolver(dom_solvers);

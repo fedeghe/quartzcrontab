@@ -412,25 +412,7 @@ describe('date utils', () => {
             ])('%s', (_, y, m, dom, expected) => {
                 expect(solve_dom(y, m, dom)).toMatchObject(expected)
             })
-        })
-
-        describe('[1-7]L', () => {
-            test.each([
-                ['1L (2025 march)', 2025, 3, '1L', [30]],
-                ['2L (2025 march)', 2025, 3, '2L', [31]],
-                ['3L (2025 march)', 2025, 3, '3L', [25]],
-                ['4L (2025 march)', 2025, 3, '4L', [26]],
-                ['5L (2025 march)', 2025, 3, '5L', [27]],
-                ['6L (2025 march)', 2025, 3, '6L', [28]],
-                ['7L (2025 march)', 2025, 3, '7L', [29]],
-                ['7L (2025 march)', 2025, 3, 'L222', []],
-                ['8L (2025 march)', 2025, 3, '8L', []],
-                ['00L (2025 march)', 2025, 3, '00L', []],
-            ])('%s', (_, y, m, dom, expected) => {
-                expect(solve_dom(y, m, dom)).toMatchObject(expected)
-            })
-        })
-        
+        })        
     })
 
     describe('solve_dow', () => {

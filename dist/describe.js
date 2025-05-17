@@ -5,6 +5,8 @@ const C = require('./constants.js');
 
 const langUtils = require('./langUtils.js')
 
+const utils = require('./utils.js')
+
 
 
 const doubleDigitize = d => {
@@ -277,7 +279,7 @@ const describeTime = ({ s, i, h }, lu) => {
             if(h === '*' || i === '*' || s === '*') return '';
             return lu.everyX(lu.day);
         }
-        let mat
+        let mat, spl;
         if(!dom.match(/^[*?]$/)){
             // [1-31]
             mat = dom.match(C.rx.oneThirtyone);
@@ -288,17 +290,99 @@ const describeTime = ({ s, i, h }, lu) => {
                 ].filter(Boolean).join(', ');
             }
 
-            // [1-31] - [1-31]
-            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)-(([1-9]|1[0-9]|2[0-9]|3[01]|\*))$/);
+            // [1-31] / [1-31]
+            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)\/([1-9]|1[0-9]|2[0-9]|3[01]|\*)$/);
             if (mat) {
                 return [
-                    lu.bwtweenMonthDays(mat[1], mat[2]),
+                    lu.everyStartingFrom(mat[1], mat[2], lu.day),
                     mEvery && lu.everyX(lu.month)
                 ].filter(Boolean).join(', ');
-                return '';
+            }
+
+            // [1-31] - [1-31]
+            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)-([1-9]|1[0-9]|2[0-9]|3[01]|\*)$/);
+            if (mat) {
+                return [
+                    lu.betweenMonthDays(mat[1], mat[2], lu.day),
+                    mEvery && lu.everyX(lu.month)
+                ].filter(Boolean).join(', ');
+            }
+
+            // [1-31] - [1-31] / [1-31]
+            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)-([1-9]|1[0-9]|2[0-9]|3[01]|\*)\/([1-9]|1[0-9]|2[0-9]|3[01]|\*)$/);
+            if (mat) {
+                return [
+                    lu.everyX(mat[3], lu.days),
+                    ' ',
+                    lu.betweenMonthDays(mat[1], mat[2], lu.day),
+                    ', ',
+                    mEvery && lu.everyX(lu.month)
+                ].filter(Boolean).join('');
+            }
+
+            // [1-31], ....
+            spl = dom.split(',');
+            mat = spl.every(s => s.match(C.rx.oneThirtyone));
+            if (mat) {
+                return [
+                    lu.multipleThe(dom, lu.day),
+                    ', ',
+                    mEvery && lu.everyX(lu.month)
+                ].filter(Boolean).join('');
+            }
+
+
+            // L
+            mat = dom.match(/^L$/)
+            if (mat) {
+                return [
+                    lu.onThe(lu.last, lu.day),
+                    lu.ofTheX(lu.month)
+                ].join(' ');
+            }
+
+            // LW
+            mat = dom.match(/^LW$/)
+            if (mat) {
+                return [
+                    lu.onThe(lu.last, lu.weekday),
+                    lu.ofTheX(lu.month)
+                ].join(' ');
+            }
+            // [1-31]W
+            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)W$/)
+            if (mat) {
+                return [
+                    lu.nearestToThe(lu.weekday, mat[1]),
+                    lu.ofTheX(lu.month)
+                ].join(' ');
+            }
+            // L-n
+            mat = dom.match(/^L-([1-9]|1[0-9]|2[0-9]|3[01])$/);
+            if (mat) {
+                const n = parseInt(mat[1], 10),
+                    L = n > 1 ? lu.days : lu. day
+                return  [
+                    lu.nX(mat[1], L),
+                    lu.beforeTheEndOfThe(lu.month)
+                ]. join(' ')
             }
         }
         if(!dow.match(/^[*?]$/)){
+            const numDow = utils.daysLabels2Numbers(dow);
+            
+            // weekend
+            mat = numDow.match(/^(7,1|1,7)$/)
+            if(mat){
+                return lu.everyX(lu.weekend)
+            }
+
+            // weekday
+            mat = numDow.match(/^(2,3,4,5,6|2-6)$/)
+            if(mat){
+                return lu.everyX(lu.weekend)
+            }
+
             return 'dow'
         }
         return '';

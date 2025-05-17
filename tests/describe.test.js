@@ -951,7 +951,7 @@ describe('describe', () => {
             // 4,1,1
             [
                 'at seconds 03, 07 and 34, at minute 44, at hour 13, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                i => i.atSecond(3).atSecondAdd('7/4').atSecondAdd(34)
                     .atMinute(44)
                     .atHour(13),
                 en,
@@ -1333,9 +1333,51 @@ describe('describe', () => {
                 en,
             ],
             [
-                'at 00:00:00, from the 2nd to the 10th, every month',
+                'at 00:00:00, every 10 days starting from the 3rd day, every month',
+                i => i.atSecond(0).atMinute(0).atHour(0)
+                    .everyNDays(3, 10),
+                en,
+            ],
+            [
+                'at 00:00:00, from the 2nd to the 10th day, every month',
                 i => i.atSecond(0).atMinute(0).atHour(0)
                     .betweenMonthDays(2, 10),
+                en,
+            ],
+            [
+                'at 00:00:00, every 3 days from the 2nd to the 10th day, every month',
+                i => i.atSecond(0).atMinute(0).atHour(0)
+                    .betweenMonthDays(2, 10, 3),
+                en,
+            ],
+            [
+                'at 01:00:00, on the 2nd, 11th, 13th and 21st day, every month',
+                i => i.atSecond(0).atMinute(0).atHour(1)
+                    .atMonthDay(2).atMonthDayAdd(11).atMonthDayAdd(13).atMonthDayAdd(21),
+                en,
+            ],
+            [
+                'at 01:30:00, on the last day of the month',
+                i => i.atSecond(0).atMinute(30).atHour(1)
+                    .onLastMonthDay(),
+                en,
+            ],
+            [
+                'at 01:30:00, on the last weekday of the month',
+                i => i.atSecond(0).atMinute(30).atHour(1)
+                    .onLastMonthWeekDay(),
+                en,
+            ],
+            [
+                'at 02:45:00, on the nearest weekday to the 7th of the month',
+                i => i.atSecond(0).atMinute(45).atHour(2)
+                    .onClosestWorkingDayToTheNMonthDay(7),
+                en,
+            ],
+            [
+                'at 03:15:00, 7 days before the end of the month',
+                i => i.atSecond(0).atMinute(15).atHour(3)
+                    .onNDayBeforeTheEndOfTheMonth(7),
                 en,
             ]
         ])('%s', (expected, prep, lang ) => {
@@ -1353,19 +1395,20 @@ describe('describe', () => {
         })
         test.each([
             [
-                'at 00:00:00, every day, every 2 months between February and October, every 3 years between 2039 and 2045',
+                'at 00:00:00, every weekend',
                 i => i.atSecond(0).atMinute(0).atHour(0)
-                    .betweenMonths(2, 10, 2)
-                    .betweenYears(2039, 2045, 3),
+                    .everyWeekEnd(),
                 en,
-            ]
+            ],
         ])('%s', (expected, prep, lang ) => {
             qc.loadLang(lang);
             prep(qc);
-            // console.log(qc.out())
+            console.log(qc.out())
             expect(qc.describe()).toBe(expected);
         })
     })
+
+
     
 
     it('throws when no lang file loaded', () => {
