@@ -163,6 +163,22 @@ const dom_solvers = [
         return res;
     },
 
+    // [1-31] - [1-31]
+    ({val, lastDate}) => {
+        const mat = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)\-(([1-9]|1[0-9]|2[0-9]|3[01]|\*))$/);
+        let res = [];
+        
+        if (mat) {
+            let start = parseInt(mat[1], 10),
+                end = parseInt(mat[2], 10);
+            while(start <= end && start<=lastDate){
+                res.push(start);
+                start += 1;
+            }
+        }
+        return res;
+    },
+    
     // [1-31]
     ({val, lastDate}) => {
         const mat = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])$/);
