@@ -103,8 +103,9 @@ const getRangeSolver = ({
     if(spl.length === mat.length) {
 
         return mat.reduce((acc, r) => {
+            let p = parseInt(r[2], 10)
             if(r[2]) {
-                acc.push(parseInt(r[2], 10))
+                if (p <= bounds.max)acc.push(p)
             } else {
                 let cursor = parseInt(r[3], 10);
                 const every = parseInt(r[4], 10);
@@ -328,21 +329,7 @@ const dom_solvers = [
         }
         return [];
     },
-    // [1-7]W
-    // ({val, lastDate, d}) => {
-    //     const vals = val.match(/^([1-7])W$/);
-    //     if(vals){
-    //         d.setUTCDate(lastDate);
-    //         const targetWeekDay = (parseInt(vals[1], 10) - 1 +7)%7, //rem quartz[1-7], js [0-6]
-    //             res = d.getUTCDay(); // [0-6]
-    //         let min = 0;
-    //         while((res - min + 7)%7 !== targetWeekDay){
-    //             min++;
-    //         }
-    //         return [lastDate-min];
-    //     }
-    //     return [];
-    // }
+
 
 ];
 const solve_dom = getSpecialSolver(dom_solvers);
@@ -394,21 +381,48 @@ const dow_solvers = [
     
     // one or more [1-7] OR [SUN-SAT] comma separated
     ({val, d, lastDate}) => {
-        const vals = daysLabels2Numbers(val)
-                .split(/,/),
-            res = [];
+        let vals = daysLabels2Numbers(val).split(/,/),
+            add = [];
+        const firstDayWd = d.getUTCDay()+1,// [0-6] -> [1-7]
+            res = [],
+            max = 7;
+
+        let mat = vals.map(s => s.match(/^(([1-7])|([1-7])\/([1-7]))$/)).filter(Boolean);
+        if(mat.length === vals.length){
+            
+            add =  mat.reduce((acc, r) => {
+                let v2 = parseInt(r[2], 10);
+                if(typeof r[2] !== 'undefined') {
+                    if(v2 <= max) acc.push(v2)
+                } else {
+                    
+                    let cursor = parseInt(r[3], 10);
+                    const every = parseInt(r[4], 10);
+                    while(cursor <= max){
+                        acc.push(cursor);
+                        cursor = every + cursor;
+                    }
+                }
+                return acc;
+            }, [])
+        }
+        vals = [...vals, ...add].map(v => v.toString()).filter(f => f.match(/^[1-7]$/));
+
         if(
             vals.every(v => v.match(/^([1-7])$/))
         ) {
-            let firstDayWd = d.getUTCDay()+1, // [0-6] -> [1-7]
+            let cursor = firstDayWd, 
                 toAddDate = 1;
             while(toAddDate <= lastDate) {
-                if(vals.includes(`${firstDayWd}`)) res.push(toAddDate);
-                firstDayWd = 1 + firstDayWd%7;
+                if(vals.includes(`${cursor}`)) res.push(toAddDate);
+                cursor = 1 + cursor%7;
                 toAddDate+= 1;
             }
 
         }
+        
+
+
         return res;
     },
     

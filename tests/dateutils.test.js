@@ -452,6 +452,8 @@ describe('date utils', () => {
                 ['sun (2025 jan)', 2025, 1, '1', [5,12,19,26]],
                 ['SUN (2025 jan)', 2025, 1, 'SUN', [5,12,19,26]],
                 ['MON (2025 jan)', 2025, 1, 'MON', [6,13,20,27]],
+                ['MON (2025 jan)', 2025, 1, 'MON', [6,13,20,27]],
+                ['MON (2025 jan)', 2025, 1, 'MON/2', [1,3,6,8,10,13,15,17,20,22,24,27,29,31]],
             ])('%s', (_, y, m, dow, expected) => {
                 expect(solve_dow(y, m, dow)).toMatchObject(expected)
             })
