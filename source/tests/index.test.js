@@ -237,7 +237,7 @@ describe('Quartzcron', () => {
             expect(c.out()).toBe('0 0 0 15/3 * ? *')
         })
         it('every weekend', () => {
-            c.everyWeekEnd(3, 15)
+            c.everyWeekEnd()
             expect(c.out()).toBe('0 0 0 ? * 7,1 *')
         })
         it('everyWeekDay => weekdays mon-fri', () => {
@@ -263,8 +263,8 @@ describe('Quartzcron', () => {
             c.betweenWeekDays(2, 5)
             expect(c.out()).toBe('0 0 0 ? * 2-5 *')
         })
-        it('betweenWeekDays wrong (unchanged)', () => {
-            c.betweenWeekDays(7, 1)
+        it('betweenWeekDays (wrong, unchanged)', () => {
+            c.betweenWeekDays(5, 2)
             expect(c.out()).toBe('0 0 0 * * ? *')
         })
         it('betweenWeekDays with cadence', () => {
@@ -322,6 +322,7 @@ describe('Quartzcron', () => {
             c.onClosestWorkingDayToTheNMonthDay(2)
             expect(c.out()).toBe('0 0 0 2W * ? *')
         })
+        
         it('onNWeekDayOfTheMonth', () => {
             c.onNWeekDayOfTheMonth(2, 4)
             expect(c.out()).toBe('0 0 0 ? * 4#2 *')
@@ -464,15 +465,15 @@ describe('Quartzcron', () => {
         })
     })
 
-    // describe('describe as expected', () => {
-    //     let c
-    //     beforeEach(() => {
-    //         c = new Quartzcron()
-    //     })
-    //     it('default', () => {
-    //         expect(c.describe()).toBe('at midnight of every day')
-    //     })
-    // })
+    describe('describe as expected', () => {
+        let c
+        beforeEach(() => {
+            c = new Quartzcron()
+        })
+        it('default', () => {
+            expect(c.describe()).toBe('at midnight of every day')
+        })
+    })
 
     describe('static', () => {
         const ranger24 = Quartzcron.getRanger(24),

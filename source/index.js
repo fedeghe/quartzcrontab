@@ -27,6 +27,7 @@ const nextGen = require('./nextGen');
 const C = require('./constants');
 const en = require('./langs/en.js');
 
+
 const argumentize = o => {
     const ty = typeof o;
     switch(ty) {
@@ -35,7 +36,7 @@ const argumentize = o => {
         default:;
     }
     return {...defaults};
-}
+};
 
 class Quartzcron {
     constructor(o) {

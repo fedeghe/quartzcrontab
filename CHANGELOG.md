@@ -1,13 +1,12 @@
-## 0.0.41
+## 0.0.43
 added methods:
 - `onFirstMonthWeekDay` (shortcut for `dom:1W`)
 - describe works (only english locale shipped)
 
-PROBLEM
-all fields allow comma separated
-values and one or more of those can be a cadence:
-0 0 1,5/2 ? 1,4/2 1,5/2 *
-"At 0 minutes past the hour, at 01:00 AM and every 2 hours, starting at 05:00 AM, only on Monday and , every 2 days of the week, starting only on Friday, only in January and , every 2 months, starting only in April"
+## 0.0.42  
+- fixed wrong behaviour of `betweenWeekDays`
+    which was allowing to set the first bigger than the second  
+- fixed `everyWeekEnd`
 
 ## 0.0.40  
 BUGFIX missing _dom_ `a-b` solver added  

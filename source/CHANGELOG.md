@@ -1,7 +1,12 @@
-## 0.0.41
+## 0.0.43
 added methods:
 - `onFirstMonthWeekDay` (shortcut for `dom:1W`)
 - describe works (only english locale shipped)
+
+## 0.0.42  
+- fixed wrong behaviour of `betweenWeekDays`
+    which was allowing to set the first bigger than the second  
+- fixed `everyWeekEnd`
 
 ## 0.0.40  
 BUGFIX missing _dom_ `a-b` solver added  

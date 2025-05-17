@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.40)
+quartzcron (v.0.0.42)
 */
 const {
     solve_dom,
