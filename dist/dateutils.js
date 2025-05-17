@@ -71,7 +71,8 @@ const getRangeSolver = ({
     minMaxCadenceGetter,
     rx1, rx2
 }) => v => {
-    let vstr = `${v}`;
+
+    let vstr = `${v}`, spl, mat;
     if(v ==='?') return null;
     if(vstr.startsWith('*')){
         vstr = vstr.replace('*', `${bounds.min}-${bounds.max}`);
@@ -81,12 +82,43 @@ const getRangeSolver = ({
     if (vstr.match(/^\d*$/)) {
         return [parseInt(vstr, 10)];
     }
+
     // commasep
+    
+    
+    /*
     if (vstr.match(/^([\d,]+)\d$/)) {
         return vstr.split(/,/).map(val=>parseInt(val,10)).sort(
             ( a, b ) => a > b ? 1 : -1
         );
     }
+    this one handles only 123,423,243534,4564,6456
+
+
+    the following handles also 
+    9346,2343/3,4234/44,756,14/3
+    */
+    spl = vstr.split(/,/);
+    mat = spl.map(s => s.match(/^((\d*)|(\d*)\/(\d*))$/)).filter(Boolean)
+    if(spl.length === mat.length) {
+
+        return mat.reduce((acc, r) => {
+            if(r[2]) {
+                acc.push(parseInt(r[2], 10))
+            } else {
+                let cursor = parseInt(r[3], 10);
+                const every = parseInt(r[4], 10);
+                while(cursor <= bounds.max){
+                    acc.push(cursor);
+                    cursor += every
+                }
+            }
+            return acc;
+        }, []).sort(( a, b ) => a > b ? 1 : -1)
+        
+    }   
+
+
     // startwithCadence
     const cadenceStart = vstr.match(rx1);
     if(cadenceStart){
