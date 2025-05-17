@@ -471,7 +471,7 @@ describe('Quartzcron', () => {
             c = new Quartzcron()
         })
         it('default', () => {
-            expect(c.describe()).toBe('at midnight of every day')
+            expect(c.describe()).toBe('at 00:00:00, every day')
         })
     })
 

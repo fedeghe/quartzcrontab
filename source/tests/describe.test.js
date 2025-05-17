@@ -951,7 +951,7 @@ describe('describe', () => {
             // 4,1,1
             [
                 'at seconds 03, 07 and 34, at minute 44, at hour 13, every day',
-                i => i.atSecond(3).atSecondAdd('7/4').atSecondAdd(34)
+                i => i.atSecond(3).atSecondAdd('7').atSecondAdd(34)
                     .atMinute(44)
                     .atHour(13),
                 en,
