@@ -1,3 +1,8 @@
+## 0.0.41  
+- fixed wrong behaviour of `betweenWeekDays`
+    which was allowing to set the first bigger than the second  
+- fixed `everyWeekEnd`
+
 ## 0.0.40  
 BUGFIX missing _dom_ `a-b` solver added  
 

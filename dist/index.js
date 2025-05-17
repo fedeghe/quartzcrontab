@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.40)
+quartzcron (v.0.0.41)
 */
 
 const {
@@ -19,30 +19,31 @@ const {
     solve_year_ranges,
     solve_dom,
     solve_dow,
-} = require('./dateutils');
+} = require('./dateutils.js');
+
 
 const nextGen = require('./nextGen');
 
 const C = require('./constants');
 
+const argumentize = o => {
+    const ty = typeof o;
+    switch(ty) {
+        case 'string': return exp2elements(o);
+        case 'object': return {...defaults, ...o};
+        default:;
+    }
+    return {...defaults};
+}
+
 class Quartzcron {
     constructor(o) {
-        let els = null;
-        if(typeof o === 'string'){
-            els = exp2elements(o);
-        }
-        if(typeof o === 'object'){
-            els = {...defaults, ...o}
-        }
-        if(els === null) {
-            els = {...defaults};
-        }
         this.months = { min: 0, max: 11 };
-        this.elements = els;
+        this.elements = argumentize(o);
         const validity = this.validate();
         if(!validity.valid) throw new Error(C.errors.constructorErr)
     };
-
+    // static lang = 'en';
     static solvers = {
         solve_0_59_ranges,
         solve_hours_ranges,
@@ -66,31 +67,17 @@ class Quartzcron {
     range60 = Quartzcron.getRanger(60);
 
     updateExp(o) {
-        let els = null;
-        if(typeof o === 'string'){
-            els = exp2elements(o);
-        }
-        if(typeof o === 'object'){
-            els = {...defaults, ...o}
-        }
-        if(els === null) {
-            els = {...defaults};
-        }
-        this.elements = els;
+        this.elements = argumentize(o);
         const validity = this.validate();
-        if(!validity.valid) throw new Error(C.errors.updateExpErr)
+        if(!validity.valid) throw new Error(C.errors.updateExpErr);
+        return this;
     }
 
-    over({ s, i, h, dom, m, dow, y }) {
-        this.elements = {
-            s: removeSpaces(s ?? this.elements.s),
-            i: removeSpaces(i ?? this.elements.i),
-            h: removeSpaces(h ?? this.elements.h),
-            dom: removeSpaces(dom ?? this.elements.dom),
-            m: removeSpaces(m ?? this.elements.m),
-            dow: removeSpaces(dow ?? this.elements.dow),
-            y: removeSpaces(y ?? this.elements.y),
-        };
+    over(ov) {
+        this.elements = Object.entries(this.elements).reduce((acc, [k, v]) => {
+            acc[k] = removeSpaces(ov[k] ?? v);
+            return acc;
+        }, {});
         return this;
     }
     /* seconds */
@@ -155,7 +142,7 @@ class Quartzcron {
         return this.over({ dom: `${start}/${n}`, dow: '?'});
     }
     everyWeekEnd() {
-        return this.over({ dom: '?', dow: '7-1' });
+        return this.over({ dom: '?', dow: '7,1' });
     }   
     everyWeekDay() {
         return this.over({ dom: '?', dow: '2-6' });
@@ -169,7 +156,10 @@ class Quartzcron {
             : this.elements.dow.split(',');
         return this.over({ dom: '?', dow: [...current, d].map(c=>`${c}`).join(',') })
     }
+
+    // the relative validator should check it
     betweenWeekDays(from, to, every) {
+        if(from>=to) return this;
         return this.over({ dom: '?', dow: `${from}-${to}${every ? `/${every}`: ''}`})
     }
     atMonthDay(dom) {
@@ -186,6 +176,9 @@ class Quartzcron {
     }
     onLastMonthDay(){
         return this.over({ dom: 'L', dow: '?' });
+    }
+    onFirstMonthWeekDay(){
+        return this.over({ dom:`1W`, dow: '?' })
     }
     onLastMonthWeekDay(){
         return this.over({ dom: 'LW', dow: '?' });
@@ -243,18 +236,7 @@ class Quartzcron {
         return this.over({ y: `${from}-${to}${every ? `/${every}` : ''}` })
     }
     
-    /***********/
-    // TODO
-    describe() {
-        return [
-            this.describeTime(),
-            this.describeDomDowOccurrence(),
-            this.describeYears()
-        ].join(' of ')
-    }
-    describeTime() { return 'every second' }
-    describeDomDowOccurrence() { return 'every day' }
-    describeYears() { return 'every year' }
+    
     /***********/
 
     next({n = 1, date = null} = {}){
