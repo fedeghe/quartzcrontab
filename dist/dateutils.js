@@ -225,13 +225,37 @@ const dom_solvers = [
 
     // [1-31] , ... , [1-31]/[1-31]
     ({val, lastDate}) => {
-        let vals = val.split(/,/);
-        if(
-            vals.every(v=>{
-                return v.match(/^([1-9]|1[0-9]|2[0-9]|3[01])$/);
-            })
-        ) return vals.filter(v => v <=lastDate).map(v => parseInt(v,10));
-        else return [];
+        // let vals = val.split(/,/);
+        // if(
+        //     vals.every(v=>{
+        //         return v.match(/^([1-9]|1[0-9]|2[0-9]|3[01])$/);
+        //     })
+        // ) return vals.filter(v => v <=lastDate).map(v => parseInt(v,10));
+        // else return [];
+
+        const spl = val.split(/,/),
+            mat = spl.map(s => s.match(/^(([1-9]|1[0-9]|2[0-9]|3[01])|([1-9]|1[0-9]|2[0-9]|3[01])\/([1-9]|1[0-9]|2[0-9]|3[01]))$/)).filter(Boolean);
+        if(spl.length === mat.length) {
+            return mat.reduce((acc, r) => {
+                let v2 = parseInt(r[2], 10);
+                if(v2 !== undefined) {
+                    if(v2 <= lastDate) acc.push(v2)
+                } else {
+                    let cursor = parseInt(r[3], 10);
+                    const every = parseInt(r[4], 10);
+                    while(cursor <= lastDate){
+                        acc.push(cursor);
+                        cursor += every;
+                    }
+                }
+                return acc;
+            }, []).sort(( a, b ) => a > b ? 1 : -1)
+            
+        }   
+
+
+
+        return []
     },
 
     // [1-31] - [1-31] / [1-31]
