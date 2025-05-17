@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.39)
+quartzcron (v.0.0.40)
 */
 const C = require('./constants.js'),
     {daysLabels2Numbers} = require('./utils.js');
@@ -181,7 +181,6 @@ const dom_solvers = [
         }
         return res;
     },
-
     // [1-31]
     ({val, lastDate}) => {
         const mat = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])$/);

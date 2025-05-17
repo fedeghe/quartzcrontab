@@ -7,7 +7,7 @@
 
 
 # quartzcron  
-version: `0.0.39`
+version: `0.0.40`
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -482,7 +482,7 @@ Having a quick way to get a user readable internationalized description out of a
 Meanwhile give a try to the awesome [cronstrue][cronstrue] npm package.
 
 ---
-Last edit: 14/5/2025 at 19:51:30
+Last edit: 17/5/2025 at 15:46:37
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron

@@ -1,9 +1,12 @@
-
-## 0.0.40
+## 0.0.41
 added methods:
 - `onFirstMonthWeekDay` (shortcut for `dom:1W`)
+- describe works (only english locale shipped)
 
-## 0.0.39  
+## 0.0.40  
+BUGFIX missing _dom_ `a-b` solver added  
+
+## 0.0.39
 some changes on the api  
 changes: 
 - `everyWeekDayStartingFromNMonthDay` replaced for `everyNDays`  

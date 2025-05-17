@@ -178,7 +178,6 @@ const dom_solvers = [
         }
         return res;
     },
-
     // [1-31]
     ({val, lastDate}) => {
         const mat = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])$/);

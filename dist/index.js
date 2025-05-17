@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.39)
+quartzcron (v.0.0.40)
 */
 
 const {
@@ -49,7 +49,7 @@ class Quartzcron {
         const validity = this.validate();
         if(!validity.valid) throw new Error(C.errors.constructorErr)
     };
-    
+    // static lang = 'en';
     static solvers = {
         solve_0_59_ranges,
         solve_hours_ranges,
