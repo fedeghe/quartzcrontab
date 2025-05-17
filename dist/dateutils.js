@@ -223,7 +223,7 @@ const dom_solvers = [
         return [];
     },
 
-    // [1-31] , ...
+    // [1-31] , ... , [1-31]/[1-31]
     ({val, lastDate}) => {
         let vals = val.split(/,/);
         if(
