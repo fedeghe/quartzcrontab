@@ -1,4 +1,4 @@
-## 0.0.41  
+## 0.0.42  
 - fixed wrong behaviour of `betweenWeekDays`
     which was allowing to set the first bigger than the second  
 - fixed `everyWeekEnd`

@@ -31,7 +31,7 @@ const argumentize = o => {
         default:;
     }
     return {...defaults};
-}
+};
 
 class Quartzcron {
     constructor(o) {

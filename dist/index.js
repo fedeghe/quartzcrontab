@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.41)
+quartzcron (v.0.0.42)
 */
 
 const {
@@ -34,7 +34,7 @@ const argumentize = o => {
         default:;
     }
     return {...defaults};
-}
+};
 
 class Quartzcron {
     constructor(o) {
