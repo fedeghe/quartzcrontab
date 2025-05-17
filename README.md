@@ -482,7 +482,7 @@ Having a quick way to get a user readable internationalized description out of a
 Meanwhile give a try to the awesome [cronstrue][cronstrue] npm package.
 
 ---
-Last edit: 13/5/2025 at 18:29:43
+Last edit: 14/5/2025 at 19:51:30
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron

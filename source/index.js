@@ -18,11 +18,14 @@ const {
     solve_dow,
 } = require('./dateutils');
 
+const langUtils = require('./langUtils.js');
+
 const describer = require('./describe');
 
 const nextGen = require('./nextGen');
 
 const C = require('./constants');
+const en = require('./langs/en.js');
 
 const argumentize = o => {
     const ty = typeof o;
@@ -37,11 +40,13 @@ const argumentize = o => {
 class Quartzcron {
     constructor(o) {
         this.months = { min: 0, max: 11 };
+        this.lang = en;
         this.elements = argumentize(o);
+        this.langUtils = langUtils.getLangUtils(this.lang);
         const validity = this.validate();
         if(!validity.valid) throw new Error(C.errors.constructorErr)
     };
-
+    // static lang = 'en';
     static solvers = {
         solve_0_59_ranges,
         solve_hours_ranges,
@@ -231,10 +236,17 @@ class Quartzcron {
         return this.over({ y: `${from}-${to}${every ? `/${every}` : ''}` })
     }
     
-    /***********/
-    // TODO
     describe() {
-        return describer.describe(this.elements)
+        if(this.lang === null){
+            throw new Error(C.errors.noLangFile);
+        }
+        return describer.describe(this.elements, this.langUtils);
+    }
+    loadLang(l){
+        this.lang = l;
+        if(l===null)return
+        this.langUtils = langUtils.getLangUtils(l);
+        return this;
     }
     
     /***********/

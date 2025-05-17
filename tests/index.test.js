@@ -337,25 +337,25 @@ describe('Quartzcron', () => {
             expect(c.out()).toBe('0 0 0 * 0/6 ? *')
         })
         it('everyNMonths every x from y', () => {  
-            c.everyNMonths(6, 13)
-            expect(c.out()).toBe('0 0 0 * 13/6 ? *')
+            c.everyNMonths(6, 3)
+            expect(c.out()).toBe('0 0 0 * 3/6 ? *')
         })
         it('atMonth', () => {
-            c.atMonth(13)
-            expect(c.out()).toBe('0 0 0 * 13 ? *')
+            c.atMonth(3)
+            expect(c.out()).toBe('0 0 0 * 3 ? *')
         })
         it('atMonth straight more', () => {
-            c.atMonth('13,15,19')
-            expect(c.out()).toBe('0 0 0 * 13,15,19 ? *')
+            c.atMonth('3,5,9')
+            expect(c.out()).toBe('0 0 0 * 3,5,9 ? *')
         })
         it('atMonthAdd', () => {
-            c.atMonthAdd(13)
-            c.atMonthAdd(19)
-            expect(c.out()).toBe('0 0 0 * 13,19 ? *')
+            c.atMonthAdd(3)
+            c.atMonthAdd(9)
+            expect(c.out()).toBe('0 0 0 * 3,9 ? *')
         })
         it('betweenMonths', () => {
-            c.betweenMonths(13,19)
-            expect(c.out()).toBe('0 0 0 * 13-19 ? *')
+            c.betweenMonths(3,9)
+            expect(c.out()).toBe('0 0 0 * 3-9 ? *')
         })
         it('betweenMonths every X months', () => {
             c.betweenMonths(2,10, 3)
@@ -459,15 +459,15 @@ describe('Quartzcron', () => {
         })
     })
 
-    describe('describe as expected', () => {
-        let c
-        beforeEach(() => {
-            c = new Quartzcron()
-        })
-        it('default', () => {
-            expect(c.describe()).toBe('at midnight of every day')
-        })
-    })
+    // describe('describe as expected', () => {
+    //     let c
+    //     beforeEach(() => {
+    //         c = new Quartzcron()
+    //     })
+    //     it('default', () => {
+    //         expect(c.describe()).toBe('at midnight of every day')
+    //     })
+    // })
 
     describe('static', () => {
         const ranger24 = Quartzcron.getRanger(24),

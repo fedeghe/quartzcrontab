@@ -65,7 +65,8 @@ const labels = {
         nonWeekday: 'given weekday does not exist [0-6]',
         notEnoughDays: 'not enough days',
         monthsOutOfBounds: 'not enough days in any month',
-        monthOutOfBounds: 'not enough days in this month'
+        monthOutOfBounds: 'not enough days in this month',
+        noLangFile: 'no language file loaded'
     },
     rx = {
         asterx: /^\*(\/\d*)?$/,
