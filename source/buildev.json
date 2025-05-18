@@ -12,5 +12,6 @@
         "dist/langs -plugins=malta-jest[argz:'--rootDir=tests']",
         "dist/min/langs -plugins=malta-jest[argz:'--rootDir=tests']"
     ],
-    "source/*.md": ". -options=placeholderMode:'func'"
+    "source/README.md": ". -options=placeholderMode:'func'",
+    "source/CHANGELOG.md": ". -options=placeholderMode:'func'"
 }

@@ -12,5 +12,6 @@
         "dist/langs",
         "dist/min/langs"
     ],
-    "#source/*.md": ". -options=placeholderMode:'func'"
+    "#source/README.md": ". -options=placeholderMode:'func'",
+    "#source/CHANGELOG.md": ". -options=placeholderMode:'func'"
 }

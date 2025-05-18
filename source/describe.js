@@ -1,14 +1,14 @@
 const C = require('./constants.js');
 
-const langUtils = require('./langUtils.js')
+const langUtils = require('./langUtils.js');
 
-const utils = require('./utils.js')
+const utils = require('./utils.js');
 
 
 
 const doubleDigitize = d => {
     return d < 10 ? `0${d}` : d;
-}
+};
 
 const digIt = ({
     o,
@@ -20,12 +20,11 @@ const digIt = ({
     between,
     every, 
     everys
-
 }) => {
     const target = o[key];
     let mat, spl;
     // every x-th second                                /^\d+$/
-    mat = target.match(/^(\d+)$/)
+    mat = target.match(/^(\d+)$/);
     
     if (mat) {
         return [
@@ -37,7 +36,7 @@ const digIt = ({
     }
 
     // on every second from 5-th to 10th                /^\d+-\d*$/
-    mat = target.match(/^(\d+)-(\d+)$/)
+    mat = target.match(/^(\d+)-(\d+)$/);
     if (mat) {
         return [
             ...pre,
@@ -50,8 +49,8 @@ const digIt = ({
     }
 
     // at second 1, 3 and 30
-    spl = target.split(',')
-    mat = spl.every(i => i.match(/^\d+$/))
+    spl = target.split(',');
+    mat = spl.every(i => i.match(/^\d+$/));
     if (mat) {
         return [
             ...pre,
@@ -62,7 +61,7 @@ const digIt = ({
     }
 
     // every 3 seconds between 5-th and 10th second     /^\d+-\d\/\d+$/
-    mat = target.match(/^(\d+)-(\d+)\/(\d+)$/)
+    mat = target.match(/^(\d+)-(\d+)\/(\d+)$/);
     if (mat) {
         return [
             ...pre,
@@ -73,7 +72,7 @@ const digIt = ({
             ...post
         ].join('');
     }
-}
+};
 
 const describeTime = ({ s, i, h }, lu) => {
         //one ? 
@@ -97,7 +96,7 @@ const describeTime = ({ s, i, h }, lu) => {
             if (iEvery) {
                 if (sEvery) { 
                     // every second, every minute, every hour
-                    return lu.everyX(lu.second)
+                    return lu.everyX(lu.second);
                 } else {
                     return digIt({
                         o: { s, i, h },
@@ -110,7 +109,7 @@ const describeTime = ({ s, i, h }, lu) => {
                         atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
                         atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
                         between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                    })
+                    });
                 }
             } else {
                 if (sEvery) {
@@ -125,7 +124,7 @@ const describeTime = ({ s, i, h }, lu) => {
                         atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.minute),
                         atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                         between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                    })
+                    });
                 } else {
                     // ? second, ? minute, every hour
                     return [
@@ -137,8 +136,8 @@ const describeTime = ({ s, i, h }, lu) => {
                             every: () => lu.everyX(lu.second),
                             everys: mat => lu.everyX(mat[3], lu.seconds),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
-                        atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
-                        between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
+                            between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
                         }),
                         digIt({
                             o: { s, i, h },
@@ -151,7 +150,7 @@ const describeTime = ({ s, i, h }, lu) => {
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
                         })
-                    ].join(', ')
+                    ].join(', ');
                 }
             }
         } else {
@@ -168,7 +167,7 @@ const describeTime = ({ s, i, h }, lu) => {
                         atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.hour),
                         atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                         between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                    })
+                    });
                 } else {
                     // ? second, every minute, ? hour
                     return [
@@ -194,7 +193,7 @@ const describeTime = ({ s, i, h }, lu) => {
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
                         })
-                    ].join(', ')
+                    ].join(', ');
                 }
             } else {
                 if (sEvery) {
@@ -222,7 +221,7 @@ const describeTime = ({ s, i, h }, lu) => {
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
                         })
-                    ].join(', ')
+                    ].join(', ');
                 } else {
                     // ? second, ? minute, ? hour
                     return [
@@ -259,7 +258,7 @@ const describeTime = ({ s, i, h }, lu) => {
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
                         })
-                    ].join(', ')
+                    ].join(', ');
                 }
             }
         }
@@ -330,7 +329,7 @@ const describeTime = ({ s, i, h }, lu) => {
 
 
             // L
-            mat = dom.match(/^L$/)
+            mat = dom.match(/^L$/);
             if (mat) {
                 return [
                     lu.onThe(lu.last, lu.day),
@@ -339,7 +338,7 @@ const describeTime = ({ s, i, h }, lu) => {
             }
 
             // LW
-            mat = dom.match(/^LW$/)
+            mat = dom.match(/^LW$/);
             if (mat) {
                 return [
                     lu.onThe(lu.last, lu.weekday),
@@ -347,7 +346,7 @@ const describeTime = ({ s, i, h }, lu) => {
                 ].join(' ');
             }
             // [1-31]W
-            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)W$/)
+            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)W$/);
             if (mat) {
                 return [
                     lu.nearestToThe(lu.weekday, mat[1]),
@@ -358,29 +357,124 @@ const describeTime = ({ s, i, h }, lu) => {
             mat = dom.match(/^L-([1-9]|1[0-9]|2[0-9]|3[01])$/);
             if (mat) {
                 const n = parseInt(mat[1], 10),
-                    L = n > 1 ? lu.days : lu. day
+                    L = n > 1 ? lu.days : lu. day;
                 return  [
                     lu.nX(mat[1], L),
                     lu.beforeTheEndOfThe(lu.month)
-                ]. join(' ')
+                ]. join(' ');
             }
         }
         if(!dow.match(/^[*?]$/)){
             const numDow = utils.daysLabels2Numbers(dow);
             
             // weekend
-            mat = numDow.match(/^(7,1|1,7)$/)
+            mat = numDow.match(/^(7,1|1,7)$/);
             if(mat){
-                return lu.everyX(lu.weekend)
+                return lu.everyX(lu.weekend);
             }
 
             // weekday
-            mat = numDow.match(/^(2,3,4,5,6|2-6)$/)
+            mat = numDow.match(/^(2,3,4,5,6|2-6)$/);
             if(mat){
-                return lu.everyX(lu.weekend)
+                return lu.everyX(lu.weekday);
             }
 
-            return 'dow'
+            // [1-7]|* / [1-7]
+            // a/b : every b days starting on first a
+            mat = numDow.match(/^([1-7]|\*)\/([1-7])$/);
+            if (mat) {
+                const fromFirstWd = mat[1]==='*' ? 1 : parseInt(mat[1], 10),
+                    step = parseInt(mat[2]);
+                // if start + step > 7
+                // then the whole thing is actually like just start
+                if(fromFirstWd + step > 7){
+                    return lu.everyX(lu.weekdaysNames[fromFirstWd-1]);
+                }
+                return [
+                    step > 1
+                        ? lu.everyX(step, lu.days)
+                        : lu.everyX(lu.day),
+                    lu.ofTheX(lu.week),
+                    lu.startingOn(lu.weekdaysNames[fromFirstWd-1])
+                ].join(' ');
+            }
+
+            // one or more [1-7] OR [SUN-SAT] comma separated
+            // mixed also ? 
+            spl = numDow.split(/,/);
+            mat = spl.map(s => s.match(/^(([1-7])|([1-7])\/([1-7]))$/)).filter(Boolean);
+            if(spl.length === mat.length) {
+                const max = 7;
+                let collect = mat.reduce((acc, m) => {
+
+                    let v2 = parseInt(m[2], 10);
+                    if(typeof m[2] !== 'undefined') {
+                        if(v2 <= max) acc.push(v2)
+                    } else {
+                        
+                        let cursor = parseInt(m[3], 10);
+                        const every = parseInt(m[4], 10);
+                        while(cursor <= max){
+                            acc.push(cursor);
+                            cursor = every + cursor;
+                        }
+                    }
+                    return acc;
+                }, []).sort((a,b) => a > b ? 1 : -1);
+                return lu.multipleDays(
+                    collect.map(c => lu.weekdaysNames[c -1])
+                )
+            }
+
+            // [1-7]-[1-7] OR [SUN-SAT]-[SUN-SAT]
+            mat = numDow.match(/^(([1-7])-([1-7]))$/)
+            if(mat) {
+                const start = parseInt(mat[2], 10),
+                    end = parseInt(mat[3], 10);
+                return lu.betweenXY(
+                     lu.weekdaysNames[start -1],
+                     lu.weekdaysNames[end -1]
+                );
+            }
+
+            // [1-7]-[1-7]/[1-7] OR [SUN-SAT]-[SUN-SAT]/[1-7]
+            // a-b/c every c days between as and bs
+            mat = numDow.match(/^(([1-7])-([1-7])\/([1-7]))$/)
+            if(mat) {
+                const start = parseInt(mat[2], 10),
+                    end = parseInt(mat[3], 10),
+                    cadence = parseInt(mat[4], 10);
+                return [
+                    lu.everyX(cadence, cadence > 1 ? lu.days: lu.day),
+                    lu.betweenXY(
+                        lu.weekdaysNames[start -1],
+                        lu.weekdaysNames[end -1]
+                    ),
+                ].join(' ')
+            }
+
+            // [1-7]L
+            // aL the last a of the month
+            mat = numDow.match(/^([1-7])L$/)
+            if(mat) {
+                return lu.onLast(
+                    lu.weekdaysNames[parseInt(mat[1], 10) -1],
+                    lu.ofTheX(lu.month)
+                )
+            }
+
+            // [1-7]#[1-5]
+            // a#b the b-th a weekday of the month
+            mat = numDow.match(/^([1-7])#([1-5])$/)
+            if (mat) {
+                
+                return [
+                    lu.onTheNth(parseInt(mat[2], 10), lu.weekdaysNames[parseInt(mat[1], 10) -1]),
+                    lu.ofTheX(lu.month)
+                ].join(' ')
+            }
+
+            return '';
         }
         return '';
     },
@@ -397,7 +491,7 @@ const describeTime = ({ s, i, h }, lu) => {
             return [
                 lu.inX(lu.monthsNames[_m-1]),
                 _y,
-            ].join(' ')
+            ].join(' ');
         }
         if (yEvery) { // every year
             if (mEvery) { //every month
@@ -414,7 +508,7 @@ const describeTime = ({ s, i, h }, lu) => {
                     atSingle: mat => lu.inX(lu.monthsNames[parseInt(mat[1], 10)-1]),
                     atMultiple: spl => lu.inMultipX(spl.map(m => lu.monthsNames[parseInt(m, 10)-1])),
                     between: mat => lu.betweenXY(lu.monthsNames[parseInt(mat[1], 10)-1], lu.monthsNames[parseInt(mat[2], 10)-1]),
-                })
+                });
             }
         } else {
             if (mEvery) {
@@ -429,7 +523,7 @@ const describeTime = ({ s, i, h }, lu) => {
                     atSingle: mat => lu.inX(mat[1]),
                     atMultiple: spl => lu.inMultipX(spl),
                     between: mat => lu.betweenXY(mat[1], mat[2]),
-                })
+                });
                 
             } else {
                 // ? month, ? year
@@ -456,7 +550,7 @@ const describeTime = ({ s, i, h }, lu) => {
                         atMultiple: spl => lu.inMultipX(spl),
                         between: mat => lu.betweenXY(mat[1], mat[2]),
                     })
-                ].join(', ')
+                ].join(', ');
             }
         }
     };
@@ -469,8 +563,8 @@ const describe = (els, lu) => {
         describeDomDowOccurrence(els, lu),
         describeMonthsYears(els, lu)
     ].filter(Boolean)
-        .join(', ')
-}
+        .join(', ');
+};
 
 module.exports = {
     describe

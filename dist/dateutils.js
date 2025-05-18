@@ -99,11 +99,11 @@ const getRangeSolver = ({
     9346,2343/3,4234/44,756,14/3
     */
     spl = vstr.split(/,/);
-    mat = spl.map(s => s.match(/^((\d*)|(\d*)\/(\d*))$/)).filter(Boolean)
+    mat = spl.map(s => s.match(/^((\d*)|(\d*)\/(\d*))$/)).filter(Boolean);
     if(spl.length === mat.length) {
 
         return mat.reduce((acc, r) => {
-            let p = parseInt(r[2], 10)
+            let p = parseInt(r[2], 10);
             if(r[2]) {
                 if (p <= bounds.max)acc.push(p)
             } else {
@@ -115,7 +115,7 @@ const getRangeSolver = ({
                 }
             }
             return acc;
-        }, []).sort(( a, b ) => a > b ? 1 : -1)
+        }, []).sort(( a, b ) => a > b ? 1 : -1);
         
     }   
 
@@ -381,16 +381,19 @@ const dow_solvers = [
     
     // one or more [1-7] OR [SUN-SAT] comma separated
     ({val, d, lastDate}) => {
-        let vals = daysLabels2Numbers(val).split(/,/),
-            add = [];
+        let vals = daysLabels2Numbers(val).split(/,/);
         const firstDayWd = d.getUTCDay()+1,// [0-6] -> [1-7]
             res = [],
             max = 7;
 
         let mat = vals.map(s => s.match(/^(([1-7])|([1-7])\/([1-7]))$/)).filter(Boolean);
-        if(mat.length === vals.length){
-            
-            add =  mat.reduce((acc, r) => {
+
+        // collect all weekdays, counting explicit ones
+        // together with those coming from cadence
+        // MON/2 => 2,4,6
+        // TUE => 3
+        if(mat.length === vals.length){    
+            vals =  mat.reduce((acc, r) => {
                 let v2 = parseInt(r[2], 10);
                 if(typeof r[2] !== 'undefined') {
                     if(v2 <= max) acc.push(v2)
@@ -404,10 +407,10 @@ const dow_solvers = [
                     }
                 }
                 return acc;
-            }, [])
+            }, []).map(v => v.toString())
         }
-        vals = [...vals, ...add].map(v => v.toString()).filter(f => f.match(/^[1-7]$/));
 
+        // now for 2,3,4,6 in [1-7] scan the month to collect right dates
         if(
             vals.every(v => v.match(/^([1-7])$/))
         ) {
@@ -418,11 +421,7 @@ const dow_solvers = [
                 cursor = 1 + cursor%7;
                 toAddDate+= 1;
             }
-
         }
-        
-
-
         return res;
     },
     

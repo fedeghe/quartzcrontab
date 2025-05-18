@@ -103,29 +103,29 @@ describe('describe', () => {
             // ? second, ? minute, every hour
             // 4 X 4 cases
             [// 1,1
-                'at second 05, at minute 05',
-                i => i.atSecond(5)
+                'at second 01, at minute 05',
+                i => i.atSecond(1)
                     .atMinute(5)
                     .everyHour(),
                 en,
             ],
             [// 1,2
-                'at second 05, at minutes 01, 05 and 15',
-                i => i.atSecond(5)
+                'at second 02, at minutes 01, 05 and 15',
+                i => i.atSecond(2)
                     .atMinute(1).atMinuteAdd(5).atMinuteAdd(15)
                     .everyHour(),
                 en,
             ],
             [// 1,3
-                'at second 05, every minute between 05 and 15',
-                i => i.atSecond(5)
+                'at second 03, every minute between 05 and 15',
+                i => i.atSecond(3)
                     .betweenMinutes(5, 15)
                     .everyHour(),
                 en,
             ],
             [// 1,4
-                'at second 05, every 3 minutes between 05 and 15',
-                i => i.atSecond(5)
+                'at second 04, every 3 minutes between 05 and 15',
+                i => i.atSecond(4)
                     .betweenMinutes(5, 15, 3)
                     .everyHour(),
                 en,
@@ -256,16 +256,16 @@ describe('describe', () => {
             // 4x4 cases
             // 1,1
             [
-                'at second 03, every minute, at hour 13',
-                i => i.atSecond(3)
+                'at second 01, every minute, at hour 13',
+                i => i.atSecond(1)
                     .everyMinute()
                     .atHour(13),
                 en,
             ],
             // 1,2
             [
-                'at second 03, every minute, at hours 02, 03 and 13',
-                i => i.atSecond(3)
+                'at second 02, every minute, at hours 02, 03 and 13',
+                i => i.atSecond(2)
                     .everyMinute()
                     .atHour(2).atHourAdd(3).atHourAdd(13),
                 en,
@@ -280,8 +280,8 @@ describe('describe', () => {
             ],
             // 1,4
             [
-                'at second 03, every minute, every 2 hours between 03 and 13',
-                i => i.atSecond(3)
+                'at second 04, every minute, every 2 hours between 03 and 13',
+                i => i.atSecond(4)
                     .everyMinute()
                     .betweenHours(3, 13, 2),
                 en,
@@ -536,32 +536,32 @@ describe('describe', () => {
             // 4 X 4 X 4 cases
             // 1,1,1
             [
-                'at 13:44:34, every day',
-                i => i.atSecond(34)
+                'at 13:44:01, every day',
+                i => i.atSecond(1)
                     .atMinute(44)
                     .atHour(13),
                 en,
             ],
             // 1,1,2
             [
-                'at second 34, at minute 44, at hours 13, 17 and 21, every day',
-                i => i.atSecond(34)
+                'at second 02, at minute 44, at hours 13, 17 and 21, every day',
+                i => i.atSecond(2)
                     .atMinute(44)
                     .atHour(13).atHourAdd(17).atHourAdd(21),
                 en,
             ],
             // 1,1,3
             [
-                'at second 34, at minute 44, every hour between 13 and 16, every day',
-                i => i.atSecond(34)
+                'at second 03, at minute 44, every hour between 13 and 16, every day',
+                i => i.atSecond(3)
                     .atMinute(44)
                     .betweenHours(13, 16),
                 en,
             ],
             // 1,1,4
             [
-                'at second 34, at minute 44, every 2 hours between 13 and 16, every day',
-                i => i.atSecond(34)
+                'at second 04, at minute 44, every 2 hours between 13 and 16, every day',
+                i => i.atSecond(4)
                     .atMinute(44)
                     .betweenHours(13, 16, 2),
                 en,
@@ -569,32 +569,32 @@ describe('describe', () => {
             //
             // 1,2,1
             [
-                'at second 34, every minute between 34 and 41, at hour 13, every day',
-                i => i.atSecond(34)
+                'at second 05, every minute between 34 and 41, at hour 13, every day',
+                i => i.atSecond(5)
                     .betweenMinutes(34, 41)
                     .atHour(13),
                 en,
             ],
             // 1,2,2
             [
-                'at second 34, every minute between 34 and 41, at hours 13, 17 and 21, every day',
-                i => i.atSecond(34)
+                'at second 06, every minute between 34 and 41, at hours 13, 17 and 21, every day',
+                i => i.atSecond(6)
                     .betweenMinutes(34, 41)
                     .atHour(13).atHourAdd(17).atHourAdd(21),
                 en,
             ],
             // 1,2,3
             [
-                'at second 34, every minute between 34 and 41, every hour between 13 and 16, every day',
-                i => i.atSecond(34)
+                'at second 07, every minute between 34 and 41, every hour between 13 and 16, every day',
+                i => i.atSecond(7)
                     .betweenMinutes(34, 41)
                     .betweenHours(13, 16),
                 en,
             ],
             // 1,2,4
             [
-                'at second 34, every minute between 34 and 41, every 2 hours between 13 and 16, every day',
-                i => i.atSecond(34)
+                'at second 08, every minute between 34 and 41, every 2 hours between 13 and 16, every day',
+                i => i.atSecond(8)
                     .betweenMinutes(34, 41)
                     .betweenHours(13, 16, 2),
                 en,
@@ -603,32 +603,32 @@ describe('describe', () => {
             //
             // 1,3,1
             [
-                'at second 34, every 3 minutes between 34 and 41, at hour 13, every day',
-                i => i.atSecond(34)
+                'at second 09, every 3 minutes between 34 and 41, at hour 13, every day',
+                i => i.atSecond(9)
                     .betweenMinutes(34, 41, 3)
                     .atHour(13),
                 en,
             ],
             // 1,3,2
             [
-                'at second 34, every 3 minutes between 34 and 41, at hours 13, 17 and 21, every day',
-                i => i.atSecond(34)
+                'at second 10, every 3 minutes between 34 and 41, at hours 13, 17 and 21, every day',
+                i => i.atSecond(10)
                     .betweenMinutes(34, 41, 3)
                     .atHour(13).atHourAdd(17).atHourAdd(21),
                 en,
             ],
             // 1,3,3
             [
-                'at second 34, every 3 minutes between 34 and 41, every hour between 13 and 16, every day',
-                i => i.atSecond(34)
+                'at second 11, every 3 minutes between 34 and 41, every hour between 13 and 16, every day',
+                i => i.atSecond(11)
                     .betweenMinutes(34, 41, 3)
                     .betweenHours(13, 16),
                 en,
             ],
             // 1,3,4
             [
-                'at second 34, every 3 minutes between 34 and 41, every 2 hours between 13 and 16, every day',
-                i => i.atSecond(34)
+                'at second 12, every 3 minutes between 34 and 41, every 2 hours between 13 and 16, every day',
+                i => i.atSecond(12)
                     .betweenMinutes(34, 41, 3)
                     .betweenHours(13, 16, 2),
                 en,
@@ -637,32 +637,32 @@ describe('describe', () => {
             //
             // 1,4,1
             [
-                'at second 34, at minutes 03, 41 and 56, at hour 13, every day',
-                i => i.atSecond(34)
+                'at second 13, at minutes 03, 41 and 56, at hour 13, every day',
+                i => i.atSecond(13)
                     .atMinute(3).atMinuteAdd(41).atMinuteAdd(56)
                     .atHour(13),
                 en,
             ],
             // 1,4,2
             [
-                'at second 34, at minutes 03, 41 and 56, at hours 13, 17 and 21, every day',
-                i => i.atSecond(34)
+                'at second 14, at minutes 03, 41 and 56, at hours 13, 17 and 21, every day',
+                i => i.atSecond(14)
                     .atMinute(3).atMinuteAdd(41).atMinuteAdd(56)
                     .atHour(13).atHourAdd(17).atHourAdd(21),
                 en,
             ],
             // 1,4,3
             [
-                'at second 34, at minutes 03, 41 and 56, every hour between 13 and 16, every day',
-                i => i.atSecond(34)
+                'at second 15, at minutes 03, 41 and 56, every hour between 13 and 16, every day',
+                i => i.atSecond(15)
                     .atMinute(3).atMinuteAdd(41).atMinuteAdd(56)
                     .betweenHours(13, 16),
                 en,
             ],
             // 1,4,4
             [
-                'at second 34, at minutes 03, 41 and 56, every 2 hours between 13 and 16, every day',
-                i => i.atSecond(34)
+                'at second 16, at minutes 03, 41 and 56, every 2 hours between 13 and 16, every day',
+                i => i.atSecond(16)
                     .atMinute(3).atMinuteAdd(41).atMinuteAdd(56)
                     .betweenHours(13, 16, 2),
                 en,
@@ -950,16 +950,16 @@ describe('describe', () => {
 
             // 4,1,1
             [
-                'at seconds 03, 07 and 34, at minute 44, at hour 13, every day',
-                i => i.atSecond(3).atSecondAdd('7').atSecondAdd(34)
+                'at seconds 01, 07 and 34, at minute 44, at hour 13, every day',
+                i => i.atSecond(1).atSecondAdd('7').atSecondAdd(34)
                     .atMinute(44)
                     .atHour(13),
                 en,
             ],
             // 4,1,2
             [
-                'at seconds 03, 07 and 34, at minute 44, at hours 13, 17 and 21, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                'at seconds 02, 07 and 34, at minute 44, at hours 13, 17 and 21, every day',
+                i => i.atSecond(2).atSecondAdd(7).atSecondAdd(34)
                     .atMinute(44)
                     .atHour(13).atHourAdd(17).atHourAdd(21),
                 en,
@@ -974,8 +974,8 @@ describe('describe', () => {
             ],
             // 4,1,4
             [
-                'at seconds 03, 07 and 34, at minute 44, every 2 hours between 13 and 16, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                'at seconds 04, 07 and 34, at minute 44, every 2 hours between 13 and 16, every day',
+                i => i.atSecond(4).atSecondAdd(7).atSecondAdd(34)
                     .atMinute(44)
                     .betweenHours(13, 16, 2),
                 en,
@@ -983,32 +983,32 @@ describe('describe', () => {
             //
             // 4,2,1
             [
-                'at seconds 03, 07 and 34, every minute between 34 and 41, at hour 13, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                'at seconds 05, 07 and 34, every minute between 34 and 41, at hour 13, every day',
+                i => i.atSecond(5).atSecondAdd(7).atSecondAdd(34)
                     .betweenMinutes(34, 41)
                     .atHour(13),
                 en,
             ],
             // 4,2,2
             [
-                'at seconds 03, 07 and 34, every minute between 34 and 41, at hours 13, 17 and 21, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                'at seconds 06, 07 and 34, every minute between 34 and 41, at hours 13, 17 and 21, every day',
+                i => i.atSecond(6).atSecondAdd(7).atSecondAdd(34)
                     .betweenMinutes(34, 41)
                     .atHour(13).atHourAdd(17).atHourAdd(21),
                 en,
             ],
             // 4,2,3
             [
-                'at seconds 03, 07 and 34, every minute between 34 and 41, every hour between 13 and 16, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                'at seconds 07, 07 and 34, every minute between 34 and 41, every hour between 13 and 16, every day',
+                i => i.atSecond(7).atSecondAdd(7).atSecondAdd(34)
                     .betweenMinutes(34, 41)
                     .betweenHours(13, 16),
                 en,
             ],
             // 4,2,4
             [
-                'at seconds 03, 07 and 34, every minute between 34 and 41, every 2 hours between 13 and 16, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                'at seconds 08, 07 and 34, every minute between 34 and 41, every 2 hours between 13 and 16, every day',
+                i => i.atSecond(8).atSecondAdd(7).atSecondAdd(34)
                     .betweenMinutes(34, 41)
                     .betweenHours(13, 16, 2),
                 en,
@@ -1017,24 +1017,24 @@ describe('describe', () => {
             //
             // 4,3,1
             [
-                'at seconds 03, 07 and 34, every 3 minutes between 34 and 41, at hour 13, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                'at seconds 09, 07 and 34, every 3 minutes between 34 and 41, at hour 13, every day',
+                i => i.atSecond(9).atSecondAdd(7).atSecondAdd(34)
                     .betweenMinutes(34, 41, 3)
                     .atHour(13),
                 en,
             ],
             // 4,3,2
             [
-                'at seconds 03, 07 and 34, every 3 minutes between 34 and 41, at hours 13, 17 and 21, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                'at seconds 10, 07 and 34, every 3 minutes between 34 and 41, at hours 13, 17 and 21, every day',
+                i => i.atSecond(10).atSecondAdd(7).atSecondAdd(34)
                     .betweenMinutes(34, 41, 3)
                     .atHour(13).atHourAdd(17).atHourAdd(21),
                 en,
             ],
             // 4,3,3
             [
-                'at seconds 03, 07 and 34, every 3 minutes between 34 and 41, every hour between 13 and 16, every day',
-                i => i.atSecond(3).atSecondAdd(7).atSecondAdd(34)
+                'at seconds 11, 07 and 34, every 3 minutes between 34 and 41, every hour between 13 and 16, every day',
+                i => i.atSecond(11).atSecondAdd(7).atSecondAdd(34)
                     .betweenMinutes(34, 41, 3)
                     .betweenHours(13, 16),
                 en,
@@ -1105,40 +1105,40 @@ describe('describe', () => {
                 en,
             ],
             [
-                'at 00:00:00, every day',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:01, every day',
+                i => i.atSecond(1).atMinute(0).atHour(0)
                 .everyMonth()
                 .everyYear(),
                 en,
-                ],
+            ],
                 
-                //
-                // ? month, every year
-                [
-                    'at 00:00:00, every day, in April',
-                    i => i.atSecond(0).atMinute(0).atHour(0)
-                    .atMonth(4)
-                    .everyYear(),
-                    en,
-                    ],
-                    [
-                        'at 00:00:00, every day, in April, June and October',
-                        i => i.atSecond(0).atMinute(0).atHour(0)
-                        .atMonth(4).atMonthAdd(6).atMonthAdd(10)
-                        .everyYear(),
-                        en,
-                        ],
+            //
+            // ? month, every year
+            [
+                'at 00:00:02, every day, in April',
+                i => i.atSecond(2).atMinute(0).atHour(0)
+                .atMonth(4)
+                .everyYear(),
+                en,
+            ],
+            [
+                'at 00:00:03, every day, in April, June and October',
+                i => i.atSecond(3).atMinute(0).atHour(0)
+                .atMonth(4).atMonthAdd(6).atMonthAdd(10)
+                .everyYear(),
+                en,
+            ],
                         
             [
-                'at 00:00:00, every day, every month between April and July',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:04, every day, every month between April and July',
+                i => i.atSecond(4).atMinute(0).atHour(0)
                     .betweenMonths(4, 7)
                     .everyYear(),
                 en,
             ],
             [
-                'at 00:00:00, every day, every 2 months between April and July',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:05, every day, every 2 months between April and July',
+                i => i.atSecond(5).atMinute(0).atHour(0)
                     .betweenMonths(4, 7, 2)
                     .everyYear(),
                 en,
@@ -1147,29 +1147,29 @@ describe('describe', () => {
             // ----- 
             // every month, ? year
             [
-                'at 00:00:00, every day, in 2030',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:06, every day, in 2030',
+                i => i.atSecond(6).atMinute(0).atHour(0)
                     .everyMonth()
                     .atYear(2030),
                 en,
             ],
             [
-                'at 00:00:00, every day, in 2030, 2032 and 2051',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:07, every day, in 2030, 2032 and 2051',
+                i => i.atSecond(7).atMinute(0).atHour(0)
                     .everyMonth()
                     .atYear(2030).atYearAdd(2032).atYearAdd(2051),
                 en,
             ],
             [
-                'at 00:00:00, every day, every year between 2030 and 2051',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:08, every day, every year between 2030 and 2051',
+                i => i.atSecond(8).atMinute(0).atHour(0)
                     .everyMonth()
                     .betweenYears(2030, 2051),
                 en,
             ],
             [
-                'at 00:00:00, every day, every 3 years between 2030 and 2051',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:09, every day, every 3 years between 2030 and 2051',
+                i => i.atSecond(9).atMinute(0).atHour(0)
                     .everyMonth()
                     .betweenYears(2030, 2051, 3),
                 en,
@@ -1179,32 +1179,32 @@ describe('describe', () => {
             // 4x4 cases
             // 1,1
             [
-                'at 00:00:00, every day, in April 2030',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:10, every day, in April 2030',
+                i => i.atSecond(10).atMinute(0).atHour(0)
                     .atMonth(4)
                     .atYear(2030),
                 en,
             ],
             // 1,2
             [
-                'at 00:00:00, every day, in April, in 2030, 2031 and 2039',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:11, every day, in April, in 2030, 2031 and 2039',
+                i => i.atSecond(11).atMinute(0).atHour(0)
                     .atMonth(4)
                     .atYear(2030).atYearAdd(2031).atYearAdd(2039),
                 en,
             ],
             // 1,3
             [
-                'at 00:00:00, every day, in April, every year between 2039 and 2045',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:12, every day, in April, every year between 2039 and 2045',
+                i => i.atSecond(12).atMinute(0).atHour(0)
                     .atMonth(4)
                     .betweenYears(2039, 2045),
                 en,
             ],
             // 1,4
             [
-                'at 00:00:00, every day, in April, every 3 years between 2039 and 2045',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:13, every day, in April, every 3 years between 2039 and 2045',
+                i => i.atSecond(13).atMinute(0).atHour(0)
                     .atMonth(4)
                     .betweenYears(2039, 2045, 3),
                 en,
@@ -1213,32 +1213,32 @@ describe('describe', () => {
             //---
             // 2,1
             [
-                'at 00:00:00, every day, in April, June and December, 2030',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:14, every day, in April, June and December, 2030',
+                i => i.atSecond(14).atMinute(0).atHour(0)
                     .atMonth(4).atMonthAdd(6).atMonthAdd(12)
                     .atYear(2030),
                 en,
             ],
             // 2,2
             [
-                'at 00:00:00, every day, in April, June and December, in 2030, 2031 and 2039',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:15, every day, in April, June and December, in 2030, 2031 and 2039',
+                i => i.atSecond(15).atMinute(0).atHour(0)
                     .atMonth(4).atMonthAdd(6).atMonthAdd(12)
                     .atYear(2030).atYearAdd(2031).atYearAdd(2039),
                 en,
             ],
             // 2,3
             [
-                'at 00:00:00, every day, in April, June and December, every year between 2039 and 2045',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:16, every day, in April, June and December, every year between 2039 and 2045',
+                i => i.atSecond(16).atMinute(0).atHour(0)
                     .atMonth(4).atMonthAdd(6).atMonthAdd(12)
                     .betweenYears(2039, 2045),
                 en,
             ],
             // 2,4
             [
-                'at 00:00:00, every day, in April, June and December, every 3 years between 2039 and 2045',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:17, every day, in April, June and December, every 3 years between 2039 and 2045',
+                i => i.atSecond(17).atMinute(0).atHour(0)
                     .atMonth(4).atMonthAdd(6).atMonthAdd(12)
                     .betweenYears(2039, 2045, 3),
                 en,
@@ -1247,32 +1247,32 @@ describe('describe', () => {
             //---
             // 3,1
             [
-                'at 00:00:00, every day, every month between February and May, 2030',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:18, every day, every month between February and May, 2030',
+                i => i.atSecond(18).atMinute(0).atHour(0)
                     .betweenMonths(2, 5)
                     .atYear(2030),
                 en,
             ],
             // 3,2
             [
-                'at 00:00:00, every day, every month between February and May, in 2030, 2031 and 2039',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:19, every day, every month between February and May, in 2030, 2031 and 2039',
+                i => i.atSecond(19).atMinute(0).atHour(0)
                     .betweenMonths(2, 5)
                     .atYear(2030).atYearAdd(2031).atYearAdd(2039),
                 en,
             ],
             // 3,3
             [
-                'at 00:00:00, every day, every month between February and May, every year between 2039 and 2045',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:20, every day, every month between February and May, every year between 2039 and 2045',
+                i => i.atSecond(20).atMinute(0).atHour(0)
                     .betweenMonths(2, 5)
                     .betweenYears(2039, 2045),
                 en,
             ],
             // 3,4
             [
-                'at 00:00:00, every day, every month between February and May, every 3 years between 2039 and 2045',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:21, every day, every month between February and May, every 3 years between 2039 and 2045',
+                i => i.atSecond(21).atMinute(0).atHour(0)
                     .betweenMonths(2, 5)
                     .betweenYears(2039, 2045, 3),
                 en,
@@ -1281,32 +1281,32 @@ describe('describe', () => {
             //---
             // 4,1
             [
-                'at 00:00:00, every day, every 2 months between February and October, 2030',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:22, every day, every 2 months between February and October, 2030',
+                i => i.atSecond(22).atMinute(0).atHour(0)
                     .betweenMonths(2, 10, 2)
                     .atYear(2030),
                 en,
             ],
             // 4,2
             [
-                'at 00:00:00, every day, every 2 months between February and October, in 2030, 2031 and 2039',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:23, every day, every 2 months between February and October, in 2030, 2031 and 2039',
+                i => i.atSecond(23).atMinute(0).atHour(0)
                     .betweenMonths(2, 10, 2)
                     .atYear(2030).atYearAdd(2031).atYearAdd(2039),
                 en,
             ],
             // 4,3
             [
-                'at 00:00:00, every day, every 2 months between February and October, every year between 2039 and 2045',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:24, every day, every 2 months between February and October, every year between 2039 and 2045',
+                i => i.atSecond(24).atMinute(0).atHour(0)
                     .betweenMonths(2, 10, 2)
                     .betweenYears(2039, 2045),
                 en,
             ],
             // 4,4
             [
-                'at 00:00:00, every day, every 2 months between February and October, every 3 years between 2039 and 2045',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:25, every day, every 2 months between February and October, every 3 years between 2039 and 2045',
+                i => i.atSecond(25).atMinute(0).atHour(0)
                     .betweenMonths(2, 10, 2)
                     .betweenYears(2039, 2045, 3),
                 en,
@@ -1333,50 +1333,50 @@ describe('describe', () => {
                 en,
             ],
             [
-                'at 00:00:00, every 10 days starting from the 3rd day, every month',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:01, every 10 days starting from the 3rd day, every month',
+                i => i.atSecond(1).atMinute(0).atHour(0)
                     .everyNDays(3, 10),
                 en,
             ],
             [
-                'at 00:00:00, from the 2nd to the 10th day, every month',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:02, from the 2nd to the 10th day, every month',
+                i => i.atSecond(2).atMinute(0).atHour(0)
                     .betweenMonthDays(2, 10),
                 en,
             ],
             [
-                'at 00:00:00, every 3 days from the 2nd to the 10th day, every month',
-                i => i.atSecond(0).atMinute(0).atHour(0)
+                'at 00:00:03, every 3 days from the 2nd to the 10th day, every month',
+                i => i.atSecond(3).atMinute(0).atHour(0)
                     .betweenMonthDays(2, 10, 3),
                 en,
             ],
             [
-                'at 01:00:00, on the 2nd, 11th, 13th and 21st day, every month',
-                i => i.atSecond(0).atMinute(0).atHour(1)
+                'at 01:00:04, on the 2nd, 11th, 13th and 21st day, every month',
+                i => i.atSecond(4).atMinute(0).atHour(1)
                     .atMonthDay(2).atMonthDayAdd(11).atMonthDayAdd(13).atMonthDayAdd(21),
                 en,
             ],
             [
-                'at 01:30:00, on the last day of the month',
-                i => i.atSecond(0).atMinute(30).atHour(1)
+                'at 01:30:05, on the last day of the month',
+                i => i.atSecond(5).atMinute(30).atHour(1)
                     .onLastMonthDay(),
                 en,
             ],
             [
-                'at 01:30:00, on the last weekday of the month',
-                i => i.atSecond(0).atMinute(30).atHour(1)
+                'at 01:30:06, on the last weekday of the month',
+                i => i.atSecond(6).atMinute(30).atHour(1)
                     .onLastMonthWeekDay(),
                 en,
             ],
             [
-                'at 02:45:00, on the nearest weekday to the 7th of the month',
-                i => i.atSecond(0).atMinute(45).atHour(2)
+                'at 02:45:07, on the nearest weekday to the 7th of the month',
+                i => i.atSecond(7).atMinute(45).atHour(2)
                     .onClosestWorkingDayToTheNMonthDay(7),
                 en,
             ],
             [
-                'at 03:15:00, 7 days before the end of the month',
-                i => i.atSecond(0).atMinute(15).atHour(3)
+                'at 03:15:08, 7 days before the end of the month',
+                i => i.atSecond(8).atMinute(15).atHour(3)
                     .onNDayBeforeTheEndOfTheMonth(7),
                 en,
             ]
@@ -1399,7 +1399,94 @@ describe('describe', () => {
                 i => i.atSecond(0).atMinute(0).atHour(0)
                     .everyWeekEnd(),
                 en,
-            ],
+            ],[
+                'at 00:00:01, every weekday',
+                i => i.atSecond(1).atMinute(0).atHour(0)
+                    .everyWeekDay(),
+                en,
+            ],[
+                'at 00:00:02, every 3 days of the week starting on Monday',
+                i => i.atSecond(2).atMinute(0).atHour(0)
+                    .atWeekDay(2, 3),
+                en,
+            ],[
+                'at 00:00:03, every day of the week starting on Monday',
+                i => i.atSecond(3).atMinute(0).atHour(0)
+                    .atWeekDay(2, 1),
+                en,
+            ],[
+                'at 00:00:04, every 5 days of the week starting on Monday',
+                i => i.atSecond(4).atMinute(0).atHour(0)
+                    .atWeekDay(2, 5),
+                en,
+            ],[
+                'at 00:00:05, every Friday',
+                i => i.atSecond(5).atMinute(0).atHour(0)
+                    .atWeekDay(6, 4),
+                en,
+            ],[
+                'at 00:00:06, every Thursday',
+                i => i.atSecond(6).atMinute(0).atHour(0)
+                    .atWeekDay(5, 3),
+                en,
+            ],[
+                'at 00:00:07, on Sunday, Monday, Wednesday, Friday and Saturday',
+                i => i.atSecond(7).atMinute(0).atHour(0)
+                    .atWeekDay(2, 4).atWeekDayAdd(1, 3),
+                en,
+            ],[
+                'at 00:00:08, on Sunday and Monday',
+                i => i.atSecond(8).atMinute(0).atHour(0)
+                    .atWeekDay(2, 7).atWeekDayAdd(1, 7),
+                en,
+            ],[
+                'at 00:00:09, between Monday and Thursday',
+                i => i.atSecond(9).atMinute(0).atHour(0)
+                    .betweenWeekDays(2, 5),
+                en,
+            ],[
+                'at 00:00:09, every 3 days between Monday and Friday',
+                i => i.atSecond(9).atMinute(0).atHour(0)
+                    .betweenWeekDays(2, 6, 3),
+                en,
+            ],[
+                'at 00:00:09, on the last Monday of the month',
+                i => i.atSecond(9).atMinute(0).atHour(0)
+                    .onLastMonthNWeekDay(2),
+                en,
+            ],[
+                'at 00:00:09, on the 2nd Tuesday of the month',
+                i => i.atSecond(9).atMinute(0).atHour(0)
+                    .onNWeekDayOfTheMonth(2, 3),
+                en,
+            ]
+
+
+        ])('%s', (expected, prep, lang ) => {
+            qc.loadLang(lang);
+            prep(qc);
+            console.log(qc.out())
+            expect(qc.describe()).toBe(expected);
+        })
+    })
+
+
+
+    describe('full describe - en', () => {
+        let qc
+        beforeEach(() => {
+            qc = new Quartzcron()
+        })
+        test.each([
+            [
+                'xxx',
+                i => i.atSecond(1)
+                    .atMinute(20)
+                    .atHour(15),
+                en,
+            ]
+
+
         ])('%s', (expected, prep, lang ) => {
             qc.loadLang(lang);
             prep(qc);

@@ -32,7 +32,7 @@ const getLangUtils = l => ({
     atMultipX: getMult(l.snt.multipleAt, l.snt.multipleAtL),
     inMultipX: getMult(l.snt.multipleIn, l.snt.multipleInL),
     inMonthDay: x => {
-        const v = parseInt(x, 10)
+        const v = parseInt(x, 10);
         return l.snt.monthDay
             .replace(/%ph1/, v)
             .replace(/%ph2/, thize(v, l.snt))
@@ -66,6 +66,14 @@ const getLangUtils = l => ({
             .replace(/%ph3/, L)
 
     },
+     multipleDays: n => {
+        const last = n.pop(),
+            thSet = n.join(`${l.comma} `);
+        return l.snt.multipleWDays
+            .replace(/%ph1/, thSet)
+            .replace(/%ph2/, last)
+
+    },
     onThe: (one, two) => l.snt.onTheL
             .replace(/%ph1/, one)
             .replace(/%ph2/, two),
@@ -77,8 +85,19 @@ const getLangUtils = l => ({
 
     beforeTheEndOfThe: what => l.snt.beforeTheEndOfThe
             .replace(/%ph1/, what),
+    fromTo: (f, t) => l.snt.fromTo
+            .replace(/%ph1/, f)
+            .replace(/%ph2/, t),
+    startingOn: what => l.snt.startingOn
+            .replace(/%ph1/, what),
+    onLast: (x, y) => l.snt.onLast
+            .replace(/%ph1/, x)
+            .replace(/%ph2/, y),
+    onTheNth: (n, L) => l.snt.onTheNthL
+            .replace(/%ph1/, n+thize(n, l.snt))
+            .replace(/%ph2/, L),
     ...l,
-})
+});
 
 module.exports = {
     getLangUtils

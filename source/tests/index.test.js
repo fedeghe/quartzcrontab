@@ -1,5 +1,5 @@
 
-const Quartzcron  = require('../dist/index.js');
+const Quartzcron  = require('../dist/min/index.js');
 const C = require('../dist/constants.js')
 
 describe('Quartzcron', () => {
