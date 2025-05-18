@@ -66,10 +66,18 @@ const getLangUtils = l => ({
             .replace(/%ph3/, L)
 
     },
-     multipleDays: n => {
+    multipleDays: n => {
         const last = n.pop(),
             thSet = n.join(`${l.comma} `);
         return l.snt.multipleWDays
+            .replace(/%ph1/, thSet)
+            .replace(/%ph2/, last)
+
+    },
+    multiple: n => {
+        const last = n.pop(),
+            thSet = n.join(`${l.comma} `);
+        return l.snt.multiple
             .replace(/%ph1/, thSet)
             .replace(/%ph2/, last)
 
@@ -89,6 +97,8 @@ const getLangUtils = l => ({
             .replace(/%ph1/, f)
             .replace(/%ph2/, t),
     startingOn: what => l.snt.startingOn
+            .replace(/%ph1/, what),
+    startingFrom: what => l.snt.startingFrom
             .replace(/%ph1/, what),
     onLast: (x, y) => l.snt.onLast
             .replace(/%ph1/, x)

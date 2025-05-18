@@ -13,6 +13,7 @@ module.exports = {
         onTheL: 'on the %ph1 %ph2',
         between: 'between %ph1 and %ph2',
         betweenL: 'between %ph1 and %ph2 %ph3',
+        multiple: '%ph1 and %ph2',
         multipleAt: 'at %ph1 and %ph2',
         multipleAtL: 'at %ph1 %ph2 and %ph3',
         multipleIn: 'in %ph1 and %ph2',
@@ -30,6 +31,7 @@ module.exports = {
         nearestToTheL: 'on the nearest %ph1 to the %ph2%ph3%ph4',
         beforeTheEndOfThe: 'before the end of the %ph1',
         startingOn: 'starting on %ph1',
+        startingFrom: 'starting from %ph1',
         fromTo: 'from %ph1 to %ph2',
         onLast: 'on the last %ph1 %ph2',
         

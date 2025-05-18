@@ -19,7 +19,9 @@ const digIt = ({
     atMultiple,
     between,
     every, 
-    everys
+    everys,
+    bounds,
+    lu
 }) => {
     const target = o[key];
     let mat, spl;
@@ -29,7 +31,6 @@ const digIt = ({
     if (mat) {
         return [
             ...pre,
-            // atSingle(fn(mat[1]), mainStr),
             atSingle(mat),
             ...post
         ].join('');
@@ -42,7 +43,6 @@ const digIt = ({
             ...pre,
             every(),
             ' ',
-            // between(fn(mat[1]), fn(mat[2])),
             between(mat),
             ...post
         ].join('');
@@ -54,21 +54,47 @@ const digIt = ({
     if (mat) {
         return [
             ...pre,
-            // atMultiple(spl.map(fn), mainStrs),
             atMultiple(spl),
             ...post
         ].join('');
     }
+
+    
 
     // every 3 seconds between 5-th and 10th second     /^\d+-\d\/\d+$/
     mat = target.match(/^(\d+)-(\d+)\/(\d+)$/);
     if (mat) {
         return [
             ...pre,
-            everys(mat),
+            everys(mat[3]),
             ' ',
-            // between(fn(mat[1]), fn(mat[2])),
             between(mat),
+            ...post
+        ].join('');
+    }
+
+
+    // mixed 1, 3, 4/6, 8
+    spl = target.split(',');
+    mat = spl.map(i => i.match(/^((\d+)|(\d+)\/(\d+))$/)).filter(Boolean);
+    
+    if (mat.length === spl.length) {
+        const mid = mat.reduce((acc, m) => {
+            if(typeof m[2] === 'undefined') {
+                const start = parseInt(m[3], 10),
+                    cadence = parseInt(m[4], 10);
+                acc.push([
+                    everys(cadence),
+                    lu.startingFrom(start)
+                ].join(' '))
+            } else {
+                acc.unshift(lu.atX(m[1]))
+            }
+            return acc;
+        }, []);
+        return [
+            ...pre,
+            lu.multiple(mid),
             ...post
         ].join('');
     }
@@ -104,11 +130,12 @@ const describeTime = ({ s, i, h }, lu) => {
                         pre: [],
                         post: [ lu.comma, ' ', lu.everyX(lu.minute)],
                         every: () => lu.everyX(lu.second),
-                        everys: mat => lu.everyX(mat[3], lu.seconds),
-
+                        everys: m => lu.everyX(m, lu.seconds),
                         atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
                         atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
                         between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                        bounds: C.bounds.seconds,
+                        lu
                     });
                 }
             } else {
@@ -120,10 +147,12 @@ const describeTime = ({ s, i, h }, lu) => {
                         pre: [ lu.everyX(lu.second), lu.comma, ' ',],
                         post: [],
                         every: () => lu.everyX(lu.minute),
-                        everys: mat => lu.everyX(mat[3], lu.minutes),
+                        everys: m => lu.everyX(m, lu.minutes),
                         atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.minute),
                         atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                         between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                        bounds: C.bounds.minutes,
+                        lu
                     });
                 } else {
                     // ? second, ? minute, every hour
@@ -134,10 +163,12 @@ const describeTime = ({ s, i, h }, lu) => {
                             pre: [],
                             post: [],
                             every: () => lu.everyX(lu.second),
-                            everys: mat => lu.everyX(mat[3], lu.seconds),
+                            everys: m => lu.everyX(m, lu.seconds),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            bounds: C.bounds.seconds,
+                            lu
                         }),
                         digIt({
                             o: { s, i, h },
@@ -145,10 +176,12 @@ const describeTime = ({ s, i, h }, lu) => {
                             pre: [],
                             post: [],
                             every: () => lu.everyX(lu.minute),
-                            everys: mat => lu.everyX(mat[3], lu.minutes),
+                            everys: m => lu.everyX(m, lu.minutes),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.minute),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            bounds: C.bounds.minutes,
+                            lu
                         })
                     ].join(', ');
                 }
@@ -163,10 +196,12 @@ const describeTime = ({ s, i, h }, lu) => {
                         pre: [ lu.everyX(lu.second), ', ',],
                         post: [],
                         every: () => lu.everyX(lu.hour),
-                        everys: mat => lu.everyX(mat[3], lu.hours),
+                        everys: m => lu.everyX(m, lu.hours),
                         atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.hour),
                         atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                         between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                        bounds: C.bounds.hours,
+                        lu
                     });
                 } else {
                     // ? second, every minute, ? hour
@@ -177,10 +212,12 @@ const describeTime = ({ s, i, h }, lu) => {
                             pre: [],
                             post: [],
                             every: () => lu.everyX(lu.second),
-                            everys: mat => lu.everyX(mat[3], lu.seconds),
+                            everys: m => lu.everyX(m, lu.seconds),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            bounds: C.bounds.seconds,
+                            lu
                         }),
                         digIt({
                             o: { s, i, h },
@@ -188,10 +225,12 @@ const describeTime = ({ s, i, h }, lu) => {
                             pre: [ lu.everyX(lu.minute), ', '],
                             post: [],
                             every: () => lu.everyX(lu.hour),
-                            everys: mat => lu.everyX(mat[3], lu.hours),
+                            everys: m => lu.everyX(m, lu.hours),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.hour),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            bounds: C.bounds.hours,
+                            lu
                         })
                     ].join(', ');
                 }
@@ -205,10 +244,12 @@ const describeTime = ({ s, i, h }, lu) => {
                             pre: [lu.everyX(lu.second), ', '],
                             post: [],
                             every: () => lu.everyX(lu.minute),
-                            everys: mat => lu.everyX(mat[3], lu.minutes),
+                            everys: m => lu.everyX(m, lu.minutes),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.minute),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            bounds: C.bounds.minutes,
+                            lu
                         }),
                         digIt({
                             o: { s, i, h },
@@ -216,10 +257,12 @@ const describeTime = ({ s, i, h }, lu) => {
                             pre: [],
                             post: [],
                             every: () => lu.everyX(lu.hour),
-                            everys: mat => lu.everyX(mat[3], lu.hours),
+                            everys: m => lu.everyX(m, lu.hours),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.hour),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            bounds: C.bounds.hours,
+                            lu
                         })
                     ].join(', ');
                 } else {
@@ -231,10 +274,12 @@ const describeTime = ({ s, i, h }, lu) => {
                             pre: [],
                             post: [],
                             every: () => lu.everyX(lu.second),
-                            everys: mat => lu.everyX(mat[3], lu.seconds),
+                            everys: m => lu.everyX(m, lu.seconds),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            bounds: C.bounds.seconds,
+                            lu
                         }),
                         digIt({
                             o: { s, i, h },
@@ -242,10 +287,12 @@ const describeTime = ({ s, i, h }, lu) => {
                             pre: [],
                             post: [],
                             every: () => lu.everyX(lu.minute),
-                            everys: mat => lu.everyX(mat[3], lu.minutes),
+                            everys: m => lu.everyX(m, lu.minutes),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.minute),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            bounds: C.bounds.minutes,
+                            lu
                         }),
                         digIt({
                             o: { s, i, h },
@@ -253,10 +300,12 @@ const describeTime = ({ s, i, h }, lu) => {
                             pre: [],
                             post: [],
                             every: () => lu.everyX(lu.hour),
-                            everys: mat => lu.everyX(mat[3], lu.hours),
+                            everys: m => lu.everyX(m, lu.hours),
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.hour),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
+                            bounds: C.bounds.hours,
+                            lu
                         })
                     ].join(', ');
                 }
@@ -382,6 +431,7 @@ const describeTime = ({ s, i, h }, lu) => {
             // [1-7]|* / [1-7]
             // a/b : every b days starting on first a
             mat = numDow.match(/^([1-7]|\*)\/([1-7])$/);
+            
             if (mat) {
                 const fromFirstWd = mat[1]==='*' ? 1 : parseInt(mat[1], 10),
                     step = parseInt(mat[2]);
@@ -398,7 +448,7 @@ const describeTime = ({ s, i, h }, lu) => {
                     lu.startingOn(lu.weekdaysNames[fromFirstWd-1])
                 ].join(' ');
             }
-
+            
             // one or more [1-7] OR [SUN-SAT] comma separated
             // mixed also ? 
             spl = numDow.split(/,/);
@@ -427,7 +477,7 @@ const describeTime = ({ s, i, h }, lu) => {
             }
 
             // [1-7]-[1-7] OR [SUN-SAT]-[SUN-SAT]
-            mat = numDow.match(/^(([1-7])-([1-7]))$/)
+            mat = numDow.match(/^(([1-7])-([1-7]))$/);
             if(mat) {
                 const start = parseInt(mat[2], 10),
                     end = parseInt(mat[3], 10);
@@ -439,7 +489,7 @@ const describeTime = ({ s, i, h }, lu) => {
 
             // [1-7]-[1-7]/[1-7] OR [SUN-SAT]-[SUN-SAT]/[1-7]
             // a-b/c every c days between as and bs
-            mat = numDow.match(/^(([1-7])-([1-7])\/([1-7]))$/)
+            mat = numDow.match(/^(([1-7])-([1-7])\/([1-7]))$/);
             if(mat) {
                 const start = parseInt(mat[2], 10),
                     end = parseInt(mat[3], 10),
@@ -455,7 +505,7 @@ const describeTime = ({ s, i, h }, lu) => {
 
             // [1-7]L
             // aL the last a of the month
-            mat = numDow.match(/^([1-7])L$/)
+            mat = numDow.match(/^([1-7])L$/);
             if(mat) {
                 return lu.onLast(
                     lu.weekdaysNames[parseInt(mat[1], 10) -1],
@@ -465,9 +515,8 @@ const describeTime = ({ s, i, h }, lu) => {
 
             // [1-7]#[1-5]
             // a#b the b-th a weekday of the month
-            mat = numDow.match(/^([1-7])#([1-5])$/)
-            if (mat) {
-                
+            mat = numDow.match(/^([1-7])#([1-5])$/);
+            if (mat) {                
                 return [
                     lu.onTheNth(parseInt(mat[2], 10), lu.weekdaysNames[parseInt(mat[1], 10) -1]),
                     lu.ofTheX(lu.month)
@@ -504,10 +553,12 @@ const describeTime = ({ s, i, h }, lu) => {
                     pre: [],
                     post: [],
                     every: () => lu.everyX(lu.month),
-                    everys: mat => lu.everyX(mat[3], lu.months),
+                    everys: m => lu.everyX(m, lu.months),
                     atSingle: mat => lu.inX(lu.monthsNames[parseInt(mat[1], 10)-1]),
                     atMultiple: spl => lu.inMultipX(spl.map(m => lu.monthsNames[parseInt(m, 10)-1])),
                     between: mat => lu.betweenXY(lu.monthsNames[parseInt(mat[1], 10)-1], lu.monthsNames[parseInt(mat[2], 10)-1]),
+                    bounds: C.bounds.months,
+                    lu
                 });
             }
         } else {
@@ -519,10 +570,12 @@ const describeTime = ({ s, i, h }, lu) => {
                     pre: [],
                     post: [],
                     every: () => lu.everyX(lu.year),
-                    everys: mat => lu.everyX(mat[3], lu.years),
+                    everys: m => lu.everyX(m, lu.years),
                     atSingle: mat => lu.inX(mat[1]),
                     atMultiple: spl => lu.inMultipX(spl),
                     between: mat => lu.betweenXY(mat[1], mat[2]),
+                    bounds: C.bounds.years,
+                    lu
                 });
                 
             } else {
@@ -534,10 +587,12 @@ const describeTime = ({ s, i, h }, lu) => {
                         pre: [],
                         post: [],
                         every: () => lu.everyX(lu.month),
-                        everys: mat => lu.everyX(mat[3], lu.months),
+                        everys: m => lu.everyX(m, lu.months),
                         atSingle: mat => lu.inX(lu.monthsNames[parseInt(mat[1], 10)-1]),
                         atMultiple: spl => lu.inMultipX(spl.map(m => lu.monthsNames[parseInt(m, 10)-1])),
                         between: mat => lu.betweenXY(lu.monthsNames[parseInt(mat[1], 10)-1], lu.monthsNames[parseInt(mat[2], 10)-1]),
+                        bounds: C.bounds.months,
+                        lu
                     }),
                     digIt({
                         o: { y, m },
@@ -545,10 +600,12 @@ const describeTime = ({ s, i, h }, lu) => {
                         pre: [],
                         post: [],
                         every: () => lu.everyX(lu.year),
-                        everys: mat => lu.everyX(mat[3], lu.years),
+                        everys: m => lu.everyX(m, lu.years),
                         atSingle: mat => mat[1],
                         atMultiple: spl => lu.inMultipX(spl),
                         between: mat => lu.betweenXY(mat[1], mat[2]),
+                        bounds: C.bounds.years,
+                        lu
                     })
                 ].join(', ');
             }

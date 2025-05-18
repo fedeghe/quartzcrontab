@@ -1404,12 +1404,14 @@ describe('describe', () => {
                 i => i.atSecond(1).atMinute(0).atHour(0)
                     .everyWeekDay(),
                 en,
-            ],[
+            ],
+            [
                 'at 00:00:02, every 3 days of the week starting on Monday',
                 i => i.atSecond(2).atMinute(0).atHour(0)
                     .atWeekDay(2, 3),
                 en,
-            ],[
+            ]
+            ,[
                 'at 00:00:03, every day of the week starting on Monday',
                 i => i.atSecond(3).atMinute(0).atHour(0)
                     .atWeekDay(2, 1),
@@ -1465,7 +1467,7 @@ describe('describe', () => {
         ])('%s', (expected, prep, lang ) => {
             qc.loadLang(lang);
             prep(qc);
-            console.log(qc.out())
+            // console.log(qc.out())
             expect(qc.describe()).toBe(expected);
         })
     })
@@ -1479,9 +1481,11 @@ describe('describe', () => {
         })
         test.each([
             [
-                'xxx',
+                'at second 01, at 36, at 35 and every 2 minutes starting from 20, at hour 15, every day',
                 i => i.atSecond(1)
-                    .atMinute(20)
+                    .atMinute(20, 2)
+                    .atMinuteAdd(35)
+                    .atMinuteAdd(36)
                     .atHour(15),
                 en,
             ]
@@ -1490,7 +1494,7 @@ describe('describe', () => {
         ])('%s', (expected, prep, lang ) => {
             qc.loadLang(lang);
             prep(qc);
-            console.log(qc.out())
+            // console.log(qc.out())
             expect(qc.describe()).toBe(expected);
         })
     })

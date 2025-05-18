@@ -131,9 +131,9 @@ class Quartzcron {
         return this.over({ h: `${start}/${freq}` });
     }
     atHour(h, cad = false) {
-        return this.over({ h: cad ? `${h}/${cad}` : `${h}`});
+        return this.over({ h: cad ? `${h}/${cad}` : `${h}` });
     }
-    atHourAdd(h, cad) {
+    atHourAdd(h, cad = false) {
         var current = this.elements.h.split(',');
         return this.over({ h: [...current, cad ? `${h}/${cad}` : `${h}`].map(c=>`${c}`).join(',') })
     }
@@ -154,10 +154,10 @@ class Quartzcron {
     everyWeekDay() {
         return this.over({ dom: '?', dow: '2-6' });
     }
-    atWeekDay(d, cad){
+    atWeekDay(d, cad = false){
         return this.over({ dom: '?', dow: cad ? `${d}/${cad}` : `${d}` });
     }
-    atWeekDayAdd(d, cad) {
+    atWeekDayAdd(d, cad = false) {
         var current = this.elements.dow === defaults.dow
             ? []
             : this.elements.dow.split(',');
@@ -169,14 +169,14 @@ class Quartzcron {
         if(from>=to) return this;
         return this.over({ dom: '?', dow: `${from}-${to}${every ? `/${every}`: ''}`})
     }
-    atMonthDay(d, cad = false) {
-        return this.over({ dom: cad ? `${d}/${cad}` : `${d}`, dow: '?' });
+    atMonthDay(dom, cad = false) {
+        return this.over({ dom: cad ? `${dom}/${cad}` : `${dom}`, dow: '?' });
     }
-    atMonthDayAdd(d, cad = false) {
+    atMonthDayAdd(dom, cad) {
         var current = this.elements.dom === defaults.dom
             ? []
             : this.elements.dom.split(',');
-        return this.over({ dom: [...current, cad ? `${d}/${cad}` : `${d}`].map(c=>`${c}`).join(','), dow: '?' })
+        return this.over({ dom: [...current, cad ? `${dom}/${cad}` : `${dom}`].map(c=>`${c}`).join(','), dow: '?' })
     }
     betweenMonthDays(from, to, every) {
         return this.over({ dom: `${from}-${to}${every ? `/${every}`: ''}`, dow: '?' })
@@ -210,10 +210,10 @@ class Quartzcron {
     everyNMonths(freq, start = 0) {
         return this.over({ m: `${start}/${freq}` })
     }
-    atMonth(m, cad = false) {
+    atMonth(m, cad) {
         return this.over({ m: cad ? `${m}/${cad}` : `${m}` })
     }
-    atMonthAdd(m, cad = false) {
+    atMonthAdd(m, cad) {
         var current = this.elements.m === defaults.m
             ? []
             : this.elements.m.split(',');
@@ -230,10 +230,10 @@ class Quartzcron {
     everyNYears(freq, start = yearNow) {
         return this.over({ y: `${start}/${freq}` })
     }
-    atYear(y, cad = false) {
+    atYear(y, cad) {
         return this.over({ y: cad ? `${y}/${cad}` : `${y}` })
     }
-    atYearAdd(y, cad = false) {
+    atYearAdd(y, cad) {
         var current = this.elements.y === defaults.y
             ? []
             : this.elements.y.split(',');
