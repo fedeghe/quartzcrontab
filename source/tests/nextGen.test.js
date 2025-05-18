@@ -172,6 +172,46 @@ describe('Quartzcron.next', () => {
                         "Tue, 11 Apr 2023 00:00:00 GMT",
                     ]
             ],
+            [
+                'mixed days',
+                i => i.atYear('2023')
+                        .atMonthDay(2).atMonthDayAdd(5, 7)
+                        .atMonth(4, 3).atMonthAdd(2),
+                    10,
+                    s=>s.toUTCString(),
+                    new Date('03:00:00 2-6-2023 GMT'),// today 6th feb 2023
+                    [
+                        "Sun, 12 Feb 2023 00:00:00 GMT",
+                        "Sun, 19 Feb 2023 00:00:00 GMT",
+                        "Sun, 26 Feb 2023 00:00:00 GMT",
+                        "Sun, 02 Apr 2023 00:00:00 GMT",
+                        "Wed, 05 Apr 2023 00:00:00 GMT",
+                        "Wed, 12 Apr 2023 00:00:00 GMT",
+                        "Wed, 19 Apr 2023 00:00:00 GMT",
+                        "Wed, 26 Apr 2023 00:00:00 GMT",
+                        "Sun, 02 Jul 2023 00:00:00 GMT",
+                        "Wed, 05 Jul 2023 00:00:00 GMT",
+                    ]
+            ],[
+                'sorted mixed days',
+                i => i.atYear('2023')
+                        .atMonthDay(4).atMonthDayAdd(1).atMonthDayAdd(5, 7),
+                    10,
+                    s=>s.toUTCString(),
+                    new Date('03:00:00 2-6-2023 GMT'),// today 6th feb 2023
+                    [
+                        "Sun, 12 Feb 2023 00:00:00 GMT",
+                        "Sun, 19 Feb 2023 00:00:00 GMT",
+                        "Sun, 26 Feb 2023 00:00:00 GMT",
+                        "Wed, 01 Mar 2023 00:00:00 GMT",
+                        "Sat, 04 Mar 2023 00:00:00 GMT",
+                        "Sun, 05 Mar 2023 00:00:00 GMT",
+                        "Sun, 12 Mar 2023 00:00:00 GMT",
+                        "Sun, 19 Mar 2023 00:00:00 GMT",
+                        "Sun, 26 Mar 2023 00:00:00 GMT",
+                        "Sat, 01 Apr 2023 00:00:00 GMT",
+                    ]
+            ],
 
         ])('%s', (_ , prep, n, trans, date, expected) => {
             prep(qc)

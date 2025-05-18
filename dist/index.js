@@ -154,6 +154,9 @@ class Quartzcron {
     everyWeekDay() {
         return this.over({ dom: '?', dow: '2-6' });
     }
+    everyWeek() {
+        return this.over({ dom: '?', dow: '*' });
+    }
     atWeekDay(d, cad = false){
         return this.over({ dom: '?', dow: cad ? `${d}/${cad}` : `${d}` });
     }

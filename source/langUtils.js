@@ -26,9 +26,7 @@ const getLangUtils = l => ({
     atX:  getDual(l.snt.at, l.snt.atL),
     inX:  getDual(l.snt.in, l.snt.inL),
     ofTheX: getDual(l.snt.ofThe, l.snt.ofTheL),
-    betweenXY: (x, y, lb) => lb
-        ? l.snt.betweenL.replace(/%ph1/, x).replace(/%ph2/, y).replace(/%ph3/, lb)
-        : l.snt.between.replace(/%ph1/, x).replace(/%ph2/, y),
+    betweenXY: (x, y) => l.snt.between.replace(/%ph1/, x).replace(/%ph2/, y),
     atMultipX: getMult(l.snt.multipleAt, l.snt.multipleAtL),
     inMultipX: getMult(l.snt.multipleIn, l.snt.multipleInL),
     inMonthDay: x => {
@@ -93,9 +91,9 @@ const getLangUtils = l => ({
 
     beforeTheEndOfThe: what => l.snt.beforeTheEndOfThe
             .replace(/%ph1/, what),
-    fromTo: (f, t) => l.snt.fromTo
-            .replace(/%ph1/, f)
-            .replace(/%ph2/, t),
+    // fromTo: (f, t) => l.snt.fromTo
+    //         .replace(/%ph1/, f)
+    //         .replace(/%ph2/, t),
     startingOn: what => l.snt.startingOn
             .replace(/%ph1/, what),
     startingFrom: what => l.snt.startingFrom

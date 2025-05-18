@@ -80,24 +80,30 @@ const digIt = ({
     // mixed 1, 3, 4/6, 8
     spl = target.split(',');
     mat = spl.map(i => i.match(/^((\d+)|(\d+)\/(\d+))$/)).filter(Boolean);
-    
+    /* istanbul ignore else */
     if (mat.length === spl.length) {
         const mid = mat.reduce((acc, m) => {
             if(typeof m[2] === 'undefined') {
                 const start = parseInt(m[3], 10),
                     cadence = parseInt(m[4], 10);
-                acc.push([
+                    
+                acc.res.push([
                     everys(cadence),
                     lu.startingFrom(start)
                 ].join(' '))
             } else {
-                acc.unshift(lu.atX(m[1]))
+                const v = parseInt(m[1], 10);
+                /* istanbul ignore else */
+                if(!acc.pres.includes(v)){
+                    acc.res.unshift(lu.atX(v))
+                    acc.pres.push(v)
+                }
             }
             return acc;
-        }, []);
+        }, {res: [], pres: []});
         return [
             ...pre,
-            lu.multiple(mid),
+            lu.multiple([...new Set(mid.res)]),
             ...post
         ].join('');
     }
@@ -407,6 +413,7 @@ const describeTime = ({ s, i, h }, lu) => {
             }
             // L-n
             mat = dom.match(/^L-([1-9]|1[0-9]|2[0-9]|3[01])$/);
+            /* istanbul ignore else */
             if (mat) {
                 const n = parseInt(mat[1], 10),
                     L = n > 1 ? lu.days : lu. day;
@@ -415,7 +422,45 @@ const describeTime = ({ s, i, h }, lu) => {
                     lu.beforeTheEndOfThe(lu.month)
                 ]. join(' ');
             }
+
+            // one or more [1-9]|1[0-9]|2[0-9]|3[01] comma separated
+            // mixed also !
+            spl = dom.split(/,/);
+            mat = spl.map(s => s.match(/^(([1-9]|1[0-9]|2[0-9]|3[01])|([1-9]|1[0-9]|2[0-9]|3[01])\/([1-9]|1[0-9]|2[0-9]|3[01]))$/)).filter(Boolean);
+            /* istanbul ignore else */
+            if(spl.length === mat.length) {
+                // const max = 31;
+                let collect = mat.reduce((acc, m) => {
+
+                    let v2 = parseInt(m[2], 10);
+                    if(typeof m[2] !== 'undefined') {
+                        //rx grants it cant be
+                        //if(v2 <= max)
+                        /* istanbul ignore else */
+                        if(!acc.includes(v2)) acc.push(v2);
+                    } else {
+                        
+                        let start = parseInt(m[3], 10);
+                        const every = parseInt(m[4], 10);
+
+                        acc.unshift([
+                            lu.everyX(every, lu.days),
+                            lu.startingFrom(start)
+                        ].join(' '))
+
+                        // while(cursor <= max){
+                        //     if(!acc.includes(cursor)) acc.push(cursor);
+                        //     cursor = every + cursor;
+                        // }
+                    }
+                    return acc;
+                }, []).sort((a,b) => a > b ? 1 : -1);
+                return lu.multipleThe(collect.join(','), lu.ofTheX(lu.month));
+            }
+
+
         }
+        /* istanbul ignore else */
         if(!dow.match(/^[*?]$/)){
             const numDow = utils.daysLabels2Numbers(dow);
             
@@ -462,7 +507,9 @@ const describeTime = ({ s, i, h }, lu) => {
 
                     let v2 = parseInt(m[2], 10);
                     if(typeof m[2] !== 'undefined') {
-                        if(v2 <= max) acc.push(v2)
+                        //rx grants it cant be
+                        //if(v2 <= max)
+                        acc.push(v2)
                     } else {
                         
                         let cursor = parseInt(m[3], 10);
@@ -498,7 +545,7 @@ const describeTime = ({ s, i, h }, lu) => {
                     end = parseInt(mat[3], 10),
                     cadence = parseInt(mat[4], 10);
                 return [
-                    lu.everyX(cadence, cadence > 1 ? lu.days: lu.day),
+                    cadence > 1 ? lu.everyX(cadence, lu.days) : lu.everyX(lu.day),
                     lu.betweenXY(
                         lu.weekdaysNames[start -1],
                         lu.weekdaysNames[end -1]
@@ -519,16 +566,14 @@ const describeTime = ({ s, i, h }, lu) => {
             // [1-7]#[1-5]
             // a#b the b-th a weekday of the month
             mat = numDow.match(/^([1-7])#([1-5])$/);
+            /* istanbul ignore else */
             if (mat) {                
                 return [
                     lu.onTheNth(parseInt(mat[2], 10), lu.weekdaysNames[parseInt(mat[1], 10) -1]),
                     lu.ofTheX(lu.month)
                 ].join(' ')
             }
-
-            return '';
         }
-        return '';
     },
     describeMonthsYears = ({y, m, dom, dow}, lu) => {
         const yMatch = y.match(/^(\d+)$/),

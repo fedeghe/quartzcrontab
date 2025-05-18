@@ -1326,6 +1326,7 @@ describe('describe', () => {
             qc = new Quartzcron()
         })
         test.each([
+            
             [
                 'at 00:00:00, on the 2nd day, every month',
                 i => i.atSecond(0).atMinute(0).atHour(0)
@@ -1356,6 +1357,14 @@ describe('describe', () => {
                     .atMonthDay(2).atMonthDayAdd(11).atMonthDayAdd(13).atMonthDayAdd(21),
                 en,
             ],
+            
+            [
+                'at 01:00:04, on the 2nd, 21st, 29th and every 5 days starting from 10th of the month',
+                i => i.atSecond(4).atMinute(0).atHour(1)
+                    .atMonthDay(2).atMonthDayAdd(10, 5).atMonthDayAdd(21).atMonthDayAdd(29),
+                en,
+            ],
+            
             [
                 'at 01:30:05, on the last day of the month',
                 i => i.atSecond(5).atMinute(30).atHour(1)
@@ -1379,7 +1388,14 @@ describe('describe', () => {
                 i => i.atSecond(8).atMinute(15).atHour(3)
                     .onNDayBeforeTheEndOfTheMonth(7),
                 en,
+            ],
+            [
+                'at 03:15:09, 1 day before the end of the month',
+                i => i.atSecond(9).atMinute(15).atHour(3)
+                    .onNDayBeforeTheEndOfTheMonth(1),
+                en,
             ]
+            
         ])('%s', (expected, prep, lang ) => {
             qc.loadLang(lang);
             prep(qc);
@@ -1394,6 +1410,12 @@ describe('describe', () => {
             qc = new Quartzcron()
         })
         test.each([
+            [
+                'at 00:00:00, every day',
+                i => i.atSecond(0).atMinute(0).atHour(0)
+                    .everyWeek(),
+                en,
+            ],
             [
                 'at 00:00:00, every weekend',
                 i => i.atSecond(0).atMinute(0).atHour(0)
@@ -1410,8 +1432,13 @@ describe('describe', () => {
                 i => i.atSecond(2).atMinute(0).atHour(0)
                     .atWeekDay(2, 3),
                 en,
-            ]
-            ,[
+            ],
+            [
+                'at 00:00:02, every 3 days of the week starting on Sunday',
+                i => i.atSecond(2).atMinute(0).atHour(0)
+                    .atWeekDay('*', 3),
+                en,
+            ],[
                 'at 00:00:03, every day of the week starting on Monday',
                 i => i.atSecond(3).atMinute(0).atHour(0)
                     .atWeekDay(2, 1),
@@ -1432,9 +1459,9 @@ describe('describe', () => {
                     .atWeekDay(5, 3),
                 en,
             ],[
-                'at 00:00:07, on Sunday, Monday, Wednesday, Friday and Saturday',
+                'at 00:00:07, on Sunday, Monday, Wednesday and Saturday',
                 i => i.atSecond(7).atMinute(0).atHour(0)
-                    .atWeekDay(2, 4).atWeekDayAdd(1, 3),
+                    .atWeekDay(2).atWeekDay(2).atWeekDayAdd(1, 3),
                 en,
             ],[
                 'at 00:00:08, on Sunday and Monday',
@@ -1450,6 +1477,11 @@ describe('describe', () => {
                 'at 00:00:09, every 3 days between Monday and Friday',
                 i => i.atSecond(9).atMinute(0).atHour(0)
                     .betweenWeekDays(2, 6, 3),
+                en,
+            ],[
+                'at 00:00:09, every day between Monday and Friday',
+                i => i.atSecond(9).atMinute(0).atHour(0)
+                    .betweenWeekDays(2, 6, 1),
                 en,
             ],[
                 'at 00:00:09, on the last Monday of the month',
@@ -1473,7 +1505,6 @@ describe('describe', () => {
     })
 
 
-
     describe('full describe - en', () => {
         let qc
         beforeEach(() => {
@@ -1487,6 +1518,55 @@ describe('describe', () => {
                     .atMinuteAdd(35)
                     .atMinuteAdd(36)
                     .atHour(15),
+                en,
+            ]
+
+
+        ])('%s', (expected, prep, lang ) => {
+            qc.loadLang(lang);
+            prep(qc);
+            // console.log(qc.out())
+            expect(qc.describe()).toBe(expected);
+        })
+    })
+
+    describe('check cadences - en', () => {
+        let qc
+        beforeEach(() => {
+            qc = new Quartzcron()
+        })
+        test.each([
+            [
+                'every 3 seconds starting from 10 and every 5 seconds starting from 10, at minute 00, at hour 00, every day',
+                i => i.atSecond(10, 3).atSecondAdd(10, 5),
+                en,
+            ],
+            [
+                'at second 00, every 3 minutes starting from 10 and every 5 minutes starting from 10, at hour 00, every day',
+                i => i.atMinute(10, 3).atMinuteAdd(10, 5),
+                en,
+            ],
+            [
+                'at second 00, at minute 00, every 3 hours starting from 10 and every 5 hours starting from 10, every day',
+                i => i.atHour(10, 3).atHourAdd(10, 5),
+                en,
+            ],
+
+
+            // TODO !!!
+            [
+                'at 00:00:00, on the every 3 days starting from 3rd and every 5 days starting from 10th of the month',
+                i => i.atMonthDay(3, 3).atMonthDayAdd(10, 5),
+                en,
+            ],
+            [
+                'at 00:00:00, every day, every 3 months starting from 3 and every 5 months starting from 2',
+                i => i.atMonth(3, 3).atMonthAdd(2, 5),
+                en,
+            ],
+            [
+                'at 00:00:00, every day, every 3 years starting from 2010 and every 4 years starting from 2020',
+                i => i.atYear(2010, 3).atYearAdd(2020, 4),
                 en,
             ]
 
