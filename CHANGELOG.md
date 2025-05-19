@@ -1,3 +1,14 @@
+## 0.0.43
+cadences optional added in:  
+- `atSecond`, `atSecondAdd`
+- `atMinute`, `atMinuteAdd`
+- `atHour`, `atHourAdd`
+- `atWeekDay`, `atWeekDayAdd`
+- `atMonthDay`, `atMonthDayAdd`
+- `atMonth`, `atMonthAdd`
+- `atYear`, `atYearAdd`
+
+
 ## 0.0.42  
 - fixed wrong behaviour of `betweenWeekDays`
     which was allowing to set the first bigger than the second  
