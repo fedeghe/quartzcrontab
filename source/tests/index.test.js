@@ -411,6 +411,81 @@ describe('Quartzcron', () => {
         })
     })
 
+    describe('cadences', () => {
+        let c
+        beforeEach(() => {
+            c = new Quartzcron()
+        })
+        test.each([
+            // seconds
+            [
+                '2/6 0 0 * * ? *',
+                i => i.atSecond(2,6)
+            ],
+            [
+                '2,5/7 0 0 * * ? *',
+                i => i.atSecond(2).atSecondAdd(5, 7)
+            ],
+            // minutes
+            [
+                '0 2/7 0 * * ? *',
+                i => i.atMinute(2,7)
+            ],
+            [
+                '0 2,5/8 0 * * ? *',
+                i => i.atMinute(2).atMinuteAdd(5, 8)
+            ],
+            // hours
+            [
+                '0 0 2/8 * * ? *',
+                i => i.atHour(2,8)
+            ],
+            [
+                '0 0 2,5/9 * * ? *',
+                i => i.atHour(2).atHourAdd(5, 9)
+            ],
+            // weekday
+            [
+                '0 0 0 ? * 2/6 *',
+                i => i.atWeekDay(2,6)
+            ],
+            [
+                '0 0 0 ? * 2,3/2 *',
+                i => i.atWeekDay(2).atWeekDayAdd(3, 2)
+            ],
+            // monthday
+            [
+                '0 0 0 2/6 * ? *',
+                i => i.atMonthDay(2,6)
+            ],
+            [
+                '0 0 0 2,3/2 * ? *',
+                i => i.atMonthDay(2).atMonthDayAdd(3, 2)
+            ],
+            // month
+            [
+                '0 0 0 * 2/4 ? *',
+                i => i.atMonth(2,4)
+            ],
+            [
+                '0 0 0 * 2,3/2 ? *',
+                i => i.atMonth(2).atMonthAdd(3, 2)
+            ],
+            // year
+            [
+                '0 0 0 * * ? 2024/6',
+                i => i.atYear(2024,6)
+            ],
+            [
+                '0 0 0 * * ? 2024,2050/2',
+                i => i.atYear(2024).atYearAdd(2050, 2)
+            ]
+        ])('%s', (exp, prep) => {
+            prep(c);
+            expect(c.out()).toBe(exp)
+        })
+    })
+
     describe('chained actions', () => {
         let c
         beforeEach(() => {

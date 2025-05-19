@@ -91,10 +91,10 @@ class Quartzcron {
     everyNSeconds(freq, start = 0) {
         return this.over({ s: `${start}/${freq}` });
     }
-    atSecond(s, cad = false) {
+    atSecond(s, cad) {
         return this.over({ s: cad ? `${s}/${cad}` : `${s}` });
     }
-    atSecondAdd(s, cad = false) {
+    atSecondAdd(s, cad) {
         var current = this.elements.s.split(',');
         return this.over({ s: [...current, cad ? `${s}/${cad}` : `${s}`].map(c=>`${c}`).join(',') })
     }
@@ -109,10 +109,10 @@ class Quartzcron {
     everyNMinutes(freq, start = 0) {
         return this.over({ i: `${start}/${freq}` });
     }
-    atMinute(i, cad = false) {
+    atMinute(i, cad) {
         return this.over({ i: cad ? `${i}/${cad}` : `${i}` });
     }
-    atMinuteAdd(i, cad = false) {
+    atMinuteAdd(i, cad) {
         var current = this.elements.i.split(',');
         return this.over({ i: [...current, cad ? `${i}/${cad}` : `${i}`].map(c=>`${c}`).join(',') })
     }
@@ -127,10 +127,10 @@ class Quartzcron {
     everyNHours(freq, start = 0) {
         return this.over({ h: `${start}/${freq}` });
     }
-    atHour(h, cad = false) {
+    atHour(h, cad) {
         return this.over({ h: cad ? `${h}/${cad}` : `${h}` });
     }
-    atHourAdd(h, cad = false) {
+    atHourAdd(h, cad) {
         var current = this.elements.h.split(',');
         return this.over({ h: [...current, cad ? `${h}/${cad}` : `${h}`].map(c=>`${c}`).join(',') })
     }
@@ -154,10 +154,10 @@ class Quartzcron {
     everyWeek() {
         return this.over({ dom: '?', dow: '*' });
     }
-    atWeekDay(d, cad = false){
+    atWeekDay(d, cad){
         return this.over({ dom: '?', dow: cad ? `${d}/${cad}` : `${d}` });
     }
-    atWeekDayAdd(d, cad = false) {
+    atWeekDayAdd(d, cad) {
         var current = this.elements.dow === defaults.dow
             ? []
             : this.elements.dow.split(',');
@@ -169,7 +169,7 @@ class Quartzcron {
         if(from>=to) return this;
         return this.over({ dom: '?', dow: `${from}-${to}${every ? `/${every}`: ''}`})
     }
-    atMonthDay(dom, cad = false) {
+    atMonthDay(dom, cad) {
         return this.over({ dom: cad ? `${dom}/${cad}` : `${dom}`, dow: '?' });
     }
     atMonthDayAdd(dom, cad) {

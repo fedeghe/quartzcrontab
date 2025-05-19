@@ -7,7 +7,7 @@
 
 
 # quartzcron  
-version: `0.0.42`
+version: `0.0.43`
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
@@ -155,12 +155,12 @@ This clearly applies similarly also for almost all other commands.
 - `everyNSeconds(x, start = 0)`  
 every `x` seconds (starting from `start`)  
 
-- `atSecond(sec, cad= false)`  
+- `atSecond(sec, cad = false)`  
 resets any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[0, 59]`
 
 - `atSecondAdd(sec, cad = false)`  
-adds `sec` to the list of already set seconds (`0` there by default); as in the previous can pass multiple values comma separated (when no cadence is passed).
+adds `sec` to the list of already set seconds (`0` there by default); as in the previous can pass multiple values comma separated (when cadence is not passed).
 
 - `betweenSeconds(from, to, every)`  
 all seconds from `from` to `to` seconds; optionally set the cadence passing an `every` integer.  
@@ -222,7 +222,7 @@ every `x` `[1-7][SUN-SAT]` day of the week starting from `y`th day `[1-31]` of t
     ```
 
 - `atWeekDay(wd, cad = false)`  
-every `wd` `[1-7][SUN-SAT]`; resets any previous value set there. 
+every `wd` `[1-7][SUN-SAT]`; resets any previous value set there; when cadence is not passed even here more than one comma separated value can be passed. 
     ``` js
     qtc.atWeekDay('WED')
     // { dom: `?`, dow: 'WED', ...}
@@ -386,7 +386,7 @@ resets any previous value set there;
 when cadence is not passed can be called passing multiple comma separated values within `[1970, 2099]`
 
 - `atYearAdd(y, cad = false)`  
-adds `min` to the list of already set minutes; as in the previous can pass multiple values comma separated, within `[1970, 2099]` (when cadence is not passed)  
+adds `min` to the list of already set minutes; as in the previous can pass multiple values comma separated (when cadence is not passed), within `[1970, 2099]`
 
 - `betweenYears(from, to, every)`  
 all years from `from` year to `to` year; optionally set the cadence passing an `every` integer.  
