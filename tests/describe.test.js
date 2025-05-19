@@ -1530,7 +1530,7 @@ describe('describe', () => {
         })
     })
 
-    describe('check cadences - en', () => {
+    describe('check mixed cadences - en', () => {
         let qc
         beforeEach(() => {
             qc = new Quartzcron()

@@ -434,8 +434,7 @@ const describeTime = ({ s, i, h }, lu) => {
 
                     let v2 = parseInt(m[2], 10);
                     if(typeof m[2] !== 'undefined') {
-                        //rx grants it cant be
-                        //if(v2 <= max)
+                        // rx grants it cant be more than 31
                         /* istanbul ignore else */
                         if(!acc.includes(v2)) acc.push(v2);
                     } else {
@@ -447,11 +446,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             lu.everyX(every, lu.days),
                             lu.startingFrom(start)
                         ].join(' '))
-
-                        // while(cursor <= max){
-                        //     if(!acc.includes(cursor)) acc.push(cursor);
-                        //     cursor = every + cursor;
-                        // }
                     }
                     return acc;
                 }, []).sort((a,b) => a > b ? 1 : -1);
