@@ -53,10 +53,18 @@ const getLangUtils = l => ({
             .replace(/%ph2/, sta+''+thize(sta, l.snt))
             .replace(/%ph3/, L)
     },
-    multipleThe: (n, L) => {
-        const vals = n.split(','),
-            last = vals.pop(),
-            thSet = vals.map(v => v + '' +thize(v, l.snt)).join(`${l.comma} `),
+    multipleThe: n => {
+        const last = n.pop(),
+            thSet = n.map(v => v + '' +thize(v, l.snt)).join(`${l.comma} `),
+            thLast = last + ''+thize(last, l.snt);
+        return l.snt.multipleThe
+            .replace(/%ph1/, thSet)
+            .replace(/%ph2/, thLast)
+
+    },
+    multipleTheL: (n, L) => {
+        const last = n.pop(),
+            thSet = n.map(v => v + '' +thize(v, l.snt)).join(`${l.comma} `),
             thLast = last + ''+thize(last, l.snt);
         return l.snt.multipleTheL
             .replace(/%ph1/, thSet)
@@ -104,6 +112,7 @@ const getLangUtils = l => ({
     onTheNth: (n, L) => l.snt.onTheNthL
             .replace(/%ph1/, n+thize(n, l.snt))
             .replace(/%ph2/, L),
+    thize: n => n+thize(n, l.snt),
     ...l,
 });
 

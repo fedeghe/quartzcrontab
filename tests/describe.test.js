@@ -1359,7 +1359,7 @@ describe('describe', () => {
             ],
             
             [
-                'at 01:00:04, on the 2nd, 21st, 29th and every 5 days starting from 10th of the month',
+                'at 01:00:04, on the 2nd, 21st and 29th and every 5 days starting from 10th',
                 i => i.atSecond(4).atMinute(0).atHour(1)
                     .atMonthDay(2).atMonthDayAdd(10, 5).atMonthDayAdd(21).atMonthDayAdd(29),
                 en,
@@ -1555,7 +1555,7 @@ describe('describe', () => {
 
             // TODO !!!
             [
-                'at 00:00:00, on the every 3 days starting from 3rd and every 5 days starting from 10th of the month',
+                'at 00:00:00, every 3 days starting from 3rd and every 5 days starting from 10th',
                 i => i.atMonthDay(3, 3).atMonthDayAdd(10, 5),
                 en,
             ],

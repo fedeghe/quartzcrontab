@@ -376,7 +376,7 @@ const describeTime = ({ s, i, h }, lu) => {
             mat = spl.every(s => s.match(C.rx.oneThirtyone));
             if (mat) {
                 return [
-                    lu.multipleThe(dom, lu.day),
+                    lu.multipleTheL(spl, lu.day),
                     ', ',
                     mEvery && lu.everyX(lu.month)
                 ].filter(Boolean).join('');
@@ -433,20 +433,24 @@ const describeTime = ({ s, i, h }, lu) => {
                     if(typeof m[2] !== 'undefined') {
                         // rx grants it cant be more than 31
                         /* istanbul ignore else */
-                        if(!acc.includes(v2)) acc.push(v2);
+                        if(!acc.plain.includes(v2)) acc.plain.push(v2);
                     } else {
                         
                         let start = parseInt(m[3], 10);
                         const every = parseInt(m[4], 10);
 
-                        acc.unshift([
+                        acc.mixed.push([
                             lu.everyX(every, lu.days),
-                            lu.startingFrom(start)
+                            lu.startingFrom(lu.thize(start))
                         ].join(' '))
                     }
                     return acc;
-                }, []).sort((a,b) => a > b ? 1 : -1);
-                return lu.multipleThe(collect.join(','), lu.ofTheX(lu.month));
+                }, {plain:[], mixed:[]});
+                return [
+                    collect.plain.length && lu.multipleThe(collect.plain),
+                    collect.mixed.length && lu.multiple(collect.mixed)
+                ].filter(Boolean).join('')
+                    // lu.ofTheX(lu.month));
             }
 
 
