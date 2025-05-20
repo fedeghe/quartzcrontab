@@ -47,6 +47,8 @@ workflows:
     jobs:
       - lint
       - build-node
+          requires:
+            - lint
       - test-node:
           requires:
             - build-node
