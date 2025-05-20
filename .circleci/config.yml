@@ -46,7 +46,7 @@ workflows:
   build-and-test-and-coveralls:
     jobs:
       - lint
-      - build-node
+      - build-node:
           requires:
             - lint
       - test-node:
