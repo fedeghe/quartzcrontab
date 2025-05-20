@@ -1,10 +1,5 @@
 const C = require('./constants.js');
-
-const langUtils = require('./langUtils.js');
-
 const utils = require('./utils.js');
-
-
 
 const doubleDigitize = d => {
     return d < 10 ? `0${d}` : d;
@@ -20,13 +15,12 @@ const digIt = ({
     between,
     every, 
     everys,
-    bounds,
     lu
 }) => {
     const target = o[key];
     let mat, spl;
-    // every x-th second                                /^\d+$/
-    mat = target.match(/^(\d+)$/);
+    // every x-th second /^\d+$/
+    mat = target.match(C.rx.loose.n);
     
     if (mat) {
         return [
@@ -36,8 +30,8 @@ const digIt = ({
         ].join('');
     }
 
-    // on every second from 5-th to 10th                /^\d+-\d*$/
-    mat = target.match(/^(\d+)-(\d+)$/);
+    // on every second from 5-th to 10th /^\d+-\d*$/
+    mat = target.match(C.rx.loose['n-n']);
     if (mat) {
         return [
             ...pre,
@@ -50,7 +44,7 @@ const digIt = ({
 
     // at second 1, 3 and 30
     spl = target.split(',');
-    mat = spl.every(i => i.match(/^\d+$/));
+    mat = spl.every(i => i.match(C.rx.loose.n));
     if (mat) {
         return [
             ...pre,
@@ -62,7 +56,7 @@ const digIt = ({
     
 
     // every 3 seconds between 5-th and 10th second     /^\d+-\d\/\d+$/
-    mat = target.match(/^(\d+)-(\d+)\/(\d+)$/);
+    mat = target.match(C.rx.loose['n-n/n']);
     if (mat) {
         return [
             ...pre,
@@ -76,7 +70,7 @@ const digIt = ({
 
     // mixed 1, 3, 4/6, 8
     spl = target.split(',');
-    mat = spl.map(i => i.match(/^((\d+)|(\d+)\/(\d+))$/)).filter(Boolean);
+    mat = spl.map(i => i.match(C.rx.loose['nORn/n'])).filter(Boolean);
     /* istanbul ignore else */
     if (mat.length === spl.length) {
         const mid = mat.reduce((acc, m) => {
@@ -108,9 +102,9 @@ const digIt = ({
 
 const describeTime = ({ s, i, h }, lu) => {
         //one ? 
-        const sMatch = s.match(/^(\d+)$/),
-            iMatch = i.match(/^(\d+)$/),
-            hMatch = h.match(/^(\d+)$/),
+        const sMatch = s.match(C.rx.loose.n),
+            iMatch = i.match(C.rx.loose.n),
+            hMatch = h.match(C.rx.loose.n),
             sEvery = s === '*',
             iEvery = i === '*',
             hEvery = h === '*';
@@ -140,7 +134,6 @@ const describeTime = ({ s, i, h }, lu) => {
                         atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
                         atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
                         between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                        bounds: C.bounds.seconds,
                         lu
                     });
                 }
@@ -157,7 +150,6 @@ const describeTime = ({ s, i, h }, lu) => {
                         atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.minute),
                         atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                         between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                        bounds: C.bounds.minutes,
                         lu
                     });
                 } else {
@@ -173,7 +165,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                            bounds: C.bounds.seconds,
                             lu
                         }),
                         digIt({
@@ -186,7 +177,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.minute),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                            bounds: C.bounds.minutes,
                             lu
                         })
                     ].join(', ');
@@ -206,7 +196,6 @@ const describeTime = ({ s, i, h }, lu) => {
                         atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.hour),
                         atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                         between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                        bounds: C.bounds.hours,
                         lu
                     });
                 } else {
@@ -222,7 +211,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                            bounds: C.bounds.seconds,
                             lu
                         }),
                         digIt({
@@ -235,7 +223,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.hour),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                            bounds: C.bounds.hours,
                             lu
                         })
                     ].join(', ');
@@ -254,7 +241,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.minute),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                            bounds: C.bounds.minutes,
                             lu
                         }),
                         digIt({
@@ -267,7 +253,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.hour),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                            bounds: C.bounds.hours,
                             lu
                         })
                     ].join(', ');
@@ -284,7 +269,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.second),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.seconds),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                            bounds: C.bounds.seconds,
                             lu
                         }),
                         digIt({
@@ -297,7 +281,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.minute),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.minutes),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                            bounds: C.bounds.minutes,
                             lu
                         }),
                         digIt({
@@ -310,7 +293,6 @@ const describeTime = ({ s, i, h }, lu) => {
                             atSingle: mat => lu.atX(doubleDigitize(mat[1]), lu.hour),
                             atMultiple: spl => lu.atMultipX(spl.map(doubleDigitize), lu.hours),
                             between: mat => lu.betweenXY(doubleDigitize(mat[1]), doubleDigitize(mat[2])),
-                            bounds: C.bounds.hours,
                             lu
                         })
                     ].join(', ');
@@ -333,7 +315,7 @@ const describeTime = ({ s, i, h }, lu) => {
         let mat, spl;
         if(!dom.match(/^[*?]$/)){
             // [1-31]
-            mat = dom.match(C.rx.oneThirtyone);
+            mat = dom.match(C.rx.ranged.md);
             if (mat) {
                 return [
                     lu.inMonthDay(mat[0]),
@@ -342,7 +324,7 @@ const describeTime = ({ s, i, h }, lu) => {
             }
 
             // [1-31] / [1-31]
-            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)\/([1-9]|1[0-9]|2[0-9]|3[01]|\*)$/);
+            mat = dom.match(C.rx.ranged['md/md']);
             if (mat) {
                 return [
                     lu.everyStartingFrom(mat[1], mat[2], lu.day),
@@ -351,7 +333,7 @@ const describeTime = ({ s, i, h }, lu) => {
             }
 
             // [1-31] - [1-31]
-            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)-([1-9]|1[0-9]|2[0-9]|3[01]|\*)$/);
+            mat = dom.match(C.rx.ranged['md-md']);
             if (mat) {
                 return [
                     lu.betweenMonthDays(mat[1], mat[2], lu.day),
@@ -360,7 +342,7 @@ const describeTime = ({ s, i, h }, lu) => {
             }
 
             // [1-31] - [1-31] / [1-31]
-            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)-([1-9]|1[0-9]|2[0-9]|3[01]|\*)\/([1-9]|1[0-9]|2[0-9]|3[01]|\*)$/);
+            mat = dom.match(C.rx.ranged['md-md/md']);
             if (mat) {
                 return [
                     lu.everyX(mat[3], lu.days),
@@ -373,7 +355,7 @@ const describeTime = ({ s, i, h }, lu) => {
 
             // [1-31], ....
             spl = dom.split(',');
-            mat = spl.every(s => s.match(C.rx.oneThirtyone));
+            mat = spl.every(s => s.match(C.rx.ranged['md']));
             if (mat) {
                 return [
                     lu.multipleTheL(spl, lu.day),
@@ -384,7 +366,7 @@ const describeTime = ({ s, i, h }, lu) => {
 
 
             // L
-            mat = dom.match(/^L$/);
+            mat = dom.match(C.rx.dumb.L);
             if (mat) {
                 return [
                     lu.onThe(lu.last, lu.day),
@@ -393,7 +375,7 @@ const describeTime = ({ s, i, h }, lu) => {
             }
 
             // LW
-            mat = dom.match(/^LW$/);
+            mat = dom.match(C.rx.dumb.LW);
             if (mat) {
                 return [
                     lu.onThe(lu.last, lu.weekday),
@@ -401,7 +383,7 @@ const describeTime = ({ s, i, h }, lu) => {
                 ].join(' ');
             }
             // [1-31]W
-            mat = dom.match(/^([1-9]|1[0-9]|2[0-9]|3[01]|\*)W$/);
+            mat = dom.match(C.rx.ranged['mdW']);
             if (mat) {
                 return [
                     lu.nearestToThe(lu.weekday, mat[1]),
@@ -409,7 +391,7 @@ const describeTime = ({ s, i, h }, lu) => {
                 ].join(' ');
             }
             // L-n
-            mat = dom.match(/^L-([1-9]|1[0-9]|2[0-9]|3[01])$/);
+            mat = dom.match(C.rx.ranged['L-md']);
             /* istanbul ignore else */
             if (mat) {
                 const n = parseInt(mat[1], 10),
@@ -423,10 +405,9 @@ const describeTime = ({ s, i, h }, lu) => {
             // one or more [1-9]|1[0-9]|2[0-9]|3[01] comma separated
             // mixed also !
             spl = dom.split(/,/);
-            mat = spl.map(s => s.match(/^(([1-9]|1[0-9]|2[0-9]|3[01])|([1-9]|1[0-9]|2[0-9]|3[01])\/([1-9]|1[0-9]|2[0-9]|3[01]))$/)).filter(Boolean);
+            mat = spl.map(s => s.match(C.rx.ranged['mdORmd/md'])).filter(Boolean);
             /* istanbul ignore else */
             if(spl.length === mat.length) {
-                // const max = 31;
                 let collect = mat.reduce((acc, m) => {
 
                     let v2 = parseInt(m[2], 10);
@@ -450,30 +431,29 @@ const describeTime = ({ s, i, h }, lu) => {
                     collect.plain.length && lu.multipleThe(collect.plain),
                     collect.mixed.length && lu.multiple(collect.mixed)
                 ].filter(Boolean).join('')
-                    // lu.ofTheX(lu.month));
             }
 
 
         }
         /* istanbul ignore else */
-        if(!dow.match(/^[*?]$/)){
+        if(!dow.match(C.rx.dumb.astrxQuest)){
             const numDow = utils.daysLabels2Numbers(dow);
             
             // weekend
-            mat = numDow.match(/^(7,1|1,7)$/);
+            mat = numDow.match(C.rx.dumb.weekend);
             if(mat){
                 return lu.everyX(lu.weekend);
             }
 
             // weekday
-            mat = numDow.match(/^(2,3,4,5,6|2-6)$/);
+            mat = numDow.match(C.rx.dumb.weekday);
             if(mat){
                 return lu.everyX(lu.weekday);
             }
 
             // [1-7]|* / [1-7]
             // a/b : every b days starting on first a
-            mat = numDow.match(/^([1-7]|\*)\/([1-7])$/);
+            mat = numDow.match(C.rx.ranged['wdOR*/wd']);
             
             if (mat) {
                 const fromFirstWd = mat[1]==='*' ? 1 : parseInt(mat[1], 10),
@@ -494,8 +474,8 @@ const describeTime = ({ s, i, h }, lu) => {
             
             // one or more [1-7] OR [SUN-SAT] comma separated
             // mixed also ? 
-            spl = numDow.split(/,/);
-            mat = spl.map(s => s.match(/^(([1-7])|([1-7])\/([1-7]))$/)).filter(Boolean);
+            spl = numDow.split(C.rx.dumb.comma);
+            mat = spl.map(s => s.match(C.rx.ranged['wdORwd/wd'])).filter(Boolean);
             if(spl.length === mat.length) {
                 const max = 7;
                 let collect = mat.reduce((acc, m) => {
@@ -522,7 +502,7 @@ const describeTime = ({ s, i, h }, lu) => {
             }
 
             // [1-7]-[1-7] OR [SUN-SAT]-[SUN-SAT]
-            mat = numDow.match(/^(([1-7])-([1-7]))$/);
+            mat = numDow.match(C.rx.ranged['wd-wd']);
             if(mat) {
                 const start = parseInt(mat[2], 10),
                     end = parseInt(mat[3], 10);
@@ -534,7 +514,7 @@ const describeTime = ({ s, i, h }, lu) => {
 
             // [1-7]-[1-7]/[1-7] OR [SUN-SAT]-[SUN-SAT]/[1-7]
             // a-b/c every c days between as and bs
-            mat = numDow.match(/^(([1-7])-([1-7])\/([1-7]))$/);
+            mat = numDow.match(C.rx.ranged['wd-wd/wd']);
             if(mat) {
                 const start = parseInt(mat[2], 10),
                     end = parseInt(mat[3], 10),
@@ -550,7 +530,7 @@ const describeTime = ({ s, i, h }, lu) => {
 
             // [1-7]L
             // aL the last a of the month
-            mat = numDow.match(/^([1-7])L$/);
+            mat = numDow.match(C.rx.ranged['wdL']);
             if(mat) {
                 return lu.onLast(
                     lu.weekdaysNames[parseInt(mat[1], 10) -1],
@@ -560,7 +540,7 @@ const describeTime = ({ s, i, h }, lu) => {
 
             // [1-7]#[1-5]
             // a#b the b-th a weekday of the month
-            mat = numDow.match(/^([1-7])#([1-5])$/);
+            mat = numDow.match(C.rx.ranged['wd#wdn']);
             /* istanbul ignore else */
             if (mat) {                
                 return [
@@ -571,8 +551,8 @@ const describeTime = ({ s, i, h }, lu) => {
         }
     },
     describeMonthsYears = ({y, m, dom, dow}, lu) => {
-        const yMatch = y.match(/^(\d+)$/),
-            mMatch = m.match(/^(\d+)$/),
+        const yMatch = y.match(C.rx.loose.n),
+            mMatch = m.match(C.rx.loose.n),
             yEvery = y === '*',
             mEvery = m === '*';
 
@@ -600,7 +580,6 @@ const describeTime = ({ s, i, h }, lu) => {
                     atSingle: mat => lu.inX(lu.monthsNames[parseInt(mat[1], 10)-1]),
                     atMultiple: spl => lu.inMultipX(spl.map(m => lu.monthsNames[parseInt(m, 10)-1])),
                     between: mat => lu.betweenXY(lu.monthsNames[parseInt(mat[1], 10)-1], lu.monthsNames[parseInt(mat[2], 10)-1]),
-                    bounds: C.bounds.months,
                     lu
                 });
             }
@@ -617,7 +596,6 @@ const describeTime = ({ s, i, h }, lu) => {
                     atSingle: mat => lu.inX(mat[1]),
                     atMultiple: spl => lu.inMultipX(spl),
                     between: mat => lu.betweenXY(mat[1], mat[2]),
-                    bounds: C.bounds.years,
                     lu
                 });
                 
@@ -634,7 +612,6 @@ const describeTime = ({ s, i, h }, lu) => {
                         atSingle: mat => lu.inX(lu.monthsNames[parseInt(mat[1], 10)-1]),
                         atMultiple: spl => lu.inMultipX(spl.map(m => lu.monthsNames[parseInt(m, 10)-1])),
                         between: mat => lu.betweenXY(lu.monthsNames[parseInt(mat[1], 10)-1], lu.monthsNames[parseInt(mat[2], 10)-1]),
-                        bounds: C.bounds.months,
                         lu
                     }),
                     digIt({
@@ -647,7 +624,6 @@ const describeTime = ({ s, i, h }, lu) => {
                         atSingle: mat => mat[1],
                         atMultiple: spl => lu.inMultipX(spl),
                         between: mat => lu.betweenXY(mat[1], mat[2]),
-                        bounds: C.bounds.years,
                         lu
                     })
                 ].join(', ');
@@ -655,9 +631,7 @@ const describeTime = ({ s, i, h }, lu) => {
         }
     };
 
-// elements, langUtils(fns)
 const describe = (els, lu) => {
-    // console.log({lu})
     return [
         describeTime(els, lu),
         describeDomDowOccurrence(els, lu),

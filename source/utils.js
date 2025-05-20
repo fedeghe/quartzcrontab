@@ -18,8 +18,16 @@ y   [2xxx,]*
 const C = require('./constants.js');
 
 const { defaults, rx, labels } = C;
-
-const getRangeValidator = ({mainRx, cadenceRx}) => val => {
+const argumentize = o => {
+        const ty = typeof o;
+        switch(ty) {
+            case 'string': return exp2elements(o);
+            case 'object': return {...defaults, ...o};
+            default:;
+        }
+        return {...defaults};
+    },
+    getRangeValidator = ({mainRx, cadenceRx}) => val => {
         const v = `${val}`;
         if (v.match(rx.asterx)) return true;
         const s = v.match(rx.splitter);
@@ -125,5 +133,6 @@ module.exports = {
     yearNow,
     removeSpaces,
     daysLabels2Numbers,
-    exp2elements
+    exp2elements,
+    argumentize
 };

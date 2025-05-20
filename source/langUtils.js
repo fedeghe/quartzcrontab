@@ -91,17 +91,12 @@ const getLangUtils = l => ({
     onThe: (one, two) => l.snt.onTheL
             .replace(/%ph1/, one)
             .replace(/%ph2/, two),
-            
     nearestToThe: (what, n, L) => l.snt.nearestToThe
         .replace(/%ph1/, what)
         .replace(/%ph2/, n)
         .replace(/%ph3/, thize(n, l.snt)),
-
     beforeTheEndOfThe: what => l.snt.beforeTheEndOfThe
             .replace(/%ph1/, what),
-    // fromTo: (f, t) => l.snt.fromTo
-    //         .replace(/%ph1/, f)
-    //         .replace(/%ph2/, t),
     startingOn: what => l.snt.startingOn
             .replace(/%ph1/, what),
     startingFrom: what => l.snt.startingFrom

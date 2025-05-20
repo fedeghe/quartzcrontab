@@ -1,42 +1,25 @@
-
 const {
-    validators,
-    fieldCorrelationValidators,
-    defaults,
-    yearNow,
-    removeSpaces,
-    exp2elements
-} = require('./utils');
-
-const {
-    solve_0_59_ranges,
-    solve_hours_ranges,
-    solve_week_ranges,
-    solve_month_ranges,
-    solve_year_ranges,
-    solve_dom,
-    solve_dow,
-} = require('./dateutils.js');
-
-const langUtils = require('./langUtils.js');
-
-const describer = require('./describe');
-
-const nextGen = require('./nextGen');
-
-const C = require('./constants');
-const en = require('./langs/en.js');
-
-
-const argumentize = o => {
-    const ty = typeof o;
-    switch(ty) {
-        case 'string': return exp2elements(o);
-        case 'object': return {...defaults, ...o};
-        default:;
-    }
-    return {...defaults};
-};
+        validators,
+        fieldCorrelationValidators,
+        defaults,
+        yearNow,
+        removeSpaces,
+        argumentize
+    } = require('./utils'),
+    {
+        solve_0_59_ranges,
+        solve_hours_ranges,
+        solve_week_ranges,
+        solve_month_ranges,
+        solve_year_ranges,
+        solve_dom,
+        solve_dow,
+    } = require('./dateutils.js'),
+    langUtils = require('./langUtils.js'),
+    describer = require('./describe'),
+    nextGen = require('./nextGen'),
+    C = require('./constants'),
+    en = require('./langs/en.js');
 
 class Quartzcron {
     constructor(o) {
