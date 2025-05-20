@@ -14,10 +14,8 @@ m   [1,12]*
 dow [1(SUN), 7(SAT)]*
 y   [2xxx,]*
 */
+const { defaults, rx, labels, errors } = require('./constants.js');
 
-const C = require('./constants.js');
-
-const { defaults, rx, labels } = C;
 const argumentize = o => {
         const ty = typeof o;
         switch(ty) {
@@ -27,9 +25,9 @@ const argumentize = o => {
         }
         return {...defaults};
     },
-    getRangeValidator = ({mainRx, cadenceRx}) => val => {
+    getRangeValidator = (mainRx, cadenceRx) => val => {
         const v = `${val}`;
-        if (v.match(rx.asterx)) return true;
+        if (v.match(rx.dumb.astrxn)) return true;
         const s = v.match(rx.splitter);
         if (!s) return false;
         const starts = s[1].split(/,/),
@@ -52,46 +50,27 @@ const argumentize = o => {
         if(typeof r === 'function') return r(v);
         return `${v}`.match(r);
     }),
-    rx059 = getRangeValidator({
-        mainRx: rx.zeroFiftynine,
-        cadenceRx: rx.zeroFiftynine
-    }),
-    rx023 = getRangeValidator({
-        mainRx: rx.zeroTwentythree,
-        cadenceRx: rx.zeroTwentythree
-    }),
-    rx131 = getRangeValidator({
-        mainRx: rx.oneThirtyone,
-        cadenceRx: rx.oneThirtyone
-    }),
-    rxmonth = getRangeValidator({
-        mainRx: rx.month,
-        cadenceRx: rx.month
-    }),
-    rxYear = getRangeValidator({
-        mainRx: rx.year,
-        cadenceRx: rx.wildCadence
-    }),
-    rxWeekday = getRangeValidator({
-        mainRx: rx.weekday,
-        cadenceRx: rx.weekday
-    }),
+    rx059 = getRangeValidator(rx.ranged['0-59'], rx.ranged['0-59'] ),
+    rx023 = getRangeValidator(rx.ranged['0-23'], rx.ranged['0-23'] ),
+    rx131 = getRangeValidator(rx.ranged['1-31'], rx.ranged['1-31'] ),
+    rxmonth = getRangeValidator(rx.month, rx.month ),
+    rxYear = getRangeValidator(rx.year, rx.wildCadence ),
+    rxWeekday = getRangeValidator(rx.ranged['maybelabelled-wd'], rx.ranged['maybelabelled-wd'] ),
     rxDom = getValidator([
-        rx.oneThirtyone,
-        rx.quest,
-        rx.asterx,
-        rx.weekdayAfterX,
         rx131,
-        rx.LW,
-        rx.Lx,
-        rx.xL31,
-        rx.oneThirtyoneW
+        rx.ranged['1-31'],
+        rx.dumb.quest,
+        rx.dumb.astrxn,
+        rx.dumb['LW?'],
+        rx.ranged['L-md'],
+        rx.ranged['1-31L'],
+        rx.ranged['1-31W']
     ]),
     rxDow = getValidator([
-        rx.quest,
+        rx.dumb.quest,
         rxWeekday,
-        rx.xLweekday,
-        rx.nthWeekDay
+        rx.ranged.fullWd,
+        rx.ranged.nthFullWd
     ]),
     validators = {
         second: rx059,
@@ -104,25 +83,20 @@ const argumentize = o => {
     },
     fieldCorrelationValidators = [{
         validator: ({dom, dow}) =>  !(dow!=='?' && dom!=='?') && !(dow==='?'&&dom==='?'),
-        message: C.errors.domdowExclusivity
+        message: errors.domdowExclusivity
     }],
     daysLabels2Numbers = v => 
         labels.days.reduce(
-            (acc, label, i) => acc.replace(label,i+1), v
+            (acc, label, i) => acc.replace(label, i + 1), v
         ),
     now = new Date(),
     yearNow = now.getFullYear(),
     removeSpaces = s => `${s}`.replace(/\s/mg, ''),
     exp2elements = exp => {
-        const e = exp.split(/\s/);
+        const e = exp.split(rx.dumb.spaceSplit);
         return {
-            s: e[0],
-            i: e[1],
-            h: e[2],
-            dom: e[3],
-            m: e[4],
-            dow: e[5],
-            y: e[6],
+            s: e[0], i: e[1], h: e[2],
+            dom: e[3], m: e[4], dow: e[5], y: e[6]
         }
     };
 

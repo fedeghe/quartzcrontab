@@ -85,86 +85,44 @@ const labels = {
             'wd-wd': /^(([1-7])-([1-7]))$/,
             'wd-wd/wd': /^(([1-7])-([1-7])\/([1-7]))$/,
             'wd#wdn': /^([1-7])#([1-5])$/,
-            'wdL': /^([1-7])L$/,
-            'wd': /^([1-7])$/,
+            wdL: /^([1-7])L$/,
+            wd: /^([1-7])$/,
+            fullWd: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)L$/i,
+            nthFullWd: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\#[1-5]{1}$/i,
+            'maybelabelled-wd': /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)$/i,
+            '0-59': /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
+            '0-23': /^([01]\d|2[0-3]|\d)$/,
+            '1-31': /^([1-9]|1[0-9]|2[0-9]|3[01])$/,
+            '1-31W': /^([1-9]|1[0-9]|2[0-9]|3[01])W$/,
+            '1-31L': /^([1-9]|1[0-9]|2[0-9]|3[01])L$/,
         },
         dumb: {
             L: /^L$/,
             LW: /^LW$/,
+            'LW?': /^LW?$/,
             astrx: /^\*$/,
+            astrxn: /^\*(\/\d*)?$/,
             astrxQuest: /^[*?]$/,
             weekend: /^(7,1|1,7)$/,
             weekday: /^(2,3,4,5,6|2-6)$/,
             comma: /,/,
+            quest: /^\?$/,
+            spaceSplit: /\s/,
             '0OR6': /^[06]$/
         },
-        asterx: /^\*(\/\d*)?$/,
-        zeroFiftynine: /^([0-5]{1}[0-9]{1}|[0-9]{1})$/,
-        zeroTwentythree: /^([01]\d|2[0-3]|\d)$/,
-        oneThirtyone: /^([1-9]|1[0-9]|2[0-9]|3[01])$/,
-        oneThirtyoneW: /^([1-9]|1[0-9]|2[0-9]|3[01])W$/,
-        weekday: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)$/i,     /* this belowis exactly oneThirtyone */
-        weekdayAfterX: /^(?:[1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\/(?:[012]\d|3[0,1]|[1-9]{1})$/i,
-        LW: /^LW?$/,
-
-        //even this uses oneThirtyone
-        Lx: /^(L-([012]\d|3[0,1]|[1-9]{1}))$/,
-
-        xL31: /^([012]\d|3[0,1]|[1-9]{1})L$/,
-        xLweekday: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)L$/i,
-
-        nthWeekDay: /^([1-7]{1}|SUN|MON|TUE|WED|THU|FRI|SAT)\#[1-5]{1}$/i,
-        // dow/dow related
-        quest: /^(\?)$/,
-        /**
-         * ?
-         * *
-         * x/y : x weekday, y [1-31]
-         * x
-         * x,y,z
-         * x-y/z
-         * L
-         * LW
-         * L-x : x [1-31]
-         * xL: x [1-31]
-         * */
-        dom: /^(\?)|(\*)|()$/,
-        
-        /**
-         * ?
-         * x weekday
-         * x-y weekday
-         * x-y/z weekday
-         * xL weekday
-         * x#y   y-th[1,5] weekday x [1,7]
-         */
-        dow: /^(\?)|$/,
-        
-        month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/i,
-        // year: /^(20[2-9][0-9])$/,
-        year: /^(19[7-9]\d)|(20\d\d)$/,
-
-        // match a valid cadence ()
-        wildCadence: /^\d*$/,
-
-        /**
-         * splits number-number/number (second and third optionals)
-         */
         splitter: /^([\d,\w]*)(-([\d\w]*))?(\/([\d\w]*))?$/,
-
+        month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/i,
+        year: /^(19[7-9]\d)|(20\d\d)$/,
+        wildCadence: /^\d*$/,
+        /* splits number-number/number (second and third optionals) */
         next: {
             hasMonths: /JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC/,
             hasWeekdays: /SUN|MON|TUE|WED|THU|FRI|SAT/
         },
         ranges: {
-            // zero59cadence: /^(\*|(\d)|([1-5][0-9]))(\/((\d)|([1-5][0-9])))$/,
             zero59cadence: /^((\d)|([1-5][0-9]))(\/((\d)|([1-5][0-9])))$/,
-            // one7cadence: /^(\*|([1-7]?))(\/([1-7]?))$/,
             one7cadence: /^(([1-7]?))(\/([1-7]?))$/,
-            // one12cadence: /^(\*|([1-9][0-2]?))(\/([1-9][0-2]?))$/,
             one12cadence: /^(([1-9][0-2]?))(\/([1-9][0-2]?))$/,
-
-            // TODO: those two must be replaced with something range specific
             wildRangeCadence: /^([\d,]+)-([\d,]+)(\/(\d*))?$/,
             wildStartCadence: /^(\*|(\d*))(\/(\d*))$/          
         }
