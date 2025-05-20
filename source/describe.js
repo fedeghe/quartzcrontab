@@ -53,8 +53,6 @@ const digIt = ({
         ].join('');
     }
 
-    
-
     // every 3 seconds between 5-th and 10th second     /^\d+-\d\/\d+$/
     mat = target.match(C.rx.loose['n-n/n']);
     if (mat) {
@@ -67,7 +65,6 @@ const digIt = ({
         ].join('');
     }
 
-
     // mixed 1, 3, 4/6, 8
     spl = target.split(',');
     mat = spl.map(i => i.match(C.rx.loose['nORn/n'])).filter(Boolean);
@@ -77,17 +74,16 @@ const digIt = ({
             if(typeof m[2] === 'undefined') {
                 const start = parseInt(m[3], 10),
                     cadence = parseInt(m[4], 10);
-                    
                 acc.res.push([
                     everys(cadence),
                     lu.startingFrom(start)
-                ].join(' '))
+                ].join(' '));
             } else {
                 const v = parseInt(m[1], 10);
                 /* istanbul ignore else */
                 if(!acc.pres.includes(v)){
-                    acc.res.unshift(lu.atX(v))
-                    acc.pres.push(v)
+                    acc.res.unshift(lu.atX(v));
+                    acc.pres.push(v);
                 }
             }
             return acc;
@@ -107,8 +103,7 @@ const describeTime = ({ s, i, h }, lu) => {
             hMatch = h.match(C.rx.loose.n),
             sEvery = s === '*',
             iEvery = i === '*',
-            hEvery = h === '*';
-        let mat, spl;
+            hEvery = h === '*';;
         // all one
         if(sMatch && iMatch && hMatch){
             const _s = parseInt(sMatch[0]),
@@ -301,9 +296,8 @@ const describeTime = ({ s, i, h }, lu) => {
         }
     },
 
-    describeDomDowOccurrence = ({h,i,s, dom, dow, m, y}, lu) => {
-        const mEvery = m === '*',
-            yEvery = y === '*';
+    describeDomDowOccurrence = ({h, i, s, dom, dow, m}, lu) => {
+        const mEvery = m === '*';
         if(
             (dow === '*' && dom==='?')
             ||
@@ -423,14 +417,14 @@ const describeTime = ({ s, i, h }, lu) => {
                         acc.mixed.push([
                             lu.everyX(every, lu.days),
                             lu.startingFrom(lu.thize(start))
-                        ].join(' '))
+                        ].join(' '));
                     }
                     return acc;
                 }, {plain:[], mixed:[]});
                 return [
                     collect.plain.length && lu.multipleThe(collect.plain),
                     collect.mixed.length && lu.multiple(collect.mixed)
-                ].filter(Boolean).join('')
+                ].filter(Boolean).join('');
             }
 
 
@@ -484,7 +478,7 @@ const describeTime = ({ s, i, h }, lu) => {
                     if(typeof m[2] !== 'undefined') {
                         //rx grants it cant be
                         //if(v2 <= max)
-                        acc.push(v2)
+                        acc.push(v2);
                     } else {
                         
                         let cursor = parseInt(m[3], 10);
@@ -498,7 +492,7 @@ const describeTime = ({ s, i, h }, lu) => {
                 }, []).sort((a,b) => a > b ? 1 : -1);
                 return lu.multipleDays(
                     collect.map(c => lu.weekdaysNames[c -1])
-                )
+                );
             }
 
             // [1-7]-[1-7] OR [SUN-SAT]-[SUN-SAT]
@@ -525,7 +519,7 @@ const describeTime = ({ s, i, h }, lu) => {
                         lu.weekdaysNames[start -1],
                         lu.weekdaysNames[end -1]
                     ),
-                ].join(' ')
+                ].join(' ');
             }
 
             // [1-7]L
@@ -535,7 +529,7 @@ const describeTime = ({ s, i, h }, lu) => {
                 return lu.onLast(
                     lu.weekdaysNames[parseInt(mat[1], 10) -1],
                     lu.ofTheX(lu.month)
-                )
+                );
             }
 
             // [1-7]#[1-5]
@@ -546,11 +540,11 @@ const describeTime = ({ s, i, h }, lu) => {
                 return [
                     lu.onTheNth(parseInt(mat[2], 10), lu.weekdaysNames[parseInt(mat[1], 10) -1]),
                     lu.ofTheX(lu.month)
-                ].join(' ')
+                ].join(' ');
             }
         }
     },
-    describeMonthsYears = ({y, m, dom, dow}, lu) => {
+    describeMonthsYears = ({ y, m }, lu) => {
         const yMatch = y.match(C.rx.loose.n),
             mMatch = m.match(C.rx.loose.n),
             yEvery = y === '*',
@@ -642,4 +636,4 @@ const describe = (els, lu) => {
 
 module.exports = {
     describe
-}
+};

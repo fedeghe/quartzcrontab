@@ -34,7 +34,6 @@ module.exports = {
         startingFrom: 'starting from %ph1',
         fromTo: 'from %ph1 to %ph2',
         onLast: 'on the last %ph1 %ph2',
-        
         oneSt: 'st',
         twoNd: 'nd',
         threeRd: 'rd',
@@ -83,5 +82,5 @@ module.exports = {
     years: 'years',
     "of": 'of',
     comma: ',',
-}
+};
 

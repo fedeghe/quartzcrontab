@@ -2,12 +2,13 @@ const labels = {
         days: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
         months: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
     },
+    /* eslint-disable no-unused-vars */
     SEVEN = Array.from({length:7}, (_, i)=>i+1),
     THIRTYONE = Array.from({length:31}, (_, i)=>i+1),
     THIRTY = Array.from({length:30}, (_, i)=>i+1),
     TWENTYNINE = Array.from({length:29}, (_, i)=>i+1),
     TWENTYEIGTH = Array.from({length:28}, (_, i)=>i+1),
-
+    /* eslint-enable no-unused-vars */
     NUMBERS = {
         ZERO : 0,
         ONE : 1,

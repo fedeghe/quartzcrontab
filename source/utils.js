@@ -97,7 +97,7 @@ const argumentize = o => {
         return {
             s: e[0], i: e[1], h: e[2],
             dom: e[3], m: e[4], dow: e[5], y: e[6]
-        }
+        };
     };
 
 module.exports = {

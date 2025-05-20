@@ -1579,9 +1579,6 @@ describe('describe', () => {
         })
     })
 
-
-    
-
     it('throws when no lang file loaded', () => {
         c.loadLang(null)
         expect(

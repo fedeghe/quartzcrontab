@@ -4,6 +4,14 @@ version: 2.1
 orbs:
   node: circleci/node@5
 jobs:
+  lint: 
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: yarn lint
   build-node:
     # Build node project
     executor: node/default
@@ -37,6 +45,7 @@ jobs:
 workflows:
   build-and-test-and-coveralls:
     jobs:
+      - lint
       - build-node
       - test-node:
           requires:

@@ -33,7 +33,7 @@ const getLangUtils = l => ({
         const v = parseInt(x, 10);
         return l.snt.monthDay
             .replace(/%ph1/, v)
-            .replace(/%ph2/, thize(v, l.snt))
+            .replace(/%ph2/, thize(v, l.snt));
     },
     betweenMonthDays: (x, y, L) => {
         const v1 = parseInt(x, 10),
@@ -43,7 +43,7 @@ const getLangUtils = l => ({
             .replace(/%ph2/, thize(v1, l.snt))
             .replace(/%ph3/, v2)
             .replace(/%ph4/, thize(v2, l.snt))
-            .replace(/%ph5/, L)
+            .replace(/%ph5/, L);
     },
     everyStartingFrom: (x, y, L) => {
         const eve = parseInt(x, 10),
@@ -51,7 +51,7 @@ const getLangUtils = l => ({
         return l.snt.everyStartingFromL
             .replace(/%ph1/, eve)
             .replace(/%ph2/, sta+''+thize(sta, l.snt))
-            .replace(/%ph3/, L)
+            .replace(/%ph3/, L);
     },
     multipleThe: n => {
         const last = n.pop(),
@@ -59,7 +59,7 @@ const getLangUtils = l => ({
             thLast = last + ''+thize(last, l.snt);
         return l.snt.multipleThe
             .replace(/%ph1/, thSet)
-            .replace(/%ph2/, thLast)
+            .replace(/%ph2/, thLast);
 
     },
     multipleTheL: (n, L) => {
@@ -69,7 +69,7 @@ const getLangUtils = l => ({
         return l.snt.multipleTheL
             .replace(/%ph1/, thSet)
             .replace(/%ph2/, thLast)
-            .replace(/%ph3/, L)
+            .replace(/%ph3/, L);
 
     },
     multipleDays: n => {
@@ -77,7 +77,7 @@ const getLangUtils = l => ({
             thSet = n.join(`${l.comma} `);
         return l.snt.multipleWDays
             .replace(/%ph1/, thSet)
-            .replace(/%ph2/, last)
+            .replace(/%ph2/, last);
 
     },
     multiple: n => {
@@ -85,13 +85,13 @@ const getLangUtils = l => ({
             thSet = n.join(`${l.comma} `);
         return l.snt.multiple
             .replace(/%ph1/, thSet)
-            .replace(/%ph2/, last)
+            .replace(/%ph2/, last);
 
     },
     onThe: (one, two) => l.snt.onTheL
             .replace(/%ph1/, one)
             .replace(/%ph2/, two),
-    nearestToThe: (what, n, L) => l.snt.nearestToThe
+    nearestToThe: (what, n) => l.snt.nearestToThe
         .replace(/%ph1/, what)
         .replace(/%ph2/, n)
         .replace(/%ph3/, thize(n, l.snt)),

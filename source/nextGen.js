@@ -12,11 +12,11 @@ function* generateDates(base, years, months, dom, dow, hours, minutes, seconds) 
 function* generateDatesForMonth(base, year, month, dom, dow, hours, minutes, seconds) {
     let daysInMonth; 
     if (dom !== '?') {
-        daysInMonth = solve_dom(year, month, dom)
+        daysInMonth = solve_dom(year, month, dom);
     } else
     /* istanbul ignore else */
     if (dow !== '?') {
-        daysInMonth = solve_dow(year, month, dow)
+        daysInMonth = solve_dow(year, month, dow);
     }
     for (let i = 0, l = daysInMonth.length; i < l; i++)
         yield* generateDatesForDay(base, year, month, daysInMonth[i], hours, minutes, seconds);
@@ -34,4 +34,4 @@ function* generateDatesForDay(base, year, month, day, hours, minutes, seconds) {
 
 module.exports = {
     generateDates
-}
+};

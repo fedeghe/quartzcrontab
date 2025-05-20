@@ -1,14 +1,16 @@
 /*
 quartzcron (v.0.0.43)
 */
-const C = require('./constants.js'),
+const {
+        monthEnds,
+        labels,
+        rx,
+        errors,
+        bounds
+    } = require('./constants.js'),
     {daysLabels2Numbers} = require('./utils.js');
 
-const {
-    monthEnds,
-    labels,
-    rx
-} = C;
+
 
 /**
  * Check if a input year is leap of not
@@ -45,7 +47,7 @@ const lastMonthDay = (y, m, wd) => {
 const nDaysBeforeEndOfMonth = (n, y, m) => {
     const end = lastMonthDay(y, m),
         pot = end - n;
-    if (pot < 1) throw new Error(C.errors.notEnoughDays);
+    if (pot < 1) throw new Error(errors.notEnoughDays);
     return pot;
 };
 
@@ -53,15 +55,15 @@ const nDaysBeforeEndOfMonth = (n, y, m) => {
  * returns the n-th weekday present in that month of that year 
  */
 const nDayOfMonth = (n, wd, y, m) => {
-    if (wd < 0 || wd > 6) throw new Error(C.errors.nonWeekday);
-    if (n < 0 || n > 5) throw new Error(C.errors.monthsOutOfBounds);
+    if (wd < 0 || wd > 6) throw new Error(errors.nonWeekday);
+    if (n < 0 || n > 5) throw new Error(errors.monthsOutOfBounds);
     const end = lastMonthDay(y, m),
         da = new Date(Date.UTC(y,m,1,0,0)),
         first = da.getUTCDay(),// 0-6
         distance = (first-1+7)%7,
         firstTarget = (wd + 7 - distance) % 7,
         nthTarget = (n-1)*7 + firstTarget;
-    if (nthTarget > end) throw new Error(C.errors.monthOutOfBounds);
+    if (nthTarget > end) throw new Error(errors.monthOutOfBounds);
     return nthTarget;     
 };
 
@@ -91,13 +93,13 @@ const getRangeSolver = ({
             let p = parseInt(r[2], 10);
             if(r[2]) {
                 /* istanbul ignore else */
-                if (p <= bounds.max)acc.push(p)
+                if (p <= bounds.max)acc.push(p);
             } else {
                 let cursor = parseInt(r[3], 10);
                 const every = parseInt(r[4], 10);
                 while(cursor <= bounds.max){
                     acc.push(cursor);
-                    cursor += every
+                    cursor += every;
                 }
             }
             return acc;
@@ -116,6 +118,7 @@ const getRangeSolver = ({
                 ret.push(i);
             }
         } else {
+            // eslint-disable-next-line no-unused-vars
             ret = Array.from({length: max-min+1}, (_, i) => i+min);
         }
         return ret;
@@ -128,6 +131,7 @@ const getRangeSolver = ({
 const getSpecialSolver = solvers => (y, m, val) => {
     const d = new Date(Date.UTC(y, m-1, 1, 0, 0)),
         lastDate = lastMonthDay(y, m-1),
+        // eslint-disable-next-line no-unused-vars
         allDays = Array.from({length: lastDate}, (_,i) => i+1);
     for(var i = 0, l = solvers.length, r; i < l; i++){
         r = solvers[i]({y, m, val, d, allDays, lastDate});
@@ -210,7 +214,7 @@ const dom_solvers = [
             return mat.reduce((acc, r) => {
                 let v2 = parseInt(r[2], 10);
                 if(typeof r[2] !== 'undefined') {
-                    if(v2 <= lastDate) acc.push(v2)
+                    if(v2 <= lastDate) acc.push(v2);
                 } else {
                     let cursor = parseInt(r[3], 10);
                     const every = parseInt(r[4], 10);
@@ -220,18 +224,14 @@ const dom_solvers = [
                     }
                 }
                 return acc;
-            }, []).sort(( a, b ) => a > b ? 1 : -1)
-            
-        }   
-
-
-
-        return []
+            }, []).sort(( a, b ) => a > b ? 1 : -1);
+        }
+        return [];
     },
 
     // [1-31] - [1-31] / [1-31]
     ({val, lastDate}) => {
-        const vals = val.match(C.rx.ranged['md-md/md']),
+        const vals = val.match(rx.ranged['md-md/md']),
             res = [];
         if(vals){
             const add = Math.min(parseInt(vals[3],10), lastDate);
@@ -246,15 +246,15 @@ const dom_solvers = [
     },
 
     // L
-    ({val, lastDate}) => val.match(C.rx.dumb.L) ? [lastDate]: [],
+    ({val, lastDate}) => val.match(rx.dumb.L) ? [lastDate]: [],
 
     // LW
     ({val, lastDate, d}) => {
-        if(val.match(C.rx.dumb.LW)){
+        if(val.match(rx.dumb.LW)){
             d.setUTCDate(lastDate);
             let res = d.getUTCDay(),
                 min = 0;
-            while(`${(res - min + 7)%7 }`.match(C.rx.dumb['0OR6'])){
+            while(`${(res - min + 7)%7 }`.match(rx.dumb['0OR6'])){
                 min++;
             }
             return [lastDate-min];
@@ -265,7 +265,7 @@ const dom_solvers = [
     // [1-31]W
     // /^([1-9]|1[0-9]|2[0-9]|3[01])W$/
     ({val, lastDate, d}) => {
-        let mat = val.match(C.rx.ranged.mdW);
+        let mat = val.match(rx.ranged.mdW);
         if(mat){
             let v = parseInt(mat[1], 10),
                 res;
@@ -292,7 +292,7 @@ const dom_solvers = [
     
     // L-[1-31]
     ({val, lastDate}) => {
-        const vals = val.match(C.rx.ranged['L-md']);
+        const vals = val.match(rx.ranged['L-md']);
         if(vals){
             const last = lastDate-parseInt(vals[1]);
             return last> 0 ? [last] : [];
@@ -317,7 +317,7 @@ const dow_solvers = [
     // *
     ({val, allDays}) =>
         // val.match(/^(\*)$/)
-        val.match(C.rx.dumb.astrx)
+        val.match(rx.dumb.astrx)
         ? allDays
         : [],
 
@@ -327,7 +327,7 @@ const dow_solvers = [
     
     ({val, d, lastDate}) => {
         // const mat = val.match(/^([1-7]|\*)\/([1-7])$/);
-        const mat = val.match(C.rx.ranged['wdOR*/wd']);
+        const mat = val.match(rx.ranged['wdOR*/wd']);
         let res = [];
         
         if (mat) {
@@ -351,13 +351,13 @@ const dow_solvers = [
     
     // one or more [1-7] OR [SUN-SAT] comma separated
     ({val, d, lastDate}) => {
-        let vals = daysLabels2Numbers(val).split(C.rx.dumb.comma);
+        let vals = daysLabels2Numbers(val).split(rx.dumb.comma);
         const firstDayWd = d.getUTCDay()+1,// [0-6] -> [1-7]
             res = [],
             max = 7;
 
         let mat = vals.map(
-            s => s.match(C.rx.ranged['wdORwd/wd'])
+            s => s.match(rx.ranged['wdORwd/wd'])
         ).filter(Boolean);
 
         // collect all weekdays, counting explicit ones
@@ -370,7 +370,7 @@ const dow_solvers = [
                 if(typeof r[2] !== 'undefined') {
                     //not needed ..the rx grants it
                     //if(v2 <= max) 
-                    acc.push(v2)
+                    acc.push(v2);
                 } else {
                     
                     let cursor = parseInt(r[3], 10);
@@ -381,13 +381,13 @@ const dow_solvers = [
                     }
                 }
                 return acc;
-            }, []).map(v => v.toString())
+            }, []).map(v => v.toString());
         }
 
         // now for 2,3,4,6 in [1-7] scan the month to collect right dates
         if(
             // vals.every(v => v.match(/^([1-7])$/))
-            vals.every(v => v.match(C.rx.ranged.wd))
+            vals.every(v => v.match(rx.ranged.wd))
         ) {
             let cursor = firstDayWd, 
                 toAddDate = 1;
@@ -403,7 +403,7 @@ const dow_solvers = [
     // [1-7]-[1-7] OR [SUN-SAT]-[SUN-SAT]
     ({val, d, lastDate}) => {
         const mat = daysLabels2Numbers(val)
-            .match(C.rx.ranged['wd-wd']);
+            .match(rx.ranged['wd-wd']);
             // .match(/^(([1-7])-([1-7]))$/);
         let res = [];
         
@@ -433,7 +433,7 @@ const dow_solvers = [
     // a-b/c every c days between as and bs
     ({val, d, lastDate}) => {
         const mat = daysLabels2Numbers(val)
-                .match(C.rx.ranged['wd-wd/wd']),
+                .match(rx.ranged['wd-wd/wd']),
                 // .match(/^(([1-7])-([1-7])\/([1-7]))$/),
             res = [];
             
@@ -451,7 +451,8 @@ const dow_solvers = [
                 range.push(cursor);
                 rangeFilled = cursor === to;
             }
-            range = range.filter((e,i) => {
+            // eslint-disable-next-line no-unused-vars
+            range = range.filter((_,i) => {
                 return i === 0 || i % cadence === 0;
             });
             while(toAddDate <= lastDate) {
@@ -466,7 +467,7 @@ const dow_solvers = [
     // [1-7]L
     // aL the last a of the month
     ({val, d, lastDate}) => {
-        const mat = val.match(C.rx.ranged.wdL);
+        const mat = val.match(rx.ranged.wdL);
         // const mat = val.match(/^([1-7])L$/);
         let res = [],
             trg = lastDate;
@@ -492,7 +493,7 @@ const dow_solvers = [
     // [1-7]#[1-5]
     // a#b the b-th a weekday of the month
     ({val, d, lastDate}) => {
-        const mat = val.match(C.rx.ranged['wd#wdn']),
+        const mat = val.match(rx.ranged['wd#wdn']),
         // const mat = val.match(/^([1-7])#([1-5])$/),
             res = [];
         d.setUTCDate(1);
@@ -516,38 +517,38 @@ const dow_solvers = [
 const solve_dow = getSpecialSolver(dow_solvers);
 
 const solve_0_59_ranges = getRangeSolver({
-        bounds: C.bounds.seconds,
-        rx: C.rx.ranges.wildRangeCadence
+        bounds: bounds.seconds,
+        rx: rx.ranges.wildRangeCadence
     }),
     solve_hours_ranges = getRangeSolver({
-        bounds: C.bounds.hour,
-        rx: C.rx.ranges.wildRangeCadence
+        bounds: bounds.hour,
+        rx: rx.ranges.wildRangeCadence
     }),
     solve_month_ranges = getRangeSolver({
-        bounds: C.bounds.month,
-        labelTransformer: vstr => vstr.match(C.rx.next.hasMonths)
+        bounds: bounds.month,
+        labelTransformer: vstr => vstr.match(rx.next.hasMonths)
             ? labels.months.reduce(
                 (acc, day, i) => acc.replace(day, i+1),
                 vstr
             )
             : vstr,
-        rx: C.rx.ranges.wildRangeCadence
+        rx: rx.ranges.wildRangeCadence
     }),
     solve_year_ranges = getRangeSolver({
-        bounds: C.bounds.year,
-        rx: C.rx.ranges.wildRangeCadence
+        bounds: bounds.year,
+        rx: rx.ranges.wildRangeCadence
     }),
     
     // this will be no more needed
     solve_week_ranges = getRangeSolver({
-        bounds: C.bounds.week,
-        labelTransformer: vstr => vstr.match(C.rx.next.hasWeekdays)
+        bounds: bounds.week,
+        labelTransformer: vstr => vstr.match(rx.next.hasWeekdays)
             ? labels.days.reduce(
                 (acc, day, i) => acc.replace(day, i+1),
                 vstr
             )
             : vstr,
-        rx: C.rx.ranges.wildRangeCadence
+        rx: rx.ranges.wildRangeCadence
     });
 
 
