@@ -2,6 +2,7 @@
 added methods:
 - `onFirstMonthWeekDay` (shortcut for `dom:1W`)
 - describe works (only english locale shipped)
+- validators on setters and refined validators for validate
 
 
 ## 0.0.43  
