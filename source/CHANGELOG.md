@@ -1,7 +1,9 @@
 ## 0.0.44
 added methods:
 - `onFirstMonthWeekDay` (shortcut for `dom:1W`)
-- describe works (only english locale shipped)
+- experimental: describe works (only english locale shipped)
+- bugfix: validators where not set correctly to accept multimple values like `2,30-39,45-50/2,55/5` for seconds for example
+    same was happening for all fields allowing multiple elements, giving false nevetives from when invoking `validate`
 
 
 ## 0.0.43  

@@ -1,11 +1,13 @@
 const {
-        validators,
-        fieldCorrelationValidators,
         defaults,
         yearNow,
         removeSpaces,
         argumentize
     } = require('./utils'),
+    {
+        validators,
+        fieldCorrelationValidators
+    } = require('./validators'),
     {
         solve_0_59_ranges,
         solve_hours_ranges,
@@ -301,17 +303,17 @@ class Quartzcron {
         if (!validators.hour(elements.h)) {
             errors.push(C.errors.malformed.hours);
         }
-        if (!validators.month(elements.m)) {
-            errors.push(C.errors.malformed.months);
-        }
-        if (elements.y && !validators.year(elements.y)) {
-            errors.push(C.errors.malformed.years);
-        }
         if (!validators.dayOfMonth(elements.dom)) {
             errors.push(C.errors.malformed.dom);
         }
+        if (!validators.month(elements.m)) {
+            errors.push(C.errors.malformed.months);
+        }
         if (!validators.dayOfWeek(elements.dow)) {
             errors.push(C.errors.malformed.dow);
+        }
+        if (elements.y && !validators.year(elements.y)) {
+            errors.push(C.errors.malformed.years);
         }
         return {
             valid: errors.length === 0,
