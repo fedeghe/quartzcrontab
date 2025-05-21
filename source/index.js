@@ -1,11 +1,13 @@
 const {
-        validators,
-        fieldCorrelationValidators,
         defaults,
         yearNow,
         removeSpaces,
         argumentize
     } = require('./utils'),
+    {
+        validators,
+        fieldCorrelationValidators
+    } = require('./validators'),
     {
         solve_0_59_ranges,
         solve_hours_ranges,

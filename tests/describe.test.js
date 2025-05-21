@@ -3,19 +3,19 @@ const Quartzcron  = require('../dist/index.js');
 const C = require('../dist/constants.js');
 
 const en = require('../dist/langs/en.js');
-const ita = require('../dist/langs/it.js');
+
 
 describe('describe', () => {
-    let c
+    let c;
     beforeEach(() => {
-        c = new Quartzcron()
-    })
+        c = new Quartzcron();
+    });
 
     describe('basic describe sector - h:i:s - en', () => {
-        let qc
+        let qc;
         beforeEach(() => {
-            qc = new Quartzcron()
-        })
+            qc = new Quartzcron();
+        });
         test.each([
             [
                 'at 13:00:00, every day',
@@ -1087,14 +1087,14 @@ describe('describe', () => {
             prep(qc);
             // console.log(qc.out())
             expect(qc.describe()).toBe(expected);
-        })
-    })
+        });
+    });
 
     describe('basic describe sector - m:y - en', () => {
-        let qc
+        let qc;
         beforeEach(() => {
-            qc = new Quartzcron()
-        })
+            qc = new Quartzcron();
+        });
         test.each([
 
             [
@@ -1317,14 +1317,14 @@ describe('describe', () => {
             prep(qc);
             // console.log(qc.out())
             expect(qc.describe()).toBe(expected);
-        })
-    })
+        });
+    });
 
     describe('basic describe sector - dom - en', () => {
-        let qc
+        let qc;
         beforeEach(() => {
-            qc = new Quartzcron()
-        })
+            qc = new Quartzcron();
+        });
         test.each([
             
             [
@@ -1401,14 +1401,14 @@ describe('describe', () => {
             prep(qc);
             // console.log(qc.out())
             expect(qc.describe()).toBe(expected);
-        })
-    })
+        });
+    });
 
     describe('basic describe sector - dow - en', () => {
-        let qc
+        let qc;
         beforeEach(() => {
-            qc = new Quartzcron()
-        })
+            qc = new Quartzcron();
+        });
         test.each([
             [
                 'at 00:00:00, every day',
@@ -1501,15 +1501,15 @@ describe('describe', () => {
             prep(qc);
             // console.log(qc.out())
             expect(qc.describe()).toBe(expected);
-        })
-    })
+        });
+    });
 
 
     describe('full describe - en', () => {
-        let qc
+        let qc;
         beforeEach(() => {
-            qc = new Quartzcron()
-        })
+            qc = new Quartzcron();
+        });
         test.each([
             [
                 'at second 01, at 36, at 35 and every 2 minutes starting from 20, at hour 15, every day',
@@ -1527,14 +1527,14 @@ describe('describe', () => {
             prep(qc);
             // console.log(qc.out())
             expect(qc.describe()).toBe(expected);
-        })
-    })
+        });
+    });
 
     describe('check mixed cadences - en', () => {
-        let qc
+        let qc;
         beforeEach(() => {
-            qc = new Quartzcron()
-        })
+            qc = new Quartzcron();
+        });
         test.each([
             [
                 'every 3 seconds starting from 10 and every 5 seconds starting from 10, at minute 00, at hour 00, every day',
@@ -1576,13 +1576,13 @@ describe('describe', () => {
             prep(qc);
             // console.log(qc.out())
             expect(qc.describe()).toBe(expected);
-        })
-    })
+        });
+    });
 
     it('throws when no lang file loaded', () => {
-        c.loadLang(null)
+        c.loadLang(null);
         expect(
             () => c.describe()
-        ).toThrow(C.errors.noLangFile)
-    })
-})
+        ).toThrow(C.errors.noLangFile);
+    });
+});
