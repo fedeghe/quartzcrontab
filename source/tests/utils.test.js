@@ -9,7 +9,7 @@ const {
     removeSpaces,
     daysLabels2Numbers,
     exp2elements
-} = utils
+} = utils;
 describe('utils', () => {
     describe('validators', () => {
         describe('seconds', () => {
@@ -20,8 +20,8 @@ describe('utils', () => {
                 '0-58',
                 '0-58/3',
             ])('positives', v => {
-                expect(validators.second(v)).toBeTruthy()
-            })
+                expect(validators.second(v)).toBeTruthy();
+            });
 
             test.each([
                 -2, 60,
@@ -29,9 +29,9 @@ describe('utils', () => {
                     '0+58',
                     '0-58\\3',
             ])('negatives', v => {
-                expect(validators.second(v)).toBeFalsy()
-            })
-        }) 
+                expect(validators.second(v)).toBeFalsy();
+            });
+        }); 
 
         describe('minutes', () => {
             test.each([
@@ -40,8 +40,8 @@ describe('utils', () => {
                 '0-58',
                 '0-58/3',
             ])('positives', v => {
-                expect(validators.minute(v)).toBeTruthy()
-            })
+                expect(validators.minute(v)).toBeTruthy();
+            });
 
             test.each([
                 -2, 60,
@@ -49,9 +49,9 @@ describe('utils', () => {
                     '0+58',
                     '0-58\\3',
             ])('negatives', v => {
-                expect(validators.minute(v)).toBeFalsy()
-            })
-        }) 
+                expect(validators.minute(v)).toBeFalsy();
+            });
+        }); 
 
         describe('hours', () => {
             test.each([
@@ -60,8 +60,8 @@ describe('utils', () => {
                 '0-22',
                 '0-21/3',
             ])('positives', v => {
-                expect(validators.hour(v)).toBeTruthy()
-            })
+                expect(validators.hour(v)).toBeTruthy();
+            });
 
             test.each([
                 -2, 24,
@@ -69,9 +69,9 @@ describe('utils', () => {
                 '0+23',
                 '0-21\\3',
             ])('negatives', v => {
-                expect(validators.hour(v)).toBeFalsy()
-            })
-        }) 
+                expect(validators.hour(v)).toBeFalsy();
+            });
+        }); 
 
         describe('months', () => {
             test.each([
@@ -80,8 +80,8 @@ describe('utils', () => {
                 '1-11',
                 '1-10/2',
             ])('positives', v => {
-                expect(validators.month(v)).toBeTruthy()
-            })
+                expect(validators.month(v)).toBeTruthy();
+            });
 
             test.each([
                 -1, 0, 13,
@@ -89,9 +89,9 @@ describe('utils', () => {
                 '1+12',
                 '1-11\\3',
             ])('negatives', v => {
-                expect(validators.month(v)).toBeFalsy()
-            })
-        }) 
+                expect(validators.month(v)).toBeFalsy();
+            });
+        }); 
 
         describe('years', () => {
             test.each([
@@ -100,8 +100,8 @@ describe('utils', () => {
                 '1972-2050',
                 '1972-2050/3',
             ])('positives', v => {
-                expect(validators.year(v)).toBeTruthy()
-            })
+                expect(validators.year(v)).toBeTruthy();
+            });
 
             test.each([
                 -1, 1969, 2100,
@@ -109,9 +109,9 @@ describe('utils', () => {
                 '1972+2050',
                 '1972-2050\\/3',
             ])('negatives', v => {
-                expect(validators.year(v)).toBeFalsy()
-            })
-        }) 
+                expect(validators.year(v)).toBeFalsy();
+            });
+        }); 
 
         describe('day of month', () => {
             test.each([
@@ -125,8 +125,8 @@ describe('utils', () => {
                 '5-18',
                 '5-28/3',
             ])('positives', v => {
-                expect(validators.dayOfMonth(v)).toBeTruthy()
-            })
+                expect(validators.dayOfMonth(v)).toBeTruthy();
+            });
 
             test.each([
                 '**', '!',
@@ -136,9 +136,9 @@ describe('utils', () => {
                 '64W',
                 -1, 32
             ])('negatives', v => {
-                expect(validators.dayOfMonth(v)).toBeFalsy()
-            })
-        }) 
+                expect(validators.dayOfMonth(v)).toBeFalsy();
+            });
+        }); 
 
         describe('day of week', () => {
             test.each([
@@ -149,8 +149,8 @@ describe('utils', () => {
                 'SUN-TUE','SUN-TUE/2',
                 'SUN', 'SAT'
             ])('positives', v => {
-                expect(validators.dayOfWeek(v)).toBeTruthy()
-            })
+                expect(validators.dayOfWeek(v)).toBeTruthy();
+            });
 
             test.each([
                 '**', '!',
@@ -161,10 +161,10 @@ describe('utils', () => {
                 'SUN+TUE','SUN-TUE=2',
                 'SAN', 'SUT'
             ])('negatives', v => {
-                expect(validators.dayOfWeek(v)).toBeFalsy()
-            })
-        }) 
-    })
+                expect(validators.dayOfWeek(v)).toBeFalsy();
+            });
+        }); 
+    });
 
     describe('fieldCorrelationValidators', () => {
         test.each([
@@ -173,10 +173,10 @@ describe('utils', () => {
         ])('positives', o => {
             fieldCorrelationValidators.forEach(
                 ({validator}) => {
-                    expect(validator(o)).toBeTruthy()
+                    expect(validator(o)).toBeTruthy();
                 }
-            )
-        })
+            );
+        });
         
         test.each([
             { dom: '?', dow: '?'},
@@ -185,38 +185,38 @@ describe('utils', () => {
         ])('negatives', o => {
             fieldCorrelationValidators.forEach(
                 ({validator}) => {
-                    expect(validator(o)).toBeFalsy()
+                    expect(validator(o)).toBeFalsy();
                 }
-            )
-        })
-    })
+            );
+        });
+    });
 
     describe('defaults', () => {
         it('have the expected values', () => {
-            expect(defaults.s).toBe('0')
-            expect(defaults.i).toBe('0')
-            expect(defaults.h).toBe('0')
-            expect(defaults.dom).toBe('*')
-            expect(defaults.m).toBe('*')
-            expect(defaults.dow).toBe('?')
-            expect(defaults.y).toBe('*')
-        })
-    })
+            expect(defaults.s).toBe('0');
+            expect(defaults.i).toBe('0');
+            expect(defaults.h).toBe('0');
+            expect(defaults.dom).toBe('*');
+            expect(defaults.m).toBe('*');
+            expect(defaults.dow).toBe('?');
+            expect(defaults.y).toBe('*');
+        });
+    });
 
     describe('yearNow', () => {
         it('return the expected', () => {
-            expect(yearNow).toBe((new Date).getFullYear())
-        })
-    })
+            expect(yearNow).toBe((new Date).getFullYear());
+        });
+    });
 
     describe('removeSpaces', () => {
         test.each([
             [' a, b c d e f g', 'a,bcdefg'],
             [' 45 c246u35w qc5yh    w45  ', '45c246u35wqc5yhw45'],
         ])('removeSpaces("%s")', (inp, expected) => {
-            expect(removeSpaces(inp)).toBe(expected)
-        })
-    })
+            expect(removeSpaces(inp)).toBe(expected);
+        });
+    });
 
     describe('daysLabels2Numbers', () => {
         test.each([
@@ -224,9 +224,9 @@ describe('utils', () => {
             ['MON,FRI,SAT', '2,6,7'],
             ['MON,FRU,SAT', '2,FRU,7'],
         ])(`daysLabels2Numbers("%s")`, (inp, expected) => {
-            expect(daysLabels2Numbers(inp)).toBe(expected)
-        })
-    })
+            expect(daysLabels2Numbers(inp)).toBe(expected);
+        });
+    });
     describe('exp2elements', () => {
 
         test.each([
@@ -235,10 +235,10 @@ describe('utils', () => {
             ['*/10 0 0 * * ? *', {s:'*/10',i:'0',h:'0',dom:'*',m:'*',dow:'?',y:'*'}],
             
         ])('%s', (exp, expected) => {
-            expect(exp2elements(exp)).toMatchObject(expected)
-        })
-    })
-})
+            expect(exp2elements(exp)).toMatchObject(expected);
+        });
+    });
+});
 
 
 

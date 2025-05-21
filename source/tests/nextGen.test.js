@@ -3,16 +3,16 @@ const Quartzcron  = require('../dist/index.js');
 const C = require('../dist/constants.js');
 
 describe('Quartzcron.next', () => {
-    let c
+    let c;
     beforeEach(() => {
-        c = new Quartzcron()
-    })
+        c = new Quartzcron();
+    });
 
     describe('basic next coverage cases', () => {
-        let qc
+        let qc;
         beforeEach(() => {
-            qc = new Quartzcron()
-        })
+            qc = new Quartzcron();
+        });
         test.each([
             [
                 'too late',
@@ -213,43 +213,44 @@ describe('Quartzcron.next', () => {
                     ]
             ],
 
+        // eslint-disable-next-line no-unused-vars
         ])('%s', (_ , prep, n, trans, date, expected) => {
-            prep(qc)
+            prep(qc);
             expect(
                 qc.next({ n, date }).map(trans)
-            ).toMatchObject(expected)
-        })
-    })
+            ).toMatchObject(expected);
+        });
+    });
     describe('more case to return the expected', () => {
         it('use the remotest (cover real date)', () => {
             c.atYear('2099');
-            const next = c.next()
+            const next = c.next();
             expect(
                 next.map(s=>s.toUTCString())
             ).toMatchObject([
                 "Thu, 01 Jan 2099 00:00:00 GMT"
-            ])
-        })
+            ]);
+        });
         it('next handles the passed', () => {
             c.atYear('2099');
-            const next = c.next()
+            const next = c.next();
             expect(
                 next.map(s=>s.toUTCString())
             ).toMatchObject([
                 "Thu, 01 Jan 2099 00:00:00 GMT"
-            ])
-        })
-    })
+            ]);
+        });
+    });
     describe('some cases from static validate', () => {
-        const date = new Date('01:00:00 6-5-2025 GMT')// 5th june 2025
-        let qc
+        const date = new Date('01:00:00 6-5-2025 GMT');// 5th june 2025
+        let qc;
         beforeEach(() => {
-            qc = new Quartzcron()
-        })
+            qc = new Quartzcron();
+        });
         test.each([
             [
                 '0 0 0 * * ? *',
-                i => {},
+                () => {},
                 3,
                 [
                     "Fri, 06 Jun 2025 00:00:00 GMT",
@@ -394,22 +395,22 @@ describe('Quartzcron.next', () => {
         ])('case %s', (str, act, n, exp) => {
             act(qc);
             const next = qc.next({ n, date });
-            expect(qc.out()).toBe(str)
+            expect(qc.out()).toBe(str);
             expect(
                 next.map(s=>s.toUTCString())
-            ).toMatchObject(exp)
+            ).toMatchObject(exp);
             expect(
                 qc.next({ n, date, exp: str})
                     .map(s=>s.toUTCString())
-            ).toMatchObject(exp)
-        })
-    })
+            ).toMatchObject(exp);
+        });
+    });
 
     it('throws when invalid date is passed', () => {
         expect(
             () => c.next({
                 date: new Date('18:19:20 56-37-2025')
             })
-        ).toThrow(C.errors.invalidDate)
-    })
-})
+        ).toThrow(C.errors.invalidDate);
+    });
+});
