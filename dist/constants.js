@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.43)
+quartzcron (v.0.0.44)
 */
 const labels = {
         days: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
@@ -75,6 +75,7 @@ const labels = {
             'n-n': /^(\d+)-(\d+)$/,
             'n-n/n': /^(\d+)-(\d+)\/(\d+)$/,
             'nORn/n': /^((\d+)|(\d+)\/(\d+))$/,
+            'n-n/nOPZ': /^(\d+|\w{3})(-(\d+|\w{3}))?(\/(\d+))?$/,
         },
         ranged:{
             'md/md': /^([1-9]|1[0-9]|2[0-9]|3[01])\/([1-9]|1[0-9]|2[0-9]|3[01])$/,
@@ -117,6 +118,7 @@ const labels = {
         splitter: /^([\d,\w]*)(-([\d\w]*))?(\/([\d\w]*))?$/,
         month: /^(^0?[1-9]$)|(^1[0-2]$)|(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$/i,
         year: /^(19[7-9]\d)|(20\d\d)$/,
+        yearCadence: /^(([0-9])|(\d\d)|(1[0-2]\d))$/, // [1-129]
         wildCadence: /^\d*$/,
         /* splits number-number/number (second and third optionals) */
         next: {

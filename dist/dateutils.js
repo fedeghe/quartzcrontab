@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.43)
+quartzcron (v.0.0.44)
 */
 const {
         monthEnds,

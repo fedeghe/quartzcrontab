@@ -7,7 +7,7 @@
 
 
 # quartzcron  
-version: `0.0.43`
+version: `0.0.44`
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  

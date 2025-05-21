@@ -1,27 +1,30 @@
 /*
-quartzcron (v.0.0.43)
+quartzcron (v.0.0.44)
 */
 const { rx, errors } = require('./constants.js');
 const getRangeValidator = (mainRx, cadenceRx) => val => {
         const v = `${val}`;
         if (v.match(rx.dumb.astrxn)) return true;
-        const s = v.match(rx.splitter);
-        if (!s) return false;
-        const starts = s[1].split(/,/),
-            to = s[3],
-            cadence = s[5];
-        return (
-            starts.length &&
-            starts.every(start => start.match(mainRx)) &&
-            (
-                !to || (
-                    to.match(mainRx) && (
-                        !cadence ||
-                        !!cadence.match(cadenceRx)
-                    )
-                )
-            )
-        );
+        
+        const elements = v.split(/,/),
+            matches = elements.map(el => el.match(rx.loose['n-n/nOPZ'])).filter(Boolean);
+        if(matches.length !== elements.length) return false;
+        // 1,3,5 => n-n/n
+        // 1,3 => n-n
+        // 1,5 => n/n
+        // 1 => n
+        return matches.every(m => {
+            const base = m[1].match(mainRx);
+            if (base) {
+                if (m[3] && m[5]){
+                    return m[3].match(mainRx) && m[5].match(cadenceRx);
+                }
+                if(m[3]) return m[3].match(mainRx);
+                if(m[5]) return m[5].match(cadenceRx);
+            }
+            return base;
+        });
+
     },
     getValidator = rxs => v => rxs.find(r => {
         if(typeof r === 'function') return r(v);
@@ -31,7 +34,7 @@ const getRangeValidator = (mainRx, cadenceRx) => val => {
     rx023 = getRangeValidator(rx.ranged['0-23'], rx.ranged['0-23'] ),
     rx131 = getRangeValidator(rx.ranged['1-31'], rx.ranged['1-31'] ),
     rxmonth = getRangeValidator(rx.month, rx.month ),
-    rxYear = getRangeValidator(rx.year, rx.wildCadence ),
+    rxYear = getRangeValidator(rx.year, rx.yearCadence ),
     rxWeekday = getRangeValidator(rx.ranged['maybelabelled-wd'], rx.ranged['maybelabelled-wd'] ),
     rxDom = getValidator([
         rx131,
