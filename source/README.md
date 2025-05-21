@@ -1,8 +1,10 @@
 
-[![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcron/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcron?branch=master)
-![GitHub top language](https://img.shields.io/github/languages/top/fedeghe/quartzcron?labelColor=%23fede76)
-![NPM License](https://img.shields.io/npm/l/quartzcron?style=plastic&color=blue)
-[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master)
+[![Coverage Status](https://coveralls.io/repos/github/fedeghe/quartzcron/badge.svg?branch=master)](https://coveralls.io/github/fedeghe/quartzcron?branch=master) ![NPM License](https://img.shields.io/npm/l/quartzcron?style=plastic&color=blue) [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/XxqmUuW3z2J9FC2yrGaqm6/Gqxo9Gfjfd8ERTJvcgnYw9/tree/master)
+
+![GitHub top language](https://img.shields.io/github/languages/top/fedeghe/quartzcron?labelColor=%23fede76) ![Static Badge](https://img.shields.io/badge/Human%20coded-100%25-blue?style=plastic)
+
+![urlotrack](https://click.jmvc.org/p/5I8eDsOJ/1)
+
 
 # quartzcron  
 version: `maltaV('PACKAGE.version')`
@@ -224,9 +226,11 @@ every `wd` `[1-7][SUN-SAT]`; resets any previous value set there; when cadence i
     ``` js
     qtc.atWeekDay('WED')
     // { dom: `?`, dow: 'WED', ...}
+    qtc.atWeekDay('WED', 3)
+    // { dom: `?`, dow: 'WED/3', ...}
     qtc.atWeekDay('WED,FRI')
     // { dom: `?`, dow: 'WED,FRI', ...}
-    qtc.atWeekDay('MON-FRI',2)
+    qtc.atWeekDay('MON-FRI', 2) // or qtc.atWeekDay('MON-FRI/2')
     // { dom: '?`, dow: 'MON-FRI/2', ...}
     ```
 
@@ -235,10 +239,10 @@ every `wd` in `[1,7]` or (...and corresponding to) `{SUN,MON,TUE,WED,THU,FRI,SAT
     ``` js
     qtc.atWeekDayAdd('MON')
     // { dom: `?`, dow: 'MON', ...}
-    qtc.atWeekDayAdd('WED')
-    // { dom: `?`, dow: 'MON,WED', ...}
-    qtc.atWeekDayAdd('FRI')
-    // { dom: '?`, dow: 'MON,WED,FRI', ...}
+    qtc.atWeekDayAdd('WED', 2)
+    // { dom: `?`, dow: 'MON,WED/2', ...}
+    qtc.atWeekDayAdd('FRI-SAT')
+    // { dom: '?`, dow: 'MON,WED/2,FRI-SAT', ...}
     ```
 
 - `everyWeekDay()`  
@@ -260,6 +264,7 @@ sets the target day of month, can be:
     - `*`: all days
     - `n`: with n in `[1,31]`
     - `n,m,...`: comma separated values all in `[1,31]`
+    - `n/c`: every c starting from n  
     - `n-m`: from `n` to `m` (in `[1,31]`)
     - `n-m/c`: from `n` to `m` (in `[1,31]`) with `c` cadence
 for the last two examples there's also an on purpose method named `betweenMonthDays`
@@ -274,6 +279,8 @@ for the last two examples there's also an on purpose method named `betweenMonthD
     // { dom: '10-20', dow: '?', ...} 
     qtc.atMonthDay('10-20/2')
     // { dom: '10-20/2', dow: '?', ...} 
+    qtc.atMonthDay('10/2')
+    // { dom: '10/2', dow: '?', ...} 
     ```
 
 - `atMonthDayAdd(dom, cad = false)`  
@@ -281,10 +288,10 @@ allows to add one or more days to the existing target
     ``` js
     qtc.atMonthDayAdd('10')
     // { dom: '10', dow: '?', ...} 
-    qtc.atMonthDayAdd('13')
-    // { dom: '10,13', dow: '?', ...} 
+    qtc.atMonthDayAdd('13/3')
+    // { dom: '10,13/3', dow: '?', ...} 
     qtc.atMonthDayAdd('23')
-    // { dom: '10,13,23', dow: '?', ...} 
+    // { dom: '10,13/3,23', dow: '?', ...} 
     ```
 - `betweenMonthDays(from, to, every)`  
 set target days from `from` to `to` with, if passed > 1, a cadence bigger than 1
@@ -298,15 +305,20 @@ set target days from `from` to `to` with, if passed > 1, a cadence bigger than 1
 - `onLastMonthDay`  
 set the target day to the last day of the target months
     ``` js
-    qtc.onLastMonthDay() 
-    // { dom: 'L', dow: '?', ...} 
+    qtc.onLastMonthDay()  // { dom: 'L', dow: '?', ...} 
+    ```
+
+- `onFirstMonthWeekDay`  
+set as target day the first weekday of the month (working day)  
+(same as `qtc.onClosestWorkingDayToTheNMonthDay(1)`)  
+    ``` js
+    qtc.onFirstMonthWeekDay() // { dom: '1W', dow: '?', ...} 
     ```
 
 - `onLastMonthWeekDay`  
 set as target day the last weekday of the month (working day)
     ``` js
-    qtc.onLastMonthWeekDay() 
-    // { dom: 'LW', dow: '?', ...} 
+    qtc.onLastMonthWeekDay() // { dom: 'LW', dow: '?', ...} 
     ```
 
 - `onLastMonthNWeekDay(x)`  
@@ -475,7 +487,6 @@ Having a quick way to get a user readable internationalized description out of a
 Meanwhile give a try to the awesome [cronstrue][cronstrue] npm package.
 
 ---
-Last edit: __DATE__ at __TIME__
 
 [quartz]: https://www.quartz-scheduler.org/
 [cron]: https://en.wikipedia.org/wiki/Cron

@@ -1,12 +1,17 @@
 {
     "EXE": [
         "rm -rf dist tests",
-        "mkdir -p dist/min tests"
+        "mkdir -p dist/min/langs tests/langs dist/langs"
     ],
     "#source/*.js" : [
         "dist -plugins=malta-header-comment[name:\"source/header.txt\",nostrict:true] -options=verbose:2,placeholderMode:'func'",
         "dist/min -plugins=malta-millijs...malta-header-comment[name:\"source/header.txt\",nostrict:true] -options=verbose:2,placeholderMode:'func'"
     ],
     "#source/tests/*.js" : "tests",
-    "#source/*.md": ". -options=placeholderMode:'func'"
+    "#source/langs/*.js" : [
+        "dist/langs",
+        "dist/min/langs"
+    ],
+    "#source/README.md": ". -options=placeholderMode:'func'",
+    "#source/CHANGELOG.md": ". -options=placeholderMode:'func'"
 }

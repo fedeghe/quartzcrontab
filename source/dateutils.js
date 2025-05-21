@@ -1,11 +1,13 @@
-const C = require('./constants.js'),
+const {
+        monthEnds,
+        labels,
+        rx,
+        errors,
+        bounds
+    } = require('./constants.js'),
     {daysLabels2Numbers} = require('./utils.js');
 
-const {
-    monthEnds,
-    labels,
-    rx
-} = C;
+
 
 /**
  * Check if a input year is leap of not
@@ -42,7 +44,7 @@ const lastMonthDay = (y, m, wd) => {
 const nDaysBeforeEndOfMonth = (n, y, m) => {
     const end = lastMonthDay(y, m),
         pot = end - n;
-    if (pot < 1) throw new Error('not enough days');
+    if (pot < 1) throw new Error(errors.notEnoughDays);
     return pot;
 };
 
@@ -50,25 +52,25 @@ const nDaysBeforeEndOfMonth = (n, y, m) => {
  * returns the n-th weekday present in that month of that year 
  */
 const nDayOfMonth = (n, wd, y, m) => {
-    if (wd < 0 || wd > 6) throw new Error('given weekday does not exist [0-6]');
-    if (n < 0 || n > 5) throw new Error('not enough days in any month');
+    if (wd < 0 || wd > 6) throw new Error(errors.nonWeekday);
+    if (n < 0 || n > 5) throw new Error(errors.monthsOutOfBounds);
     const end = lastMonthDay(y, m),
         da = new Date(Date.UTC(y,m,1,0,0)),
         first = da.getUTCDay(),// 0-6
         distance = (first-1+7)%7,
         firstTarget = (wd + 7 - distance) % 7,
         nthTarget = (n-1)*7 + firstTarget;
-    if (nthTarget > end) throw new Error('not enough days in this month');
+    if (nthTarget > end) throw new Error(errors.monthOutOfBounds);
     return nthTarget;     
 };
 
 const getRangeSolver = ({
     labelTransformer = v => v,
     bounds,
-    minMaxCadenceGetter,
-    rx1, rx2
+    rx
 }) => v => {
-    let vstr = `${v}`;
+
+    let vstr = `${v}`, spl, mat;
     if(v ==='?') return null;
     if(vstr.startsWith('*')){
         vstr = vstr.replace('*', `${bounds.min}-${bounds.max}`);
@@ -78,28 +80,31 @@ const getRangeSolver = ({
     if (vstr.match(/^\d*$/)) {
         return [parseInt(vstr, 10)];
     }
-    // commasep
-    if (vstr.match(/^([\d,]+)\d$/)) {
-        return vstr.split(/,/).map(val=>parseInt(val,10)).sort(
-            ( a, b ) => a > b ? 1 : -1
-        );
-    }
-    // startwithCadence
-    const cadenceStart = vstr.match(rx1);
-    if(cadenceStart){
-        const {
-                min,
-                max,
-                cadence
-            } = minMaxCadenceGetter(cadenceStart),
-            ret = [];
-        for(let i = min; i<=max; i+=cadence){
-            ret.push(i);
-        }
-        return ret;
-    }
+
+    // commasep mixed
+    spl = vstr.split(/,/);
+    mat = spl.map(s => s.match(/^((\d*)|(\d*)\/(\d*))$/)).filter(Boolean);
+    if(spl.length === mat.length) {
+
+        return mat.reduce((acc, r) => {
+            let p = parseInt(r[2], 10);
+            if(r[2]) {
+                /* istanbul ignore else */
+                if (p <= bounds.max)acc.push(p);
+            } else {
+                let cursor = parseInt(r[3], 10);
+                const every = parseInt(r[4], 10);
+                while(cursor <= bounds.max){
+                    acc.push(cursor);
+                    cursor += every;
+                }
+            }
+            return acc;
+        }, []).sort(( a, b ) => a > b ? 1 : -1);
+        
+    }   
     // range
-    const range = vstr.match(rx2);
+    const range = vstr.match(rx);
     if (range) {  
         const min = parseInt(range[1],10),
             max = parseInt(range[2],10),
@@ -110,6 +115,7 @@ const getRangeSolver = ({
                 ret.push(i);
             }
         } else {
+            // eslint-disable-next-line no-unused-vars
             ret = Array.from({length: max-min+1}, (_, i) => i+min);
         }
         return ret;
@@ -122,6 +128,7 @@ const getRangeSolver = ({
 const getSpecialSolver = solvers => (y, m, val) => {
     const d = new Date(Date.UTC(y, m-1, 1, 0, 0)),
         lastDate = lastMonthDay(y, m-1),
+        // eslint-disable-next-line no-unused-vars
         allDays = Array.from({length: lastDate}, (_,i) => i+1);
     for(var i = 0, l = solvers.length, r; i < l; i++){
         r = solvers[i]({y, m, val, d, allDays, lastDate});
@@ -178,7 +185,6 @@ const dom_solvers = [
         }
         return res;
     },
-    
     // [1-31]
     ({val, lastDate}) => {
         const mat = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])$/);
@@ -189,20 +195,40 @@ const dom_solvers = [
         return [];
     },
 
-    // [1-31] , ...
+    // [1-31] , ... , [1-31]/[1-31]
     ({val, lastDate}) => {
-        let vals = val.split(/,/);
-        if(
-            vals.every(v=>{
-                return v.match(/^([1-9]|1[0-9]|2[0-9]|3[01])$/);
-            })
-        ) return vals.filter(v => v <=lastDate).map(v => parseInt(v,10));
-        else return [];
+        // let vals = val.split(/,/);
+        // if(
+        //     vals.every(v=>{
+        //         return v.match(/^([1-9]|1[0-9]|2[0-9]|3[01])$/);
+        //     })
+        // ) return vals.filter(v => v <=lastDate).map(v => parseInt(v,10));
+        // else return [];
+
+        const spl = val.split(/,/),
+            mat = spl.map(s => s.match(/^(([1-9]|1[0-9]|2[0-9]|3[01])|([1-9]|1[0-9]|2[0-9]|3[01])\/([1-9]|1[0-9]|2[0-9]|3[01]))$/)).filter(Boolean);
+        if(spl.length === mat.length) {
+            return mat.reduce((acc, r) => {
+                let v2 = parseInt(r[2], 10);
+                if(typeof r[2] !== 'undefined') {
+                    if(v2 <= lastDate) acc.push(v2);
+                } else {
+                    let cursor = parseInt(r[3], 10);
+                    const every = parseInt(r[4], 10);
+                    while(cursor <= lastDate){
+                        acc.push(cursor);
+                        cursor += every;
+                    }
+                }
+                return acc;
+            }, []).sort(( a, b ) => a > b ? 1 : -1);
+        }
+        return [];
     },
 
     // [1-31] - [1-31] / [1-31]
     ({val, lastDate}) => {
-        const vals = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])-([1-9]|1[0-9]|2[0-9]|3[01])\/([1-9]|1[0-9]|2[0-9]|3[01])$/),
+        const vals = val.match(rx.ranged['md-md/md']),
             res = [];
         if(vals){
             const add = Math.min(parseInt(vals[3],10), lastDate);
@@ -217,24 +243,26 @@ const dom_solvers = [
     },
 
     // L
-    ({val, lastDate}) => val.match(/^L$/) ? [lastDate]: [],
+    ({val, lastDate}) => val.match(rx.dumb.L) ? [lastDate]: [],
 
     // LW
     ({val, lastDate, d}) => {
-        if(val.match(/^LW$/)){
+        if(val.match(rx.dumb.LW)){
             d.setUTCDate(lastDate);
             let res = d.getUTCDay(),
                 min = 0;
-            while(`${(res - min + 7)%7 }`.match(/^[06]$/)){
+            while(`${(res - min + 7)%7 }`.match(rx.dumb['0OR6'])){
                 min++;
             }
             return [lastDate-min];
         }
         return [];
     },
-
+    //nW
+    // [1-31]W
+    // /^([1-9]|1[0-9]|2[0-9]|3[01])W$/
     ({val, lastDate, d}) => {
-        let mat = val.match(/^([1-9]|1[0-9]|2[0-9]|3[01])W$/);
+        let mat = val.match(rx.ranged.mdW);
         if(mat){
             let v = parseInt(mat[1], 10),
                 res;
@@ -258,34 +286,16 @@ const dom_solvers = [
         }
         return [];
     },
-    // [1-31]W
-    // /^([1-9]|1[0-9]|2[0-9]|3[01])W$/
-
+    
     // L-[1-31]
     ({val, lastDate}) => {
-        const vals = val.match(/^L-([1-9]|1[0-9]|2[0-9]|3[01])$/);
+        const vals = val.match(rx.ranged['L-md']);
         if(vals){
             const last = lastDate-parseInt(vals[1]);
             return last> 0 ? [last] : [];
         }
         return [];
     },
-    // [1-7]L
-    ({val, lastDate, d}) => {
-        const vals = val.match(/^([1-7])L$/);
-        if(vals){
-            d.setUTCDate(lastDate);
-            const targetWeekDay = (parseInt(vals[1], 10) - 1 +7)%7, //rem quartz[1-7], js [0-6]
-                res = d.getUTCDay(); // [0-6]
-            let min = 0;
-            while((res - min + 7)%7 !== targetWeekDay){
-                min++;
-            }
-            return [lastDate-min];
-        }
-        return [];
-    }
-
 ];
 const solve_dom = getSpecialSolver(dom_solvers);
 
@@ -303,7 +313,8 @@ wd#n
 const dow_solvers = [
     // *
     ({val, allDays}) =>
-        val.match(/^(\*)$/)
+        // val.match(/^(\*)$/)
+        val.match(rx.dumb.astrx)
         ? allDays
         : [],
 
@@ -312,7 +323,8 @@ const dow_solvers = [
     // here *  is like sunday (1) 
     
     ({val, d, lastDate}) => {
-        const mat = val.match(/^([1-7]|\*)\/([1-7])$/);
+        // const mat = val.match(/^([1-7]|\*)\/([1-7])$/);
+        const mat = val.match(rx.ranged['wdOR*/wd']);
         let res = [];
         
         if (mat) {
@@ -336,20 +348,51 @@ const dow_solvers = [
     
     // one or more [1-7] OR [SUN-SAT] comma separated
     ({val, d, lastDate}) => {
-        const vals = daysLabels2Numbers(val)
-                .split(/,/),
-            res = [];
+        let vals = daysLabels2Numbers(val).split(rx.dumb.comma);
+        const firstDayWd = d.getUTCDay()+1,// [0-6] -> [1-7]
+            res = [],
+            max = 7;
+
+        let mat = vals.map(
+            s => s.match(rx.ranged['wdORwd/wd'])
+        ).filter(Boolean);
+
+        // collect all weekdays, counting explicit ones
+        // together with those coming from cadence
+        // MON/2 => 2,4,6
+        // TUE => 3
+        if(mat.length === vals.length){    
+            vals =  mat.reduce((acc, r) => {
+                let v2 = parseInt(r[2], 10);
+                if(typeof r[2] !== 'undefined') {
+                    //not needed ..the rx grants it
+                    //if(v2 <= max) 
+                    acc.push(v2);
+                } else {
+                    
+                    let cursor = parseInt(r[3], 10);
+                    const every = parseInt(r[4], 10);
+                    while(cursor <= max){
+                        acc.push(cursor);
+                        cursor = every + cursor;
+                    }
+                }
+                return acc;
+            }, []).map(v => v.toString());
+        }
+
+        // now for 2,3,4,6 in [1-7] scan the month to collect right dates
         if(
-            vals.every(v => v.match(/^([1-7])$/))
+            // vals.every(v => v.match(/^([1-7])$/))
+            vals.every(v => v.match(rx.ranged.wd))
         ) {
-            let firstDayWd = d.getUTCDay()+1, // [0-6] -> [1-7]
+            let cursor = firstDayWd, 
                 toAddDate = 1;
             while(toAddDate <= lastDate) {
-                if(vals.includes(`${firstDayWd}`)) res.push(toAddDate);
-                firstDayWd = 1 + firstDayWd%7;
+                if(vals.includes(`${cursor}`)) res.push(toAddDate);
+                cursor = 1 + cursor%7;
                 toAddDate+= 1;
             }
-
         }
         return res;
     },
@@ -357,7 +400,8 @@ const dow_solvers = [
     // [1-7]-[1-7] OR [SUN-SAT]-[SUN-SAT]
     ({val, d, lastDate}) => {
         const mat = daysLabels2Numbers(val)
-            .match(/^(([1-7])-([1-7]))$/);
+            .match(rx.ranged['wd-wd']);
+            // .match(/^(([1-7])-([1-7]))$/);
         let res = [];
         
         if (mat) {
@@ -386,7 +430,8 @@ const dow_solvers = [
     // a-b/c every c days between as and bs
     ({val, d, lastDate}) => {
         const mat = daysLabels2Numbers(val)
-                .match(/^(([1-7])-([1-7])\/([1-7]))$/),
+                .match(rx.ranged['wd-wd/wd']),
+                // .match(/^(([1-7])-([1-7])\/([1-7]))$/),
             res = [];
             
         let firstDayWd = d.getUTCDay()+1,// [0-6] -> [1,7]
@@ -403,7 +448,8 @@ const dow_solvers = [
                 range.push(cursor);
                 rangeFilled = cursor === to;
             }
-            range = range.filter((e,i) => {
+            // eslint-disable-next-line no-unused-vars
+            range = range.filter((_,i) => {
                 return i === 0 || i % cadence === 0;
             });
             while(toAddDate <= lastDate) {
@@ -418,7 +464,8 @@ const dow_solvers = [
     // [1-7]L
     // aL the last a of the month
     ({val, d, lastDate}) => {
-        const mat = val.match(/^([1-7])L$/);
+        const mat = val.match(rx.ranged.wdL);
+        // const mat = val.match(/^([1-7])L$/);
         let res = [],
             trg = lastDate;
         d.setUTCDate(lastDate);
@@ -443,7 +490,8 @@ const dow_solvers = [
     // [1-7]#[1-5]
     // a#b the b-th a weekday of the month
     ({val, d, lastDate}) => {
-        const mat = val.match(/^([1-7])#([1-5])$/),
+        const mat = val.match(rx.ranged['wd#wdn']),
+        // const mat = val.match(/^([1-7])#([1-5])$/),
             res = [];
         d.setUTCDate(1);
         let cursorDate = 1;
@@ -466,107 +514,41 @@ const dow_solvers = [
 const solve_dow = getSpecialSolver(dow_solvers);
 
 const solve_0_59_ranges = getRangeSolver({
-        bounds: C.bounds.seconds,
-        minMaxCadenceGetter: cs => ({
-            min: parseInt(cs[1],10),
-            max : C.bounds.seconds.max,
-            cadence: parseInt(cs[5],10),
-        }),
-        rx1: C.rx.ranges.zero59cadence,
-        rx2: C.rx.ranges.wildRangeCadence
+        bounds: bounds.seconds,
+        rx: rx.ranges.wildRangeCadence
     }),
     solve_hours_ranges = getRangeSolver({
-        bounds: C.bounds.hour,
-        minMaxCadenceGetter: cs => ({
-            min: parseInt(cs[1],10),
-            max: C.bounds.hour.max,
-            cadence: parseInt(cs[4],10)
-        }),
-        rx1: C.rx.ranges.wildStartCadence,
-        rx2: C.rx.ranges.wildRangeCadence
+        bounds: bounds.hour,
+        rx: rx.ranges.wildRangeCadence
     }),
     solve_month_ranges = getRangeSolver({
-        bounds: C.bounds.month,
-        minMaxCadenceGetter: cs => ({
-            min: parseInt(cs[1],10),
-            max: C.bounds.month.max,
-            cadence: parseInt(cs[4],10)
-        }),
-        labelTransformer: vstr => vstr.match(C.rx.next.hasMonths)
+        bounds: bounds.month,
+        labelTransformer: vstr => vstr.match(rx.next.hasMonths)
             ? labels.months.reduce(
                 (acc, day, i) => acc.replace(day, i+1),
                 vstr
             )
             : vstr,
-        rx1: C.rx.ranges.one12cadence,
-        rx2: C.rx.ranges.wildRangeCadence
+        rx: rx.ranges.wildRangeCadence
     }),
     solve_year_ranges = getRangeSolver({
-        bounds: C.bounds.year,
-        minMaxCadenceGetter: cs => ({
-            min: parseInt(cs[1],10),
-            max: C.bounds.year.max,
-            cadence: parseInt(cs[4],10)
-        }),
-        rx1: C.rx.ranges.wildStartCadence,
-        rx2: C.rx.ranges.wildRangeCadence
+        bounds: bounds.year,
+        rx: rx.ranges.wildRangeCadence
     }),
     
     // this will be no more needed
     solve_week_ranges = getRangeSolver({
-        bounds: C.bounds.week,
-        minMaxCadenceGetter: cs => ({
-            min: parseInt(cs[1],10),
-            max: C.bounds.week.max,
-            cadence: parseInt(cs[4],10)
-        }),
-        labelTransformer: vstr => vstr.match(C.rx.next.hasWeekdays)
+        bounds: bounds.week,
+        labelTransformer: vstr => vstr.match(rx.next.hasWeekdays)
             ? labels.days.reduce(
                 (acc, day, i) => acc.replace(day, i+1),
                 vstr
             )
             : vstr,
-        rx1: C.rx.ranges.one7cadence,
-        rx2: C.rx.ranges.wildRangeCadence
+        rx: rx.ranges.wildRangeCadence
     });
 
-/**
- solve_hours_ranges 
- solve_minutes_ranges < solve_0_59_ranges
- solve_seconds_ranges < solve_0_59_ranges
- */
 
-//most likely not needed, TODO : double check
-/*
-const solveNumericRange = v => {
-    // one
-    if (`${v}`.match(/^\d*$/)) {
-        return [parseInt(v, 10)]
-    }
-    // commasep
-    if (`${v}`.match(/^([\d,]+)\d$/)) {
-        return v.split(/,/).map(v=>parseInt(v,10)).sort(
-            ( a, b ) => a > b ? 1 : -1
-        );
-    }
-    // range
-    const range = `${v}`.match(/^([\d,]+)-([\d,]+)(\/(\d*))?$/)
-    if (range) {  
-        const min = parseInt(range[1],10),
-            max = parseInt(range[2],10),
-            cadence = parseInt(range[4],10);
-        let ret = [];
-        if(cadence){
-            for(let i = min; i<=max; i+=cadence){
-                ret.push(i);
-            }
-        } else {
-            ret = Array.from({length: max-min+1}, (_, i) => i+min);
-        }
-        return ret
-    }
-    return null
-}*/
 module.exports = {
     isLeap,
     lastMonthDay,

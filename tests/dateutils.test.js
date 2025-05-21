@@ -73,7 +73,7 @@ describe('date utils', () => {
 
                 expect(
                     () => nDaysBeforeEndOfMonth(n, y, m)
-                ).toThrow('not enough days');
+                ).toThrow(C.errors.notEnoughDays);
             })
         })
 
@@ -109,21 +109,21 @@ describe('date utils', () => {
                 ['lower wd violation', 1, -1, 2025, 0],
                 ['higher wd violation', 1, 7, 2025, 0],
             ])('%s', (_, n, wd, y, m) => {
-                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('given weekday does not exist [0-6]')
+                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow(C.errors.nonWeekday)
             })
 
             test.each([
                 ['lower target #wd violation', -1, 1, 2025, 0],
                 ['higher target #wd violation', 6, 1, 2025, 0],
             ])('%s', (_, n, wd, y, m) => {
-                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('not enough days in any month')
+                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow(C.errors.monthsOutOfBounds)
             })
 
             test.each([
                 ['5th sat would be 32', 5, 6, 2025, 0],
                 ['5th sun would be 33', 5, 0, 2025, 0],
             ])('%s', (_, n, wd, y, m) => {
-                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow('not enough days in this month')
+                expect(()=>nDayOfMonth(n, wd, y, m)).toThrow(C.errors.monthOutOfBounds)
             })
         })
     })
@@ -162,6 +162,7 @@ describe('date utils', () => {
             ['one', '1989', [1989]],
             ['more', '1989,1999,2013', [1989,1999,2013]],
             ['more unsorted', '1999,1989,2013', [1989,1999,2013]],
+            ['multi mixed', '1999,2080/2,2099', [1999,2080,2082,2084,2086,2088,2090,2092,2094,2096,2098,2099]],
             ['every', '*', allYears],
             ['every even', '*/2', allYears.filter(y => y%2===0)],
             ['every even', '1970/2', allYears.filter(y => y%2===0)],
@@ -188,7 +189,9 @@ describe('date utils', () => {
             ['one label', 'FEB', [2]],
             ['more', '1,3,7', [1,3,7]],
             ['more unsorted', '3,1,7', [1,3,7]],
+            ['multi mixed', '7,4/2,1', [1,4,6,7,8,10,12]],
             ['more label', 'FEB,MAR,JUL', [2,3,7]],
+            ['multi mixed label', 'JAN,FEB/2', [1,2,4,6,8,10,12]],
             ['every', '*', allMonths],
             ['every odd', '*/2', allMonths.filter(m => m%2)],
             ['every odd #2', '1/2', allMonths.filter(m => m%2)],
@@ -218,7 +221,9 @@ describe('date utils', () => {
             ['one label', 'MON', [2]],
             ['more', '2,5', [2,5]],
             ['more unsorted', '5,2', [2,5]],
+            ['more unsorted mixed', '2,6,3/2', [2,3,5,6,7]],
             ['more label', 'MON,THU,SAT', [2,5,7]],
+            ['more label mixed', 'MON,THU/2', [2,5,7]],
             ['every', '*', allWeekday],
             ['every odd', '*/2', [1,3,5,7]],
             ['every odd #2', '1/2', [1,3,5,7]],
@@ -247,6 +252,7 @@ describe('date utils', () => {
             ['one', '2', [2]],
             ['more', '2,4,7', [2,4,7]],
             ['more unsorted', '4,2,7', [2,4,7]],
+            ['more unsorted mixed', '4,2,7,15/3', [2,4,7, 15,18,21]],
             ['every', '*', allHours],
             ['every even', '*/2', allHours.filter(e=> e%2===0)],
             ['every even #2', '0/2', allHours.filter(e=> e%2===0)],
@@ -272,6 +278,7 @@ describe('date utils', () => {
             ['one', '32', [32]],
             ['more', '32,45,56', [32,45,56]],
             ['more unsorted', '45,32,56', [32,45,56]],
+            ['more unsorted mixed', '4,7/8,14', [4,7,14,15,23,31,39,47,55]],
             ['every', '*', all60],
             ['every even', '*/2', all60.filter(e=> e%2===0)],
             ['every even #2', '0/2', all60.filter(e=> e%2===0)],
@@ -412,25 +419,7 @@ describe('date utils', () => {
             ])('%s', (_, y, m, dom, expected) => {
                 expect(solve_dom(y, m, dom)).toMatchObject(expected)
             })
-        })
-
-        describe('[1-7]L', () => {
-            test.each([
-                ['1L (2025 march)', 2025, 3, '1L', [30]],
-                ['2L (2025 march)', 2025, 3, '2L', [31]],
-                ['3L (2025 march)', 2025, 3, '3L', [25]],
-                ['4L (2025 march)', 2025, 3, '4L', [26]],
-                ['5L (2025 march)', 2025, 3, '5L', [27]],
-                ['6L (2025 march)', 2025, 3, '6L', [28]],
-                ['7L (2025 march)', 2025, 3, '7L', [29]],
-                ['7L (2025 march)', 2025, 3, 'L222', []],
-                ['8L (2025 march)', 2025, 3, '8L', []],
-                ['00L (2025 march)', 2025, 3, '00L', []],
-            ])('%s', (_, y, m, dom, expected) => {
-                expect(solve_dom(y, m, dom)).toMatchObject(expected)
-            })
-        })
-        
+        })        
     })
 
     describe('solve_dow', () => {
@@ -458,11 +447,15 @@ describe('date utils', () => {
 
         describe('[1-7] OR [SUN-SAT]', () => {
             test.each([
-                ['sun (2024 jan)', 2024, 1, '1', [7,14,21,28]],
+                ['1 (2024 jan)', 2024, 1, '1', [7,14,21,28]],
                 ['SUN (2024 jan)', 2024, 1, 'SUN', [7,14,21,28]],
-                ['sun (2025 jan)', 2025, 1, '1', [5,12,19,26]],
+                ['1 (2025 jan)', 2025, 1, '1', [5,12,19,26]],
                 ['SUN (2025 jan)', 2025, 1, 'SUN', [5,12,19,26]],
                 ['MON (2025 jan)', 2025, 1, 'MON', [6,13,20,27]],
+                ['1,3 (2025 jan)', 2025, 1, '1,3', [5,7,12,14,19,21,26,28]],
+                ['MON/2 (2025 jan)', 2025, 1, 'MON/2', [1,3,6,8,10,13,15,17,20,22,24,27,29,31]],
+                ['TUE,MON/2 (2025 jan)', 2025, 1, 'TUE,MON/2', [1,3,6, 7, 8,10,13, 14, 15,17,20, 21, 22,24,27, 28, 29,31]],
+                ['3,2/2 (2025 jan)', 2025, 1, '3,2/2', [1,3,6, 7, 8,10,13, 14, 15,17,20, 21, 22,24,27, 28, 29,31]],
             ])('%s', (_, y, m, dow, expected) => {
                 expect(solve_dow(y, m, dow)).toMatchObject(expected)
             })

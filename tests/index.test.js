@@ -255,8 +255,8 @@ describe('Quartzcron', () => {
         })
         it('atWeekDayAdd on something', () => {
             c.atWeekDay(2)
-                .atWeekDayAdd(5)
-            expect(c.out()).toBe('0 0 0 ? * 2,5 *')
+                .atWeekDayAdd('5/2')
+            expect(c.out()).toBe('0 0 0 ? * 2,5/2 *')
         })
 
         it('betweenWeekDays', () => {
@@ -286,8 +286,9 @@ describe('Quartzcron', () => {
         })
         it('atMonthDayAdd', () => {
             c.atMonthDayAdd(13)
-            c.atMonthDayAdd(21)
-            expect(c.out()).toBe('0 0 0 13,21 * ? *')
+            c.atMonthDayAdd('21/2')
+            c.atMonthDayAdd(24)
+            expect(c.out()).toBe('0 0 0 13,21/2,24 * ? *')
         })
         it('betweenMonthDays', () => {
             c.betweenMonthDays(12,19)
@@ -305,7 +306,6 @@ describe('Quartzcron', () => {
             c.onFirstMonthWeekDay()
             expect(c.out()).toBe('0 0 0 1W * ? *')
         })
-
         it('onLastMonthWeekDay', () => {
             c.onLastMonthWeekDay()
             expect(c.out()).toBe('0 0 0 LW * ? *')
@@ -343,25 +343,25 @@ describe('Quartzcron', () => {
             expect(c.out()).toBe('0 0 0 * 0/6 ? *')
         })
         it('everyNMonths every x from y', () => {  
-            c.everyNMonths(6, 13)
-            expect(c.out()).toBe('0 0 0 * 13/6 ? *')
+            c.everyNMonths(6, 3)
+            expect(c.out()).toBe('0 0 0 * 3/6 ? *')
         })
         it('atMonth', () => {
-            c.atMonth(13)
-            expect(c.out()).toBe('0 0 0 * 13 ? *')
+            c.atMonth(3)
+            expect(c.out()).toBe('0 0 0 * 3 ? *')
         })
         it('atMonth straight more', () => {
-            c.atMonth('13,15,19')
-            expect(c.out()).toBe('0 0 0 * 13,15,19 ? *')
+            c.atMonth('3,5,9')
+            expect(c.out()).toBe('0 0 0 * 3,5,9 ? *')
         })
         it('atMonthAdd', () => {
-            c.atMonthAdd(13)
-            c.atMonthAdd(19)
-            expect(c.out()).toBe('0 0 0 * 13,19 ? *')
+            c.atMonthAdd(3)
+            c.atMonthAdd(9)
+            expect(c.out()).toBe('0 0 0 * 3,9 ? *')
         })
         it('betweenMonths', () => {
-            c.betweenMonths(13,19)
-            expect(c.out()).toBe('0 0 0 * 13-19 ? *')
+            c.betweenMonths(3,9)
+            expect(c.out()).toBe('0 0 0 * 3-9 ? *')
         })
         it('betweenMonths every X months', () => {
             c.betweenMonths(2,10, 3)
@@ -540,6 +540,16 @@ describe('Quartzcron', () => {
         })
     })
 
+    describe('describe as expected', () => {
+        let c
+        beforeEach(() => {
+            c = new Quartzcron()
+        })
+        it('default', () => {
+            expect(c.describe()).toBe('at 00:00:00, every day')
+        })
+    })
+
     describe('static', () => {
         const ranger24 = Quartzcron.getRanger(24),
             ranger60 = Quartzcron.getRanger(60);
@@ -587,8 +597,6 @@ describe('Quartzcron', () => {
                 expect(typeof Quartzcron.solvers[inp]).toBe('function')
             });
         })
-
-
     })
 
     /**
@@ -654,7 +662,6 @@ describe('Quartzcron', () => {
                     ['more than one number', {i: '3,11,36'}],
                     ['interval', {i: '11-36'}],
                     ['interval with cadence', {i: '11-36/2'}],
-                    
                 ])('%s', (_, arg) => {
                     c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
@@ -695,7 +702,6 @@ describe('Quartzcron', () => {
                     ['more than one number', {h: '3,5,9'}],
                     ['interval', {h: '3-9'}],
                     ['interval with cadence', {h: '3-9/2'}],
-                    
                 ])('%s', (_, arg) => {
                     c.over(arg)
                     expect(c.validate().valid).toBeTruthy()
@@ -740,6 +746,7 @@ describe('Quartzcron', () => {
                     ['weekdays/cadence', {dom: '1-5/2', dow:'?'}],
                     ['L', {dom: 'L', dow:'?'}],
                     ['LW', {dom: 'LW', dow:'?'}],
+                    ['1W', {dom: '1W', dow:'?'}],
                     ['L-x', {dom: 'L-12', dow:'?'}],
                     ['xL', {dom: '13L', dow:'?'}],
                 ])('%s', (_, arg) => {
