@@ -8,5 +8,5 @@ module.exports = [{
         "semi": ["error"],
         "func-names": ["error", "never"]
     },
-    ignores: ["source/tests/*", "dist/*", "dist/**/*", "coverage/", "tests/", "jest.config.js"]
+    ignores: [ "dist/*", "dist/**/*", "coverage/", "tests/*", "jest.config.js"]
 }];
