@@ -1,4 +1,4 @@
-## 0.0.44
+## 0.0.45
 added methods:
 - `onFirstMonthWeekDay` (shortcut for `dom:1W`)
 - experimental: describe works (only english locale shipped)

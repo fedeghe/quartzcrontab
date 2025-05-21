@@ -7,7 +7,10 @@
 
 
 # quartzcron  
-version: `0.0.44`
+version: `0.0.45`   
+[CHANGELOG](https://github.com/fedeghe/quartzcron/blob/master/CHANGELOG.md) 
+
+
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
