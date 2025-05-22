@@ -2,8 +2,10 @@
 added methods:
 - `onFirstMonthWeekDay` (shortcut for `dom:1W`)
 - experimental: describe works (only english locale shipped)
-- bugfix: validators where not set correctly to accept multimple values like `2,30-39,45-50/2,55/5` for seconds for example
-    same was happening for all fields allowing multiple elements, giving false nevetives from when invoking `validate`
+
+bugfix:
+validators where not set correctly to accept multimple values like `2,30-39,45-50/2,55/5` for seconds for example
+same was happening for all fields allowing multiple elements, giving false negatives when invoking `validate`
 
 
 ## 0.0.43  
@@ -39,12 +41,3 @@ additions
 
 ## 0.0.38  
 all 7 range resolvers are exposed in static `Quartzcron.solvers`  
-
-## 0.0.29 (unpublished)  
-fix: `dow` and `dow` additionally cant be both `?`  
-
-## 0.0.28 (unpublished) 
-validate can validate an instance unrelated expression  
-
-## 0.0.27 (unpublished) 
-first ready to use version  
