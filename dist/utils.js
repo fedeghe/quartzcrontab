@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.45)
+quartzcron (v.0.0.46)
 */
 /*
 validations
@@ -31,7 +31,7 @@ const argumentize = o => {
 
     daysLabels2Numbers = v => 
         labels.days.reduce(
-            (acc, label, i) => acc.replace(label, i + 1), v
+            (acc, label, i) => `${acc}`.replace(label, i + 1), v
         ),
     now = new Date(),
     yearNow = now.getFullYear(),

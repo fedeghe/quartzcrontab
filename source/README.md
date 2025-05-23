@@ -158,46 +158,51 @@ This clearly applies similarly also for almost all other commands.
 - `everyNSeconds(x, start = 0)`  
 every `x` seconds (starting from `start`)  
 
-- `atSecond(sec, cad = false)`  
+- `atSecond(sec, cad = false)`   
 resets any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[0, 59]`
 
 - `atSecondAdd(sec, cad = false)`  
-adds `sec` to the list of already set seconds (`0` there by default); as in the previous can pass multiple values comma separated (when cadence is not passed).
+additive version of the previous setter.
 
-- `betweenSeconds(from, to, every)`  
+- `betweenSeconds(from, to, every)`   
 all seconds from `from` to `to` seconds; optionally set the cadence passing an `every` integer.  
+
+- `betweenSecondsAdd(from, to, every)`  
+additive version of the previous setter.  
 
 
 
 ### minutes ⏱️   
 
-- `everyMinute()`  
+- `everyMinute()`   
 no explanation needed
 
-- `everyNMinutes(x, start = 0)`  
+- `everyNMinutes(x, start = 0)`   
 every `x` minutes (starting from `start`)
 
-- `atMinute(min, cad = false)`  
+- `atMinute(min, cad = false)`   
 resets any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[0, 59]`
 
 - `atMinuteAdd(min, cad = false)`  
-adds `min` to the list of already set minutes (`0` there by default); as in the previous can pass multiple values comma separated (when cadence is not passed).
+additive version of the previous setter.
 
-- `betweenMinutes(from, to, every)`  
+- `betweenMinutes(from, to, every)`   
 all minutes from `from` to `to` minutes; optionally set the cadence passing an `every` integer.  
 
+- `betweenMinutesAdd(from, to, every)`  
+additive version of the previous setter.
 
 ### hours ⏱️  
 
-- `everyHour()`  
+- `everyHour()`   
 no explanation needed
 
-- `everyNHours(x, start = 0)`  
+- `everyNHours(x, start = 0)`   
 every `x` hours (starting from `start`)
 
-- `atHour(h, cad = false)`  
+- `atHour(h, cad = false)`   
 no explanation needed;  
 resets any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[0, 23]`
@@ -205,36 +210,39 @@ when cadence is not passed can be called passing multiple comma separated values
 - `atHourAdd(h, cad = false)`  
 adds `h` to the list of already set hours (0 there by default); as in the previous can pass multiple values comma separated (when cadence is not passed).
 
-- `betweenHours(from, to, every)`  
+- `betweenHours(from, to, every)`   
 all hours from `from` to `to` hours; optionally set the cadence passing an `every` integer.  
+
+- `betweenHoursAdd(from, to, every)`   
+additive version of the previous setter.
 
 
 ### day of month / day of week 📆  
-- `everyDay()`  
+- `everyDay()`   
 no explanation needed  
     ``` js
     qct.everyDay()
     // { dom: '*', dow:'?', ...}
     ```
 
-- `everyNDays(x, y)`  
-every `x` `[1-7][SUN-SAT]` day of the week starting from `y`th day `[1-31]` of the target months. 
+- `everyNDays(x, y)`   
+every `x` `[1-31][1-31]` days starting from `y`th day `[1-31]` of the target months. 
     ``` js
-    qct.everyNDays('SUN', 10) 
-    // { dom: `10/SUN`, dow: '?', ...}
+    qct.everyNDays('13, 10) 
+    // { dom: `10/13`, dow: '?', ...}
     ```
 
-- `atWeekDay(wd, cad = false)`  
-every `wd` `[1-7][SUN-SAT]`; resets any previous value set there; when cadence is not passed even here more than one comma separated value can be passed. 
+- `atWeekDay(wd, cad = false)`   
+every `wd` `[1-7]` (labels invalid here for weekdays); resets any previous value set there; when cadence is not passed even here more than one comma separated value can be passed. 
     ``` js
-    qtc.atWeekDay('WED')
-    // { dom: `?`, dow: 'WED', ...}
-    qtc.atWeekDay('WED', 3)
-    // { dom: `?`, dow: 'WED/3', ...}
-    qtc.atWeekDay('WED,FRI')
-    // { dom: `?`, dow: 'WED,FRI', ...}
-    qtc.atWeekDay('MON-FRI', 2) // or qtc.atWeekDay('MON-FRI/2')
-    // { dom: '?`, dow: 'MON-FRI/2', ...}
+    qtc.atWeekDay(4)
+    // { dom: `?`, dow: 4, ...}
+    qtc.atWeekDay(4, 3)
+    // { dom: `?`, dow: '4/3', ...}
+    qtc.atWeekDay('4,5')
+    // { dom: `?`, dow: '4,5', ...}
+    qtc.atWeekDay('2-5', 2) // or qtc.atWeekDay('2-5/2')
+    // { dom: '?`, dow: '2-5/2', ...}
     ```
 
 - `atWeekDayAdd(wd, cad = false)`  
@@ -248,21 +256,21 @@ every `wd` in `[1,7]` or (...and corresponding to) `{SUN,MON,TUE,WED,THU,FRI,SAT
     // { dom: '?`, dow: 'MON,WED/2,FRI-SAT', ...}
     ```
 
-- `everyWeekDay()`  
+- `everyWeekDay()`   
     shortcut to set Saturnday and Sunday  
     ``` js
     qtc.everyWeekDay()
     // { dom: `?`, dow: '2-6', ...}
     ```
 
-- `everyWeekEnd()`  
+- `everyWeekEnd()`   
 shortcut to set Saturnday and Sunday
     ``` js
     qtc.everyWeekEnd()
     // { dom: `?`, dow: '7-1', ...}
     ```
 
-- `atMonthDay(dom, cad = false)`  
+- `atMonthDay(dom, cad = false)`   
 sets the target day of month, can be: 
     - `*`: all days
     - `n`: with n in `[1,31]`
@@ -296,7 +304,7 @@ allows to add one or more days to the existing target
     qtc.atMonthDayAdd('23')
     // { dom: '10,13/3,23', dow: '?', ...} 
     ```
-- `betweenMonthDays(from, to, every)`  
+- `betweenMonthDays(from, to, every)`   
 set target days from `from` to `to` with, if passed > 1, a cadence bigger than 1
     ``` js
     qtc.betweenMonthDays(10, 20) 
@@ -305,26 +313,26 @@ set target days from `from` to `to` with, if passed > 1, a cadence bigger than 1
     // { dom: '10-20/2', dow: '?', ...} 
     ```
 
-- `onLastMonthDay`  
+- `onLastMonthDay`   
 set the target day to the last day of the target months
     ``` js
     qtc.onLastMonthDay()  // { dom: 'L', dow: '?', ...} 
     ```
 
-- `onFirstMonthWeekDay`  
+- `onFirstMonthWeekDay`   
 set as target day the first weekday of the month (working day)  
 (same as `qtc.onClosestWorkingDayToTheNMonthDay(1)`)  
     ``` js
     qtc.onFirstMonthWeekDay() // { dom: '1W', dow: '?', ...} 
     ```
 
-- `onLastMonthWeekDay`  
+- `onLastMonthWeekDay`   
 set as target day the last weekday of the month (working day)
     ``` js
     qtc.onLastMonthWeekDay() // { dom: 'LW', dow: '?', ...} 
     ```
 
-- `onLastMonthNWeekDay(x)`  
+- `onLastMonthNWeekDay(x)`   
 set as target day the last selected week day of the month
     ``` js
     qtc.onLastMonthNWeekDay(2)
@@ -332,7 +340,7 @@ set as target day the last selected week day of the month
     // { dom: '?', dow: '2L', ...} 
     ```
 
-- `onNDayBeforeTheEndOfTheMonth(n)`  
+- `onNDayBeforeTheEndOfTheMonth(n)`   
 set as target the X-th day before the end of the month
     ``` js
     qtc.onNDayBeforeTheEndOfTheMonth(9)
@@ -340,7 +348,7 @@ set as target the X-th day before the end of the month
     // { dom: 'L-9', dow: '?', ...} 
     ```
 
-- `onClosestWorkingDayToTheNMonthDay(x)`  
+- `onClosestWorkingDayToTheNMonthDay(x)`   
 set as target the nearest weekday (working day) to the x-th day of the month
     ``` js
     qtc.onClosestWorkingDayToTheNMonthDay(15)
@@ -348,7 +356,7 @@ set as target the nearest weekday (working day) to the x-th day of the month
     // { dom: '15W', dow: '?', ...} 
     ```
 
-- `onNWeekDayOfTheMonth(n, wd)`  
+- `onNWeekDayOfTheMonth(n, wd)`   
 set as target the n-th week day of the month
     ``` js
     qtc.onNWeekDayOfTheMonth(4, 2)
@@ -359,39 +367,39 @@ set as target the n-th week day of the month
 
 ### months 📆  
 
-- `everyMonth()`  
+- `everyMonth()`   
 no explanation needed
 
-- `everyNMonths(freq, start)`  
+- `everyNMonths(freq, start)`   
 every `freq` months (starting from `start`)
 
-- `atMonth(m, cad = false)`  
+- `atMonth(m, cad = false)`   
 resets any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[1, 12]` or [JAN -> DEC]
 
 - `atMonthAdd(m, cad = false)`  
 adds `m` to the list of already set months; as in the previous can pass multiple values comma separated (when cadence is not passed).
 
-- `betweenMonths(from, to, every)`  
+- `betweenMonths(from, to, every)`   
 all months from `from` month to `to` month; optionally set the cadence passing an `every` integer. 
 
 
 ### years 📆  
 
-- `everyYear()`  
+- `everyYear()`   
 no explanation needed
 
-- `everyNYears(freq, start)`  
+- `everyNYears(freq, start)`   
 every `x` years (starting from `start`)
 
-- `atYear(y, cad = false)`  
+- `atYear(y, cad = false)`   
 resets any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[1970, 2099]`
 
 - `atYearAdd(y, cad = false)`  
 adds `min` to the list of already set minutes; as in the previous can pass multiple values comma separated (when cadence is not passed), within `[1970, 2099]`
 
-- `betweenYears(from, to, every)`  
+- `betweenYears(from, to, every)`   
 all years from `from` year to `to` year; optionally set the cadence passing an `every` integer.  
 
 
