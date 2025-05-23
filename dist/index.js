@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.45)
+quartzcron (v.0.0.46)
 */
 const {
         defaults,
@@ -21,18 +21,13 @@ const {
         solve_dom,
         solve_dow,
     } = require('./dateutils.js'),
-    langUtils = require('./langUtils.js'),
-    describer = require('./describe'),
     nextGen = require('./nextGen'),
-    C = require('./constants'),
-    en = require('./langs/en.js');
+    C = require('./constants');
 
 class Quartzcron {
     constructor(o) {
         this.months = { min: 0, max: 11 };
-        this.lang = en;
         this.elements = argumentize(o);
-        this.langUtils = langUtils.getLangUtils(this.lang);
         const validity = this.validate();
         if(!validity.valid) throw new Error(C.errors.constructorErr);
     };
@@ -168,9 +163,6 @@ class Quartzcron {
     everyWeekDay() {
         return this.over({ dom: '?', dow: '2-6' });
     }
-    everyWeek() {
-        return this.over({ dom: '?', dow: '*' });
-    }
     atWeekDay(d, cad){
         // transform d to n
         const nd = daysLabels2Numbers(d);
@@ -286,19 +278,6 @@ class Quartzcron {
         return this.elements.y === defaults.y
             ? this.over({ y: `${from}-${to}${every ? `/${every}` : ''}` })
             : this.overAdd({ y: `${from}-${to}${every ? `/${every}` : ''}` });
-    }
-    
-    describe() {
-        if(this.lang === null){
-            throw new Error(C.errors.noLangFile);
-        }
-        return describer.describe(this.elements, this.langUtils);
-    }
-    loadLang(l){
-        this.lang = l;
-        if(l===null)return;
-        this.langUtils = langUtils.getLangUtils(l);
-        return this;
     }
     
     /***********/

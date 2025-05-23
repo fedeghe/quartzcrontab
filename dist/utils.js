@@ -1,5 +1,5 @@
 /*
-quartzcron (v.0.0.45)
+quartzcron (v.0.0.46)
 */
 /*
 validations

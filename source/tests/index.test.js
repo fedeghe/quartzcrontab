@@ -356,15 +356,6 @@ describe('Quartzcron', () => {
         });
     });
 
-    describe('describe as expected', () => {
-        let c;
-        beforeEach(() => {
-            c = new Quartzcron();
-        });
-        it('default', () => {
-            expect(c.describe()).toBe('at 00:00:00, every day');
-        });
-    });
 
     describe('static', () => {
         const ranger24 = Quartzcron.getRanger(24),

@@ -2,6 +2,8 @@
 **bugfix**
 everyNMonths and everyNMonthsAdd when the start (second param) is not passed were setting the defautl start at 0 which is not correct.
 
+**describe removed**: need a smarter approach
+
 **fullsetters fix**  
 before that it was not possible for all compliant fields to be set (using setters) as multiple comma separated values, as  
 `5,15-20,30-40/2,50/5`  for example for seconds.  

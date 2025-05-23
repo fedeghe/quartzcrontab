@@ -76,51 +76,6 @@ describe('utils', () => {
             });
         }); 
 
-        describe('months', () => {
-            test.each([
-                '*', 1, 12,
-                '1,2,4,8',
-                '1-11',
-                '1-10/2',
-                '1,2-4,6-10/2,10/2',
-            ])('positives %s', v => {
-                expect(validators.month(v)).toBeTruthy();
-            });
-
-            test.each([
-                -1, 0, 13,
-                '1;2,4,8',
-                '1+12',
-                '1-11\\3',
-            ])('negatives %s', v => {
-                expect(validators.month(v)).toBeFalsy();
-            });
-        }); 
-
-        describe('years', () => {
-            test.each([
-                '*', 1970, 2099,
-                '1972,1973,1999,2033',
-                '1972-2050',
-                '1972-2050/3',
-                '1972-2050/3,2020-2030,2040/3',
-                '2040/3',
-                '2020-2030',
-                '1972-2050/3',
-            ])('positive %s', v => {
-                expect(validators.year(v)).toBeTruthy();
-            });
-
-            test.each([
-                -1, 1969, 2100,
-                '1972;1973,1999,2033',
-                '1972+2050',
-                '1972-2050\\/3',
-            ])('negatives %s', v => {
-                expect(validators.year(v)).toBeFalsy();
-            });
-        }); 
-
         describe('day of month', () => {
             test.each([
                 '*', '?',
@@ -149,6 +104,27 @@ describe('utils', () => {
             });
         }); 
 
+        describe('months', () => {
+            test.each([
+                '*', 1, 12,
+                '1,2,4,8',
+                '1-11',
+                '1-10/2',
+                '1,2-4,6-10/2,10/2',
+            ])('positives %s', v => {
+                expect(validators.month(v)).toBeTruthy();
+            });
+
+            test.each([
+                -1, 0, 13,
+                '1;2,4,8',
+                '1+12',
+                '1-11\\3',
+            ])('negatives %s', v => {
+                expect(validators.month(v)).toBeFalsy();
+            });
+        }); 
+
         describe('day of week', () => {
             test.each([
                 '*', '?',
@@ -173,6 +149,30 @@ describe('utils', () => {
                 'MON-WED/2,SAN'
             ])('negatives %s', v => {
                 expect(validators.dayOfWeek(v)).toBeFalsy();
+            });
+        }); 
+
+        describe('years', () => {
+            test.each([
+                '*', 1970, 2099,
+                '1972,1973,1999,2033',
+                '1972-2050',
+                '1972-2050/3',
+                '1972-2050/3,2020-2030,2040/3',
+                '2040/3',
+                '2020-2030',
+                '1972-2050/3',
+            ])('positive %s', v => {
+                expect(validators.year(v)).toBeTruthy();
+            });
+
+            test.each([
+                -1, 1969, 2100,
+                '1972;1973,1999,2033',
+                '1972+2050',
+                '1972-2050\\/3',
+            ])('negatives %s', v => {
+                expect(validators.year(v)).toBeFalsy();
             });
         }); 
     });
@@ -509,7 +509,6 @@ describe('utils', () => {
                 });
             });
         });
-
         describe('- years', () => {
             describe('- positives', () => {
                 let c;
