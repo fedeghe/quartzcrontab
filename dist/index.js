@@ -5,7 +5,8 @@ const {
         defaults,
         yearNow,
         removeSpaces,
-        argumentize
+        argumentize,
+        daysLabels2Numbers
     } = require('./utils'),
     {
         validators,
@@ -72,6 +73,16 @@ class Quartzcron {
         }, {});
         return this;
     }
+    overAdd(ov) {
+        const $ = this,
+            mod = Object.entries(ov).reduce((acc, [k, v]) => {
+                const current = $.elements[k].split(',').filter(Boolean);
+                acc[k] = removeSpaces([...current, v].join(','));
+                return acc;
+            }, {});
+        this.elements = {...this.elements, ...mod};
+        return this;
+    }
     /* seconds */
     everySecond() {
         return this.over({ s: '*'});
@@ -79,15 +90,20 @@ class Quartzcron {
     everyNSeconds(freq, start = 0) {
         return this.over({ s: `${start}/${freq}` });
     }
+    everyNSecondsAdd(freq, start = 0) {
+        return this.overAdd({ s: `${start}/${freq}` });
+    }
     atSecond(s, cad) {
         return this.over({ s: cad ? `${s}/${cad}` : `${s}` });
     }
     atSecondAdd(s, cad) {
-        var current = this.elements.s.split(',');
-        return this.over({ s: [...current, cad ? `${s}/${cad}` : `${s}`].map(c=>`${c}`).join(',') });
+        return this.overAdd({ s: cad ? `${s}/${cad}` : `${s}`});
     }
     betweenSeconds(from, to, every) {
         return this.over({ s: `${from}-${to}${every ? `/${every}`: ''}` });
+    }
+    betweenSecondsAdd(from, to, every) {
+        return this.overAdd({ s: `${from}-${to}${every ? `/${every}`: ''}` });
     }
 
     /* minutes */
@@ -97,15 +113,20 @@ class Quartzcron {
     everyNMinutes(freq, start = 0) {
         return this.over({ i: `${start}/${freq}` });
     }
+    everyNMinutesAdd(freq, start = 0) {
+        return this.overAdd({ i: `${start}/${freq}` });
+    }
     atMinute(i, cad) {
         return this.over({ i: cad ? `${i}/${cad}` : `${i}` });
     }
     atMinuteAdd(i, cad) {
-        var current = this.elements.i.split(',');
-        return this.over({ i: [...current, cad ? `${i}/${cad}` : `${i}`].map(c=>`${c}`).join(',') });
+        return this.overAdd({i: cad ? `${i}/${cad}` : `${i}`});
     }
     betweenMinutes(from, to, every) {
         return this.over({ i: `${from}-${to}${every ? `/${every}` : ''}` });
+    }
+    betweenMinutesAdd(from, to, every) {
+        return this.overAdd({ i: `${from}-${to}${every ? `/${every}` : ''}` });
     }
 
     /* hours */
@@ -115,15 +136,20 @@ class Quartzcron {
     everyNHours(freq, start = 0) {
         return this.over({ h: `${start}/${freq}` });
     }
+    everyNHoursAdd(freq, start = 0) {
+        return this.overAdd({ h: `${start}/${freq}` });
+    }
     atHour(h, cad) {
         return this.over({ h: cad ? `${h}/${cad}` : `${h}` });
     }
     atHourAdd(h, cad) {
-        var current = this.elements.h.split(',');
-        return this.over({ h: [...current, cad ? `${h}/${cad}` : `${h}`].map(c=>`${c}`).join(',') });
+        return this.overAdd({ h: cad ? `${h}/${cad}` : `${h}`});
     }
     betweenHours(from, to, every) {
         return this.over({ h: `${from}-${to}${every ? `/${every}`: ''}` });
+    }
+    betweenHoursAdd(from, to, every) {
+        return this.overAdd({ h: `${from}-${to}${every ? `/${every}`: ''}` });
     }
 
     /* dom/dow */
@@ -132,6 +158,9 @@ class Quartzcron {
     }
     everyNDays(n, start = 1){
         return this.over({ dom: `${start}/${n}`, dow: '?'});
+    }
+    everyNDaysAdd(n, start = 1){
+        return this.overAdd({ dom: `${start}/${n}`, dow: '?'});
     }
     everyWeekEnd() {
         return this.over({ dom: '?', dow: '7,1' });
@@ -143,13 +172,16 @@ class Quartzcron {
         return this.over({ dom: '?', dow: '*' });
     }
     atWeekDay(d, cad){
-        return this.over({ dom: '?', dow: cad ? `${d}/${cad}` : `${d}` });
+        // transform d to n
+        const nd = daysLabels2Numbers(d);
+        return this.over({ dom: '?', dow: cad ? `${nd}/${cad}` : `${nd}` });
     }
     atWeekDayAdd(d, cad) {
-        var current = this.elements.dow === defaults.dow
-            ? []
-            : this.elements.dow.split(',');
-        return this.over({ dom: '?', dow: [...current, cad ? `${d}/${cad}` : `${d}`].map(c=>`${c}`).join(',') });
+        // transform d to n
+        const nd = daysLabels2Numbers(d);
+        return this.elements.dow === defaults.dow
+            ? this.over({ dom: '?', dow: cad ? `${nd}/${cad}` : `${nd}` })
+            : this.overAdd({ dow: cad ? `${nd}/${cad}` : `${nd}` });
     }
 
     // the relative validator should check it
@@ -157,17 +189,24 @@ class Quartzcron {
         if(from>=to) return this;
         return this.over({ dom: '?', dow: `${from}-${to}${every ? `/${every}`: ''}`});
     }
+    betweenWeekDaysAdd(from, to, every) {
+        if (from>=to) return this;
+        return this.over({dom: '?'})
+            .overAdd({ dom: '?', dow: `${from}-${to}${every ? `/${every}`: ''}`});
+    }
     atMonthDay(dom, cad) {
         return this.over({ dom: cad ? `${dom}/${cad}` : `${dom}`, dow: '?' });
     }
     atMonthDayAdd(dom, cad) {
-        var current = this.elements.dom === defaults.dom
-            ? []
-            : this.elements.dom.split(',');
-        return this.over({ dom: [...current, cad ? `${dom}/${cad}` : `${dom}`].map(c=>`${c}`).join(','), dow: '?' });
+        return this.elements.dom === defaults.dom
+            ? this.over({dom: cad ? `${dom}/${cad}` : `${dom}`, dow: '?'})
+            : this.overAdd({dom: cad ? `${dom}/${cad}` : `${dom}`});
     }
     betweenMonthDays(from, to, every) {
         return this.over({ dom: `${from}-${to}${every ? `/${every}`: ''}`, dow: '?' });
+    }
+    betweenMonthDaysAdd(from, to, every) {
+        return this.overAdd({ dom: `${from}-${to}${every ? `/${every}`: ''}`});
     }
     onLastMonthDay(){
         return this.over({ dom: 'L', dow: '?' });
@@ -195,20 +234,29 @@ class Quartzcron {
     everyMonth() {
         return this.over({ m: '*'});
     }
-    everyNMonths(freq, start = 0) {
+    everyNMonths(freq, start = 1) {
         return this.over({ m: `${start}/${freq}` });
+    }
+    everyNMonthsAdd(freq, start = 1) {
+        return this.elements.m === defaults.m
+            ? this.over({ m: `${start}/${freq}` })
+            : this.overAdd({ m: `${start}/${freq}` });
     }
     atMonth(m, cad) {
         return this.over({ m: cad ? `${m}/${cad}` : `${m}` });
     }
     atMonthAdd(m, cad) {
-        var current = this.elements.m === defaults.m
-            ? []
-            : this.elements.m.split(',');
-        return this.over({ m: [...current, cad ? `${m}/${cad}` : `${m}`].map(c=>`${c}`).join(',') });
+        return this.elements.m === defaults.m
+            ? this.over({ m: cad ? `${m}/${cad}` : `${m}`})
+            : this.overAdd({ m: cad ? `${m}/${cad}` : `${m}`});
     }
     betweenMonths(from, to, every) {
         return this.over({ m: `${from}-${to}${every ? `/${every}` : ''}` });
+    }
+    betweenMonthsAdd(from, to, every) {
+        return this.elements.m === defaults.m
+            ? this.over({ m: `${from}-${to}${every ? `/${every}` : ''}` })
+            : this.overAdd({ m: `${from}-${to}${every ? `/${every}` : ''}` });
     }
 
     /* year */
@@ -218,17 +266,26 @@ class Quartzcron {
     everyNYears(freq, start = yearNow) {
         return this.over({ y: `${start}/${freq}` });
     }
+    everyNYearsAdd(freq, start = yearNow) {
+        return this.elements.y === defaults.y
+            ? this.over({ y: `${start}/${freq}` })
+            : this.overAdd({ y: `${start}/${freq}` });
+    }
     atYear(y, cad) {
         return this.over({ y: cad ? `${y}/${cad}` : `${y}` });
     }
     atYearAdd(y, cad) {
-        var current = this.elements.y === defaults.y
-            ? []
-            : this.elements.y.split(',');
-        return this.over({ y: [...current, cad ? `${y}/${cad}` : `${y}`].map(c=>`${c}`).join(',') });
+        return this.elements.y === defaults.y
+            ? this.over({ y: cad ? `${y}/${cad}` : `${y}`})
+            : this.overAdd({ y: cad ? `${y}/${cad}` : `${y}`});
     }
     betweenYears(from, to, every) {
         return this.over({ y: `${from}-${to}${every ? `/${every}` : ''}` });
+    }
+    betweenYearsAdd(from, to, every) {
+        return this.elements.y === defaults.y
+            ? this.over({ y: `${from}-${to}${every ? `/${every}` : ''}` })
+            : this.overAdd({ y: `${from}-${to}${every ? `/${every}` : ''}` });
     }
     
     describe() {

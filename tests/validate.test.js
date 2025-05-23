@@ -82,6 +82,7 @@ describe('utils', () => {
                 '1,2,4,8',
                 '1-11',
                 '1-10/2',
+                '1,2-4,6-10/2,10/2',
             ])('positives %s', v => {
                 expect(validators.month(v)).toBeTruthy();
             });
@@ -131,6 +132,7 @@ describe('utils', () => {
                 '12,14,17,18',
                 '5-18',
                 '5-28/3',
+                '1,2-3,5-28/3',
             ])('positives %s', v => {
                 expect(validators.dayOfMonth(v)).toBeTruthy();
             });

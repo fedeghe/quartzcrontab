@@ -21,82 +21,82 @@ const digIt = ({
     lu
 }) => {
     const target = o[key];
-    let mat, spl;
-    // every x-th second /^\d+$/
-    mat = target.match(C.rx.loose.n);
-    
-    if (mat) {
-        return [
-            ...pre,
-            atSingle(mat),
-            ...post
-        ].join('');
-    }
 
-    // on every second from 5-th to 10th /^\d+-\d*$/
-    mat = target.match(C.rx.loose['n-n']);
-    if (mat) {
-        return [
-            ...pre,
-            every(),
-            ' ',
-            between(mat),
-            ...post
-        ].join('');
-    }
+    const split = target.split(',');
 
-    // at second 1, 3 and 30
-    spl = target.split(',');
-    mat = spl.every(i => i.match(C.rx.loose.n));
-    if (mat) {
-        return [
-            ...pre,
-            atMultiple(spl),
-            ...post
-        ].join('');
-    }
-
-    // every 3 seconds between 5-th and 10th second     /^\d+-\d\/\d+$/
-    mat = target.match(C.rx.loose['n-n/n']);
-    if (mat) {
-        return [
-            ...pre,
-            everys(mat[3]),
-            ' ',
-            between(mat),
-            ...post
-        ].join('');
-    }
-
-    // mixed 1, 3, 4/6, 8
-    spl = target.split(',');
-    mat = spl.map(i => i.match(C.rx.loose['nORn/n'])).filter(Boolean);
-    /* istanbul ignore else */
-    if (mat.length === spl.length) {
-        const mid = mat.reduce((acc, m) => {
-            if(typeof m[2] === 'undefined') {
-                const start = parseInt(m[3], 10),
-                    cadence = parseInt(m[4], 10);
-                acc.res.push([
-                    everys(cadence),
-                    lu.startingFrom(start)
-                ].join(' '));
-            } else {
-                const v = parseInt(m[1], 10);
-                /* istanbul ignore else */
-                if(!acc.pres.includes(v)){
-                    acc.res.unshift(lu.atX(v));
-                    acc.pres.push(v);
-                }
+    return [
+        ...pre,
+        ...split.reduce((acc, trg) => {
+            let mat, spl;
+            // every x-th second /^\d+$/
+            mat = trg.match(C.rx.loose.n);
+            
+            if (mat) {
+                acc.push(atSingle(mat));
+                return acc;
             }
-            return acc;
-        }, {res: [], pres: []});
-        return [
-            ...pre,
-            lu.multiple([...new Set(mid.res)]),
-            ...post
-        ].join('');
-    }
+
+            // on every second from 5-th to 10th /^\d+-\d*$/
+            mat = trg.match(C.rx.loose['n-n']);
+            if (mat) {
+                acc.push([
+                    every(),
+                    ' ',
+                    between(mat),
+                ].join(''));
+                return acc;
+            }
+
+            // at second 1, 3 and 30
+            spl = trg.split(',');
+            mat = spl.every(i => i.match(C.rx.loose.n));
+            if (mat) {
+                acc.push(atMultiple(spl));
+                return acc;
+            }
+
+            // every 3 seconds between 5-th and 10th second     /^\d+-\d\/\d+$/
+            mat = trg.match(C.rx.loose['n-n/n']);
+            if (mat) {
+                acc.push([
+                    everys(mat[3]),
+                    ' ',
+                    between(mat),
+                ].join(''));
+                return acc;
+            }
+
+            // mixed 1, 3, 4/6, 8
+            spl = trg.split(',');
+            mat = spl.map(i => i.match(C.rx.loose['nORn/n'])).filter(Boolean);
+            /* istanbul ignore else */
+            if (mat.length === spl.length) {
+                const mid = mat.reduce((acc, m) => {
+                    if(typeof m[2] === 'undefined') {
+                        const start = parseInt(m[3], 10),
+                            cadence = parseInt(m[4], 10);
+                        acc.res.push([
+                            everys(cadence),
+                            lu.startingFrom(start)
+                        ].join(' '));
+                    } else {
+                        const v = parseInt(m[1], 10);
+                        /* istanbul ignore else */
+                        if(!acc.pres.includes(v)){
+                            acc.res.unshift(lu.atX(v));
+                            acc.pres.push(v);
+                        }
+                    }
+                    return acc;
+                }, {res: [], pres: []});
+                acc.push(
+                    lu.multiple([...new Set(mid.res)])
+                );
+                return acc;
+            }
+        }, []),
+        ...post
+    ].join(''); 
 };
 
 const describeTime = ({ s, i, h }, lu) => {
