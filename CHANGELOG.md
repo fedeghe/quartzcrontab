@@ -1,4 +1,4 @@
-## 0.0.46
+## 0.0.47
 **bugfix**
 everyNMonths and everyNMonthsAdd when the start (second param) is not passed were setting the defautl start at 0 which is not correct.
 

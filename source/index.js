@@ -330,27 +330,16 @@ class Quartzcron {
             }
         });
         
-        if (!validators.second(elements.s)) {
-            errors.push(C.errors.malformed.seconds);
-        }
-        if (!validators.minute(elements.i)) {
-            errors.push(C.errors.malformed.minutes);
-        }
-        if (!validators.hour(elements.h)) {
-            errors.push(C.errors.malformed.hours);
-        }
-        if (!validators.dayOfMonth(elements.dom)) {
-            errors.push(C.errors.malformed.dom);
-        }
-        if (!validators.month(elements.m)) {
-            errors.push(C.errors.malformed.months);
-        }
-        if (!validators.dayOfWeek(elements.dow)) {
-            errors.push(C.errors.malformed.dow);
-        }
-        if (elements.y && !validators.year(elements.y)) {
-            errors.push(C.errors.malformed.years);
-        }
+        validators.second(elements.s) || errors.push(C.errors.malformed.seconds);
+        validators.minute(elements.i) || errors.push(C.errors.malformed.minutes);
+        validators.hour(elements.h) || errors.push(C.errors.malformed.hours);
+        validators.dayOfMonth(elements.dom) || errors.push(C.errors.malformed.dom);
+        validators.month(elements.m) || errors.push(C.errors.malformed.months);
+        validators.dayOfWeek(elements.dow) || errors.push(C.errors.malformed.dow);
+        elements.y && (
+            validators.year(elements.y) || errors.push(C.errors.malformed.years)
+        );
+        
         return {
             valid: errors.length === 0,
             errors

@@ -3,18 +3,17 @@
 
 ![GitHub top language](https://img.shields.io/github/languages/top/fedeghe/quartzcron?labelColor=%23fede76) ![Static Badge](https://img.shields.io/badge/Human%20coded-100%25-blue?style=plastic)
 
-![urlotrack](https://click.jmvc.org/p/5I8eDsOJ/1)
 
 
 # quartzcron  
-version: `0.0.46`   
+version: `0.0.47`   
 [CHANGELOG](https://github.com/fedeghe/quartzcron/blob/master/CHANGELOG.md) 
 
 
 
 
 [Quartz scheduler][quartz] offers way more flexibility compared to traditional [cron][cron] tool.  
-That additional freedom clearly maps into less trivial composition for the cron strings, this library aims to  
+That additional freedom reflects into less trivial composition for the cron strings, this library aims to  
  - **help to programmatically create cron expressions**  
  - **validate cron expressions**  
  - **get the _n_ next precise occurrences**  
@@ -23,20 +22,19 @@ A `quartz cron expression` is characterized by the following structure:
 ```
 s  i  h dom m dow y  
 ⎜  ⎜  ⎜  ⎜  ⎜  ⎜  ⎜  
-⎜  ⎜  ⎜  ⎜  ⎜  ⎜  '-> years (optional)
-⎜  ⎜  ⎜  ⎜  ⎜  '----> days of week  -\
-⎜  ⎜  ⎜  ⎜  '-------> months          | mutually exclusive
-⎜  ⎜  ⎜  '----------> days of month -/
-⎜  ⎜  '-------------> hours
-⎜  '----------------> minutes
-'-------------------> seconds
+'--+--+--+--+--+--+--> 1st: seconds
+   '--+--+--+--+--+--> 2nd: minutes
+      '--+--+--+--+--> 3rd: hours
+         '--+--+--+--> 4th: days of month ---\
+            '--+--+--> 5th: months           | mutually exclusive
+               '--+--> 6th: days of week  ---/
+                  '--> 7th: years
 ```
 
 ## sample usage
 ``` js
 const QuartzCron = require('quartzcron'),
-    qct = new QuartzCron(),
-    _ = console.log;
+    qct = new QuartzCron();
 let exp = qct.out(); // ->  0 0 0 * * ? *
 // thus the default is
 // at midnight of everyday
@@ -159,7 +157,7 @@ This clearly applies similarly also for almost all other commands.
 every `x` seconds (starting from `start`)  
 
 - `atSecond(sec, cad = false)`   
-resets any previous value set there;  
+overrides any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[0, 59]`
 
 - `atSecondAdd(sec, cad = false)`  
@@ -182,7 +180,7 @@ no explanation needed
 every `x` minutes (starting from `start`)
 
 - `atMinute(min, cad = false)`   
-resets any previous value set there;  
+overrides any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[0, 59]`
 
 - `atMinuteAdd(min, cad = false)`  
@@ -204,7 +202,7 @@ every `x` hours (starting from `start`)
 
 - `atHour(h, cad = false)`   
 no explanation needed;  
-resets any previous value set there;  
+overrides any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[0, 23]`
 
 - `atHourAdd(h, cad = false)`  
@@ -233,7 +231,7 @@ every `x` `[1-31][1-31]` days starting from `y`th day `[1-31]` of the target mon
     ```
 
 - `atWeekDay(wd, cad = false)`   
-every `wd` `[1-7]` (labels invalid here for weekdays); resets any previous value set there; when cadence is not passed even here more than one comma separated value can be passed. 
+overrides any previous value set there; when cadence is not passed even here more than one comma separated value can be passed. 
     ``` js
     qtc.atWeekDay(4)
     // { dom: `?`, dow: 4, ...}
@@ -374,7 +372,7 @@ no explanation needed
 every `freq` months (starting from `start`)
 
 - `atMonth(m, cad = false)`   
-resets any previous value set there;  
+overrides any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[1, 12]` or [JAN -> DEC]
 
 - `atMonthAdd(m, cad = false)`  
@@ -393,7 +391,7 @@ no explanation needed
 every `x` years (starting from `start`)
 
 - `atYear(y, cad = false)`   
-resets any previous value set there;  
+overrides any previous value set there;  
 when cadence is not passed can be called passing multiple comma separated values within `[1970, 2099]`
 
 - `atYearAdd(y, cad = false)`  
