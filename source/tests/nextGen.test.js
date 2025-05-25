@@ -221,6 +221,7 @@ describe('Quartzcron.next', () => {
             ).toMatchObject(expected);
         });
     });
+
     describe('more case to return the expected', () => {
         it('use the remotest (cover real date)', () => {
             c.atYear('2099');
@@ -241,6 +242,7 @@ describe('Quartzcron.next', () => {
             ]);
         });
     });
+    
     describe('some cases from static validate', () => {
         const date = new Date('01:00:00 6-5-2025 GMT');// 5th june 2025
         let qc;

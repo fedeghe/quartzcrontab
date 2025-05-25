@@ -63,7 +63,7 @@ describe('Quartzcron', () => {
             });
         });
     });
-
+    
     describe('updateExp', () => {
         let c;
         beforeEach(() => {

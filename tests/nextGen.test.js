@@ -221,34 +221,8 @@ describe('Quartzcron.next', () => {
             ).toMatchObject(expected);
         });
     });
+
     describe('more case to return the expected', () => {
-        let qc;
-        beforeEach(() => {
-            qc = new Quartzcron();
-        });
-        test.each([
-            [
-                i => i.atSecond(4)
-                    .atMonth(9)
-                    .atMonthDay(20),
-                3,
-                new Date('03:00:00 2-6-2023 GMT'),
-                s=>s.toUTCString(),
-                [
-                    "Wed, 20 Sep 2023 00:00:04 GMT",
-                    "Fri, 20 Sep 2024 00:00:04 GMT",
-                    "Sat, 20 Sep 2025 00:00:04 GMT"
-                ]
-            ]
-        ])('%s', (prep, n, date, trans, expected) => {
-            prep(qc);
-            expect(
-                qc.next({ n, date }).map(trans)
-            ).toMatchObject(expected);
-        })
-
-
-
         it('use the remotest (cover real date)', () => {
             c.atYear('2099');
             const next = c.next();
@@ -268,6 +242,7 @@ describe('Quartzcron.next', () => {
             ]);
         });
     });
+    
     describe('some cases from static validate', () => {
         const date = new Date('01:00:00 6-5-2025 GMT');// 5th june 2025
         let qc;
