@@ -63,7 +63,7 @@ describe('Quartzcron', () => {
             });
         });
     });
-    
+
     describe('updateExp', () => {
         let c;
         beforeEach(() => {
@@ -94,7 +94,6 @@ describe('Quartzcron', () => {
         });
     });
 
-
     describe('seconds', () => {
         let c;
         beforeEach(() => {
@@ -118,6 +117,7 @@ describe('Quartzcron', () => {
             expect(c.out()).toBe(exp);
         });
     });
+
     describe('minutes', () => {
         let c;
         beforeEach(() => {
@@ -355,7 +355,6 @@ describe('Quartzcron', () => {
             expect(c.out()).toBe('3-30/2 15-45/5 12-23/3 * 3-10/2 ? *');
         });
     });
-
 
     describe('static', () => {
         const ranger24 = Quartzcron.getRanger(24),
