@@ -7,7 +7,7 @@
 
 
 # quartzcron  
-version: `0.0.47`   
+version: `0.1.0`   
 [CHANGELOG](https://github.com/fedeghe/quartzcron/blob/master/CHANGELOG.md) 
 
 
